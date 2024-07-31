@@ -1,9 +1,22 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
+import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.0.1"
-  id("org.openapi.generator") version "7.5.0"
+  id("org.openapi.generator") version "7.6.0"
   kotlin("plugin.spring") version "2.0.0"
+  kotlin("plugin.jpa") version "2.0.0"
+}
+
+allOpen {
+  annotations(
+    "javax.persistence.Entity",
+    "javax.persistence.MappedSuperclass",
+    "javax.persistence.Embeddable",
+  )
 }
 
 configurations {
@@ -11,29 +24,42 @@ configurations {
 }
 
 dependencies {
-  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.0.2")
+  // Spring boot dependencies
+  implementation("org.springframework.boot:spring-boot-starter-security")
   implementation("org.springframework.boot:spring-boot-starter-webflux")
+  implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.0.1")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-// Database dependencies
-  runtimeOnly("org.flywaydb:flyway-core")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:3.1.1")
+
+  // CSV dependencies
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.17.2")
+
+  // Database dependencies
+  runtimeOnly("org.flywaydb:flyway-database-postgresql")
   runtimeOnly("org.postgresql:postgresql:42.7.3")
 
   // OpenAPI
-  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0")
-  // Test dependencies
-  testImplementation("io.jsonwebtoken:jjwt-impl:0.12.5")
-  testImplementation("io.jsonwebtoken:jjwt-jackson:0.12.5")
-  testImplementation("com.h2database:h2")
-  testImplementation("org.mockito:mockito-inline:5.2.0")
-  testImplementation("net.javacrumbs.json-unit:json-unit:3.2.2")
-  testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.2.2")
-  testImplementation("net.javacrumbs.json-unit:json-unit-json-path:3.2.2")
-  testImplementation("org.springframework.security:spring-security-test")
-  testImplementation("org.springframework.boot:spring-boot-starter-test")
-  testImplementation("org.wiremock:wiremock-standalone:3.5.4")
+  implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0")
 
-  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.0.2")
+  // Gov Notify client
+  implementation("uk.gov.service.notify:notifications-java-client:5.1.0-RELEASE")
+
+  implementation("io.opentelemetry.instrumentation:opentelemetry-instrumentation-annotations:2.4.0")
+
+  // Test dependencies
+  testImplementation("com.h2database:h2")
+  testImplementation("io.jsonwebtoken:jjwt-impl:0.12.6")
+  testImplementation("io.jsonwebtoken:jjwt-jackson:0.12.6")
+  testImplementation("net.javacrumbs.json-unit:json-unit:3.3.0")
+  testImplementation("net.javacrumbs.json-unit:json-unit-assertj:3.3.0")
+  testImplementation("net.javacrumbs.json-unit:json-unit-json-path:3.3.0")
+  testImplementation("org.awaitility:awaitility-kotlin:4.2.1")
+  testImplementation("org.mockito:mockito-inline:5.2.0")
+  testImplementation("org.springframework.boot:spring-boot-starter-test")
+  testImplementation("org.springframework.security:spring-security-test")
+  testImplementation("org.testcontainers:localstack:1.19.8")
   testImplementation("org.wiremock:wiremock-standalone:3.8.0")
+  testImplementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter-test:1.0.2")
 }
 
 kotlin {
@@ -42,6 +68,54 @@ kotlin {
 
 tasks {
   withType<KotlinCompile> {
+    dependsOn("buildPrisonApiModel")
     compilerOptions.jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_21
+  }
+  withType<KtLintCheckTask> {
+    // Under gradle 8 we must declare the dependency here, even if we're not going to be linting the model
+    mustRunAfter("buildPrisonApiModel")
+  }
+  withType<KtLintFormatTask> {
+    // Under gradle 8 we must declare the dependency here, even if we're not going to be linting the model
+    mustRunAfter("buildPrisonApiModel")
+  }
+}
+
+val configValues = mapOf(
+  "dateLibrary" to "java8-localdatetime",
+  "serializationLibrary" to "jackson",
+  "enumPropertyNaming" to "original",
+  "useSpringBoot3" to "true",
+)
+
+val buildDirectory: Directory = layout.buildDirectory.get()
+
+tasks.register("buildPrisonApiModel", GenerateTask::class) {
+  generatorName.set("kotlin")
+  inputSpec.set("openapi-specs/prison-api.json")
+  outputDir.set("$buildDirectory/generated/prisonapi")
+  modelPackage.set("uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonapi.model")
+  configOptions.set(configValues)
+  globalProperties.set(mapOf("models" to ""))
+}
+
+val generatedProjectDirs =
+  listOf("prisonapi")
+
+kotlin {
+  generatedProjectDirs.forEach { generatedProject ->
+    sourceSets["main"].apply {
+      kotlin.srcDir("$buildDirectory/generated/$generatedProject/src/main/kotlin")
+    }
+  }
+}
+
+configure<KtlintExtension> {
+  filter {
+    generatedProjectDirs.forEach { generatedProject ->
+      exclude { element ->
+        element.file.path.contains("build/generated/$generatedProject/src/main/")
+      }
+    }
   }
 }
