@@ -39,7 +39,7 @@ class PrisonerControllersTest : IntegrationTestBase() {
 
     @Test
     fun `should return OK`() {
-      stubPrisonSearchWithResponse("P001");
+      stubPrisonSearchWithResponse("P001")
       webTestClient.get()
         .uri("/contacts/prisoner/P001")
         .headers(setAuthorisation(roles = listOf("PRISONER_SEARCH")))
@@ -48,8 +48,7 @@ class PrisonerControllersTest : IntegrationTestBase() {
         .isOk
         .expectBody()
         .jsonPath("prisonerNumber").isEqualTo("P001")
-        .jsonPath("prisonId").isEqualTo("J001");
+        .jsonPath("prisonId").isEqualTo("MDI")
     }
   }
-
 }
