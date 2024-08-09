@@ -16,7 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.PrisonerService
 class PrisonerController(private val prisonerService: PrisonerService) {
   @GetMapping(value = ["/prisoner/{prisonerNumber}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @PreAuthorize("hasAnyRole('PRISONER_SEARCH')")
-  fun getPrisonerAtPrison(
+  fun getPrisoner(
     @PathVariable("prisonerNumber") prisonerNumber: String,
   ): Prisoner? = prisonerService.getPrisoner(prisonerNumber)
 }

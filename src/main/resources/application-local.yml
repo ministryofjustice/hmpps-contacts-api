@@ -25,5 +25,5 @@ system:
 api:
   base:
     url:
-      hmpps-auth: http://localhost:8090/auth
-      prisoner-search: http://localhost:8092
+      hmpps-auth: https://sign-in-dev.hmpps.service.justice.gov.uk/auth
+      prisoner-search: https://prisoner-search-dev.prison.service.justice.gov.uk
