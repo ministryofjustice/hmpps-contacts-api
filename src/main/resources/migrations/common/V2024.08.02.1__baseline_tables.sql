@@ -71,6 +71,7 @@ CREATE TABLE contact_identity
     contact_id bigint NOT NULL REFERENCES contact(contact_id),
     identity_type varchar(20), -- Reference codes - ID_TYPE
     identity_value varchar(100), -- driving licence number, NI number, passport number
+    issuing_authority varchar(40), -- e.g. UK passport agency, DVLA
     verified boolean NOT NULL DEFAULT false,
     verified_by varchar(100),
     verified_time timestamp,
@@ -223,8 +224,8 @@ CREATE TABLE prisoner_contact
     next_of_kin boolean NOT NULL DEFAULT false,
     emergency_contact boolean NOT NULL DEFAULT false,
     comments varchar(240),
-    approved_by varchar(100) NOT NULL,
-    approved_time timestamp NOT NULL,
+    approved_by varchar(100),
+    approved_time timestamp,
     expiry_date date,
     created_at_prison varchar(5), -- prison code where this contact was created (for info)
     created_by varchar(100) NOT NULL,
@@ -266,6 +267,9 @@ CREATE INDEX idx_prisoner_contact_expiry_date ON prisoner_contact_restriction(ex
 ---------------------------------------------------------------------------------------
 -- Contains coded reference values used to constrain the values of lists/validation.
 -- e.g. address types, phone types, county codes, country codes, relationship types etc..
+-- Still questions over reference data - who owns this? Other uses in NOMIS?
+-- One-way sync from DPS to NOMIS?
+-- Local maintenance of reference data? Forms/menu options? Roles to maintain?
 ----------------------------------------------------------------------------------------
 
 CREATE TABLE reference_codes
