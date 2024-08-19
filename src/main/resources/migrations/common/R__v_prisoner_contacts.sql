@@ -33,6 +33,7 @@ AS
       pc.prisoner_number,
       pc.relationship_type,
       rc1.description as relationship_description,
+      pc.active,
       pc.can_be_contacted,
       pc.approved_visitor,
       pc.aware_of_charges,
@@ -47,6 +48,7 @@ AS
   left join reference_codes rc1 ON rc1.group_code = 'RELATIONSHIP' and rc1.code = pc.relationship_type
   left join reference_codes rc2 ON rc2.group_code = 'EMAIL_TYPE' and rc2.code = ce.email_type
   left join reference_codes rc3 ON rc3.group_code = 'PHONE_TYPE' and rc3.code = cp.phone_type
-  where pc.contact_id = c.contact_id;
+  where pc.contact_id = c.contact_id
+  order by pc.created_time desc;
 
 -- End
