@@ -15,5 +15,4 @@ interface PrisonerContactRepository : ReadOnlyRepository<PrisonerContactSummary,
     """,
   )
   fun findPrisonerContacts(prisonerNumber: String, activeFlag: Boolean = true): List<PrisonerContactSummary>
-
 }
