@@ -1,14 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactDetail
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.PrisonerContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.PrisonerContactSummary
 
-private const val GET_PRISONER_CONTACT = "/prisoner-contacts/prisoner/P001"
+private const val GET_PRISONER_CONTACT = "/prisoner-contacts/prisoner/A1234BB"
 
 class PrisonerContactsResourceIntegrationTest : IntegrationTestBase() {
 
@@ -45,24 +46,36 @@ class PrisonerContactsResourceIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `should return OK`() {
-      stubPrisonSearchWithResponse("P001")
+    fun `should return not found if no contact found`() {
+      stubPrisonSearchWithNotFoundResponse("A1234BB")
 
-      var contacts = webTestClient.getContacts()
+      webTestClient.get()
+        .uri("/prisoner-contacts/prisoner/P001")
+        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+        .exchange()
+        .expectStatus()
+        .isNotFound
+    }
+
+    @Test
+    fun `should return OK`() {
+      stubPrisonSearchWithResponse("A1234BB")
+
+      var contacts = webTestClient.getContacts(GET_PRISONER_CONTACT)
 
       assertThat(contacts).extracting("surname").contains("Last")
       assertThat(contacts).hasSize(1)
     }
   }
 
-  private fun WebTestClient.getContacts(): MutableList<PrisonerContact> =
+  private fun WebTestClient.getContacts(URL: String): MutableList<PrisonerContactSummary> =
     get()
-      .uri(GET_PRISONER_CONTACT)
+      .uri(URL)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
       .exchange()
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBodyList(PrisonerContact::class.java)
+      .expectBodyList(PrisonerContactSummary::class.java)
       .returnResult().responseBody!!
 }
