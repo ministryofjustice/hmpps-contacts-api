@@ -70,5 +70,5 @@ data class PrisonerContactSummary(
   val awareOfCharges: Boolean,
 
   @Schema(description = "Any additional comments", example = "Close family friend", nullable = true)
-  val comments: String?
+  val comments: String?,
 )
