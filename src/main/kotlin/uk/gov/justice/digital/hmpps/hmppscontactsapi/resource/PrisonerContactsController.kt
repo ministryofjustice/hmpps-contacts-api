@@ -59,7 +59,7 @@ class PrisonerContactsController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "The Contact was not found.",
+        description = "The Prisoner was not found.",
         content = [
           Content(
             mediaType = "application/json",

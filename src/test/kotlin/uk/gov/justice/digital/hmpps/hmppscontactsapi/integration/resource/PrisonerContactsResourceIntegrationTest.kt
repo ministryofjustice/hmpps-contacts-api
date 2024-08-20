@@ -46,7 +46,7 @@ class PrisonerContactsResourceIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `should return not found if no contact found`() {
+    fun `should return not found if no prisoner found`() {
       stubPrisonSearchWithNotFoundResponse("A1234BB")
 
       webTestClient.get()
