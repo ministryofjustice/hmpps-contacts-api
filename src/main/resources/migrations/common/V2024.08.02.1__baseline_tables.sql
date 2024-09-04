@@ -286,6 +286,24 @@ CREATE TABLE reference_codes
 
 CREATE UNIQUE INDEX idx_reference_code_group ON reference_codes(group_code, code);
 
+---------------------------------------------------------------------------------------
+-- Nationality reference data exported from NOMIS enhanced with ISO codes.
+-- This table holds the details from PROFILE_CODES where PROFILE_TYPE= 'NAT';.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE nationality_reference (
+    nationality_id bigserial NOT NULL CONSTRAINT nationality_pk PRIMARY KEY,
+    nationality_code VARCHAR(40),
+    nationality_description VARCHAR(100),
+    iso_numeric integer UNIQUE,
+    iso_nationality_desc VARCHAR(100),
+    display_sequence INTEGER
+);
+
+CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nationality_code, nationality_description);
+
+
+
 ---
 -- END
 ---
