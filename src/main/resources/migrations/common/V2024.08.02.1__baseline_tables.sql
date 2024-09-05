@@ -291,16 +291,19 @@ CREATE UNIQUE INDEX idx_reference_code_group ON reference_codes(group_code, code
 -- This table holds the details from PROFILE_CODES where PROFILE_TYPE= 'NAT';.
 ----------------------------------------------------------------------------------------
 
-CREATE TABLE nationality_reference (
-    nationality_id bigserial NOT NULL CONSTRAINT nationality_pk PRIMARY KEY,
-    nationality_code VARCHAR(40),
-    nationality_description VARCHAR(100),
-    iso_numeric integer UNIQUE,
-    iso_nationality_desc VARCHAR(100),
-    display_sequence INTEGER
+CREATE TABLE nationality_reference
+(
+    nationality_id          bigserial NOT NULL CONSTRAINT nationality_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12),
+    nomis_description VARCHAR(100),
+    iso_numeric             integer UNIQUE,
+    iso_alpha2              char(2),
+    iso_alpha3              char(3),
+    iso_nationality_desc    VARCHAR(100),
+    display_sequence        INTEGER
 );
 
-CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nationality_code, nationality_description);
+CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nomis_code, iso_alpha2, iso_alpha3);
 
 ---------------------------------------------------------------------------------------
 -- language reference data exported from NOMIS enriched with ISO codes.
@@ -310,15 +313,15 @@ CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (national
 CREATE TABLE language_reference
 (
     launguage_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
-    language_code        VARCHAR(10),
-    language_description VARCHAR(100),
-    iso_alpha2           char(5),
-    iso_alpha3           char(5),
+    nomis_code        VARCHAR(12),
+    nomis_description VARCHAR(100),
+    iso_alpha2           char(2),
+    iso_alpha3           char(3),
     iso_language_desc    VARCHAR(100),
     display_sequence     INTEGER
 );
 
-CREATE UNIQUE INDEX idx_language_code_desc ON language_reference (language_code, language_description);
+CREATE UNIQUE INDEX idx_language_code_desc ON language_reference (nomis_code, iso_alpha2, iso_alpha3);
 
 
 ---
