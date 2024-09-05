@@ -297,8 +297,8 @@ CREATE TABLE nationality_reference
     nomis_code        VARCHAR(12),
     nomis_description VARCHAR(100),
     iso_numeric             integer UNIQUE,
-    iso_alpha2              char(2),
-    iso_alpha3              char(3),
+    iso_alpha2              char(2) UNIQUE,
+    iso_alpha3              char(3) UNIQUE,
     iso_nationality_desc    VARCHAR(100),
     display_sequence        INTEGER
 );
@@ -315,8 +315,8 @@ CREATE TABLE language_reference
     launguage_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
     nomis_code        VARCHAR(12),
     nomis_description VARCHAR(100),
-    iso_alpha2           char(2),
-    iso_alpha3           char(3),
+    iso_alpha2           char(2) UNIQUE,
+    iso_alpha3           char(3) UNIQUE,
     iso_language_desc    VARCHAR(100),
     display_sequence     INTEGER
 );
