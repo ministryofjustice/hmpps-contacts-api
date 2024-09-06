@@ -7,11 +7,6 @@ values (1, 'SOCIAL', 'Mr', 'Last', 'Jack', 'Middle', '2000-11-21', 'London', 'Ma
        (2, 'SOCIAL', 'Miss', 'Last', 'Jacqueline', 'Middle', '2000-11-22', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM'),
        (3, 'OFFICIAL', 'Mrs', 'Last', 'Jane', 'Middle', '2000-11-23', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM');
 
-insert into contact_nationality(contact_nationality_id, contact_id, nationality_code, created_by)
-values (1, 1, 'GB', 'TIM'),
-       (2, 2, 'GB', 'TIM'),
-       (3, 3, 'GB', 'TIM');
-
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
        (2, 2, 'PASSPORT', 'PP87878787878', 'TIM'),
