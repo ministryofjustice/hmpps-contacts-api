@@ -52,4 +52,3 @@ fun PrisonerContactSummaryEntity.mapIsOverEighteen(): IsOverEighteen {
     }
   }
 }
-
