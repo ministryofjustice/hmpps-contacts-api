@@ -306,13 +306,13 @@ CREATE TABLE nationality_reference
 CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nomis_code, iso_alpha2, iso_alpha3);
 
 ---------------------------------------------------------------------------------------
--- language reference data exported from NOMIS enriched with ISO codes.
+-- Language reference data exported from NOMIS enriched with ISO codes.
 -- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%LANG%';
 ----------------------------------------------------------------------------------------
 
 CREATE TABLE language_reference
 (
-    launguage_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
+    language_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
     nomis_code        VARCHAR(12),
     nomis_description VARCHAR(100),
     iso_alpha2           char(2) UNIQUE,
@@ -323,6 +323,51 @@ CREATE TABLE language_reference
 
 CREATE UNIQUE INDEX idx_language_code_desc ON language_reference (nomis_code, iso_alpha2, iso_alpha3);
 
+---------------------------------------------------------------------------------------
+-- Country reference data exported from NOMIS enriched with ISO codes.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%COUNTRY%' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE country_reference
+(
+    country_id        bigserial NOT NULL CONSTRAINT country_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12),
+    nomis_description VARCHAR(100),
+    iso_numeric       integer UNIQUE,
+    iso_alpha2        char(2) UNIQUE,
+    iso_alpha3        char(3) UNIQUE,
+    iso_country_desc  VARCHAR(100),
+    display_sequence  INTEGER
+);
+
+CREATE UNIQUE INDEX idx_country_code_desc ON language_reference (nomis_code, iso_alpha2, iso_alpha3);
+
+---------------------------------------------------------------------------------------
+-- County reference data exported from NOMIS.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%COUNTY%' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE county_reference
+(
+    county_id         bigserial NOT NULL CONSTRAINT county_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12) UNIQUE,
+    nomis_description VARCHAR(100),
+    display_sequence  INTEGER
+);
+
+
+---------------------------------------------------------------------------------------
+-- City reference data exported from NOMIS.
+-- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%CITY' ;
+----------------------------------------------------------------------------------------
+
+CREATE TABLE city_reference
+(
+    city_id           bigserial NOT NULL CONSTRAINT city_pk PRIMARY KEY,
+    nomis_code        VARCHAR(12) UNIQUE,
+    nomis_description VARCHAR(100),
+    display_sequence  INTEGER
+);
 
 ---
 -- END
