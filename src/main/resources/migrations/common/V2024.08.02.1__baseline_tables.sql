@@ -303,8 +303,6 @@ CREATE TABLE nationality_reference
     display_sequence        INTEGER
 );
 
-CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nomis_code, iso_alpha2, iso_alpha3);
-
 ---------------------------------------------------------------------------------------
 -- Language reference data exported from NOMIS enriched with ISO codes.
 -- This table holds the details from OMS_OWNER.REFERENCE_CODES where domain like '%LANG%';
@@ -313,15 +311,13 @@ CREATE UNIQUE INDEX idx_nationality_code_desc ON nationality_reference (nomis_co
 CREATE TABLE language_reference
 (
     language_id         bigserial NOT NULL CONSTRAINT language_pk PRIMARY KEY,
-    nomis_code        VARCHAR(12),
-    nomis_description VARCHAR(100),
+    nomis_code        VARCHAR(12) NOT NULL UNIQUE,
+    nomis_description VARCHAR(100) NOT NULL,
     iso_alpha2           char(2) UNIQUE,
     iso_alpha3           char(3) UNIQUE,
-    iso_language_desc    VARCHAR(100),
-    display_sequence     INTEGER
+    iso_language_desc    VARCHAR(100) NOT NULL,
+    display_sequence     INTEGER NOT NULL
 );
-
-CREATE UNIQUE INDEX idx_language_code_desc ON language_reference (nomis_code, iso_alpha2, iso_alpha3);
 
 ---------------------------------------------------------------------------------------
 -- Country reference data exported from NOMIS enriched with ISO codes.
@@ -331,16 +327,14 @@ CREATE UNIQUE INDEX idx_language_code_desc ON language_reference (nomis_code, is
 CREATE TABLE country_reference
 (
     country_id        bigserial NOT NULL CONSTRAINT country_pk PRIMARY KEY,
-    nomis_code        VARCHAR(12),
-    nomis_description VARCHAR(100),
-    iso_numeric       integer UNIQUE,
-    iso_alpha2        char(2) UNIQUE,
-    iso_alpha3        char(3) UNIQUE,
-    iso_country_desc  VARCHAR(100),
-    display_sequence  INTEGER
+    nomis_code        VARCHAR(12)  NOT NULL UNIQUE,
+    nomis_description VARCHAR(100) NOT NULL,
+    iso_numeric       integer NOT NULL UNIQUE,
+    iso_alpha2        char(2) NOT NULL UNIQUE,
+    iso_alpha3        char(3) NOT NULL UNIQUE,
+    iso_country_desc  VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
 );
-
-CREATE UNIQUE INDEX idx_country_code_desc ON language_reference (nomis_code, iso_alpha2, iso_alpha3);
 
 ---------------------------------------------------------------------------------------
 -- County reference data exported from NOMIS.
@@ -350,9 +344,9 @@ CREATE UNIQUE INDEX idx_country_code_desc ON language_reference (nomis_code, iso
 CREATE TABLE county_reference
 (
     county_id         bigserial NOT NULL CONSTRAINT county_pk PRIMARY KEY,
-    nomis_code        VARCHAR(12) UNIQUE,
-    nomis_description VARCHAR(100),
-    display_sequence  INTEGER
+    nomis_code        VARCHAR(12) UNIQUE NOT NULL,
+    nomis_description VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
 );
 
 
@@ -364,9 +358,9 @@ CREATE TABLE county_reference
 CREATE TABLE city_reference
 (
     city_id           bigserial NOT NULL CONSTRAINT city_pk PRIMARY KEY,
-    nomis_code        VARCHAR(12) UNIQUE,
-    nomis_description VARCHAR(100),
-    display_sequence  INTEGER
+    nomis_code        VARCHAR(12) UNIQUE NOT NULL,
+    nomis_description VARCHAR(100) NOT NULL,
+    display_sequence  INTEGER NOT NULL
 );
 
 ---
