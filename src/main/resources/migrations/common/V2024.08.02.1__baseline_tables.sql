@@ -347,6 +347,8 @@ CREATE TABLE city_reference
     display_sequence  INTEGER NOT NULL
 );
 
+CREATE EXTENSION IF NOT EXISTS pg_trgm;
+CREATE EXTENSION IF NOT EXISTS fuzzystrmatch;
 ---
 -- END
 ---
