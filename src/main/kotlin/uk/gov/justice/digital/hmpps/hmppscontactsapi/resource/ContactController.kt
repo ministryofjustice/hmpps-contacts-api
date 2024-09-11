@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.validation.Valid
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Pageable
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
@@ -25,6 +27,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
+import java.time.LocalDate
 
 @Tag(name = "Contact")
 @RestController
@@ -45,7 +48,13 @@ class ContactController(val contactService: ContactService) {
       ApiResponse(
         responseCode = "201",
         description = "Created the contact successfully",
-        headers = [ Header(name = "Location", description = "The URL where you can load the contact", example = "/contact/123456")],
+        headers = [
+          Header(
+            name = "Location",
+            description = "The URL where you can load the contact",
+            example = "/contact/123456",
+          ),
+        ],
         content = [
           Content(
             mediaType = "application/json",
@@ -112,4 +121,36 @@ class ContactController(val contactService: ContactService) {
       ResponseEntity.notFound().build()
     }
   }
+
+  @GetMapping("/search")
+  @Operation(
+    summary = "Get contact",
+    description = "Gets all contacts by their last name or first name or middle name or date of birth",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "200",
+        description = "Found contacts",
+        content = [
+          Content(
+            mediaType = "application/json",
+            schema = Schema(implementation = Contact::class),
+          ),
+        ],
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "Invalid request",
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun searchContacts(
+    @RequestParam lastName: String,
+    @RequestParam(required = false) firstName: String?,
+    @RequestParam(required = false) middleName: String?,
+    @RequestParam(required = false) dateOfBirth: LocalDate?,
+    pageable: Pageable,
+  ) = contactService.searchContacts(lastName, firstName, middleName, dateOfBirth, pageable)
 }

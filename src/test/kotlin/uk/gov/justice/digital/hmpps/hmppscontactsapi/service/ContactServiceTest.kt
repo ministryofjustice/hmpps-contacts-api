@@ -2,6 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Assertions.assertNull
 import org.junit.jupiter.api.DynamicTest
@@ -14,14 +15,20 @@ import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.Clock
@@ -139,7 +146,12 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = relationshipRequest,
       )
-      whenever(prisonerService.getPrisoner(any())).thenReturn(Prisoner(relationshipRequest.prisonerNumber, prisonId = "MDI"))
+      whenever(prisonerService.getPrisoner(any())).thenReturn(
+        Prisoner(
+          relationshipRequest.prisonerNumber,
+          prisonId = "MDI",
+        ),
+      )
       whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
       whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
 
@@ -313,5 +325,51 @@ class ContactServiceTest {
         service.getContact(id)
       }
     }
+  }
+
+  @Nested
+  inner class SearchContact {
+
+    @Test
+    fun `test searchContacts with surname and forename`() {
+      // Given
+      val pageable = PageRequest.of(0, 10)
+      val contactEntities = listOf(
+        getContactEntity(1L),
+      )
+      val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
+
+      // When
+      whenever(
+        contactRepository.searchContacts(
+          eq("last"),
+          eq("first"),
+          isNull(),
+          isNull(),
+          eq(pageable),
+        ),
+      ).thenReturn(pageContacts)
+
+      // Act
+      val result: Page<Contact> = service.searchContacts("last", "first", null, null, pageable)
+
+      // Then
+      assertNotNull(result)
+      assertEquals(1, result.totalElements)
+      assertEquals("last", result.content[0].lastName)
+      assertEquals("first", result.content[0].firstName)
+    }
+
+    private fun getContactEntity(contactId: Long) = ContactEntity(
+      contactId = contactId,
+      title = "Mr",
+      lastName = "last",
+      middleName = "middle",
+      firstName = "first",
+      dateOfBirth = LocalDate.of(1980, 2, 1),
+      isOverEighteen = null,
+      createdBy = "user",
+      createdTime = LocalDateTime.now(),
+    )
   }
 }

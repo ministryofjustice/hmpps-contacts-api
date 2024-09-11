@@ -3,6 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
 import org.slf4j.LoggerFactory
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity.Companion.newContact
@@ -49,7 +51,8 @@ class ContactService(
 
   private fun validate(request: CreateContactRequest) {
     if (request.relationship != null) {
-      prisonerService.getPrisoner(request.relationship.prisonerNumber) ?: throw EntityNotFoundException("Prisoner number ${request.relationship.prisonerNumber} - not found")
+      prisonerService.getPrisoner(request.relationship.prisonerNumber)
+        ?: throw EntityNotFoundException("Prisoner number ${request.relationship.prisonerNumber} - not found")
     }
   }
 
@@ -117,5 +120,15 @@ class ContactService(
         null -> null
       }
     }
+  }
+
+  fun searchContacts(
+    lastName: String,
+    firstName: String? = null,
+    middleName: String? = null,
+    dateOfBirth: LocalDate? = null,
+    pageable: Pageable,
+  ): Page<Contact> = contactRepository.searchContacts(lastName, firstName, middleName, dateOfBirth, pageable).map { entity ->
+    mapEntityToContact(entity)
   }
 }

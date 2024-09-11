@@ -1,18 +1,26 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
+import org.mockito.kotlin.eq
+import org.mockito.kotlin.isNull
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import java.net.URI
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class ContactControllerTest {
@@ -104,4 +112,79 @@ class ContactControllerTest {
       }
     }
   }
+
+  @Nested
+  inner class SearchContact {
+
+    @Test
+    fun `test searchContacts with mandatory surname and pagination`() {
+      // Given
+      val pageable = PageRequest.of(0, 10)
+      val contactEntities = listOf(
+        getContact(1L),
+        getContact(2L),
+      )
+      val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
+
+      // When
+      whenever(
+        contactService.searchContacts(
+          eq("last"),
+          isNull(),
+          isNull(),
+          isNull(),
+          eq(pageable),
+        ),
+      ).thenReturn(pageContacts)
+
+      // Act
+      val result: Page<Contact> = controller.searchContacts("last", null, null, null, pageable)
+
+      // Then
+      assertNotNull(result)
+      assertEquals(2, result.totalElements)
+      assertEquals("last", result.content[0].lastName)
+      assertEquals("first", result.content[0].firstName)
+    }
+
+    @Test
+    fun `test searchContacts with surname and forename`() {
+      // Given
+      val pageable = PageRequest.of(0, 10)
+      val contactEntities = listOf(
+        getContact(1L),
+      )
+      val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
+
+      // When
+      whenever(
+        contactService.searchContacts(
+          eq("last"),
+          eq("first"),
+          isNull(),
+          isNull(),
+          eq(pageable),
+        ),
+      ).thenReturn(pageContacts)
+
+      // Act
+      val result: Page<Contact> = controller.searchContacts("last", "first", null, null, pageable)
+
+      // Then
+      assertNotNull(result)
+      assertEquals(1, result.totalElements)
+      assertEquals("last", result.content[0].lastName)
+      assertEquals("first", result.content[0].firstName)
+    }
+  }
+
+  private fun getContact(contactId: Long) = Contact(
+    id = contactId,
+    lastName = "last",
+    firstName = "first",
+    dateOfBirth = LocalDate.of(1980, 2, 1),
+    isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
+    createdBy = "user",
+    createdTime = LocalDateTime.now(),
+  )
 }
