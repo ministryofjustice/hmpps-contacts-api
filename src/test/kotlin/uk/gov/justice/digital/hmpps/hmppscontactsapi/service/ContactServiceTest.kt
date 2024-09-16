@@ -15,8 +15,6 @@ import org.mockito.Mockito.reset
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
-import org.mockito.kotlin.eq
-import org.mockito.kotlin.isNull
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.Page
@@ -26,10 +24,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Priso
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
 import java.time.Clock
 import java.time.LocalDate
@@ -43,9 +43,16 @@ class ContactServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerService: PrisonerService = mock()
+  private val contactSearchRepository: ContactSearchRepository = mock()
   private val clock =
     Clock.fixed(ZonedDateTime.of(2000, 1, 1, 10, 30, 0, 0, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"))
-  private val service = ContactService(contactRepository, prisonerContactRepository, prisonerService, clock)
+  private val service = ContactService(
+    contactRepository,
+    prisonerContactRepository,
+    prisonerService,
+    clock,
+    contactSearchRepository,
+  )
 
   @Nested
   inner class CreateContact {
@@ -331,7 +338,7 @@ class ContactServiceTest {
   inner class SearchContact {
 
     @Test
-    fun `test searchContacts with surname and forename`() {
+    fun `test searchContacts with lastName , firstName , middleName and date of birth`() {
       // Given
       val pageable = PageRequest.of(0, 10)
       val contactEntities = listOf(
@@ -341,17 +348,14 @@ class ContactServiceTest {
 
       // When
       whenever(
-        contactRepository.searchContacts(
-          eq("last"),
-          eq("first"),
-          isNull(),
-          isNull(),
-          eq(pageable),
+        contactSearchRepository.searchContacts(
+          ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
+          pageable,
         ),
       ).thenReturn(pageContacts)
 
       // Act
-      val result: Page<Contact> = service.searchContacts("last", "first", null, null, pageable)
+      val result: Page<Contact> = service.searchContacts(pageable, ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)))
 
       // Then
       assertNotNull(result)

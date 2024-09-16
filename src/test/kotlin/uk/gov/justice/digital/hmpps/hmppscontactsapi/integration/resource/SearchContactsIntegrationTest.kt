@@ -1,14 +1,18 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.resource
 
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 private const val CONTACT_SEARCH_URL = "contact/search?" +
   "lastName=Last" +
   "&firstName=Jack" +
   "&middleName=Middle" +
-  "&dateOfBirth=2000-11-21"
+  "&dateOfBirth=21/11/2000"
 
 class SearchContactsIntegrationTest : IntegrationTestBase() {
 
@@ -51,7 +55,7 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
           "lastName=NEW" +
           "&firstName=NEW" +
           "&middleName=Middle" +
-          "&dateOfBirth=2000-11-21",
+          "&dateOfBirth=21/11/2000",
       )
       .accept(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -65,7 +69,60 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `should get the contact with all fields when search by first,middle,last and date of birth`() {
+  fun `should return validation errors for date of birth when the date is in the future and special characters on name fields `() {
+    val futureTime = getFormattedDateOneDayInFuture()
+    val errors = webTestClient.get()
+      .uri(
+        "contact/search?" +
+          "lastName=NEW$" +
+          "&firstName=NEW$" +
+          "&middleName=Middle$" +
+          "&dateOfBirth=$futureTime" +
+          "&page=0&size=10&sort=lastName,asc&sort=firstName,desc",
+      )
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo(
+      "Validation failure(s): " +
+        "Special characters are not allowed for First Name.\n" +
+        "Special characters are not allowed for Last Name.\n" +
+        "Special characters are not allowed for Middle Name.\n" +
+        "The date of birth must be in the past",
+    )
+  }
+
+  @Test
+  fun `should return contacts when fist, middle names and date of birth is not in request parameters`() {
+    webTestClient.get()
+      .uri(
+        "contact/search?" +
+          "lastName=Twelve",
+      )
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody()
+      .jsonPath("$.content").isArray()
+      .jsonPath("$.content.length()").isEqualTo(1)
+      .jsonPath("$.totalElements").isNumber()
+      .jsonPath("$.totalPages").isNumber()
+      .jsonPath("$.content[0].id").isNotEmpty()
+      .jsonPath("$.content[0].firstName").isNotEmpty()
+      .jsonPath("$.content[0].lastName").isNotEmpty()
+  }
+
+  @Test
+  fun `should get the contact with when search by first, middle, last and date of birth`() {
     webTestClient.get()
       .uri(CONTACT_SEARCH_URL)
       .accept(MediaType.APPLICATION_JSON)
@@ -85,12 +142,12 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `should get the contacts when searched by first name and last name`() {
+  fun `should get the contacts when searched by first name and last name with partial match`() {
     webTestClient.get()
       .uri(
         "contact/search?" +
-          "lastName=Last" +
-          "&firstName=Jack",
+          "lastName=Las" +
+          "&firstName=ck",
       )
       .accept(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
@@ -109,10 +166,11 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
-  fun `should get not found when searched by not providing last name`() {
-    webTestClient.get()
+  fun `should get bad request when searched with empty last name`() {
+    val errors = webTestClient.get()
       .uri(
         "contact/search?" +
+          "lastName=" +
           "&firstName=Jack",
       )
       .accept(MediaType.APPLICATION_JSON)
@@ -120,5 +178,54 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       .exchange()
       .expectStatus()
       .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure(s): Last Name cannot be blank.")
+  }
+
+  @Test
+  fun `should get bad request when searched with invalid date format for date of birth`() {
+    val errors = webTestClient.get()
+      .uri(
+        "contact/search?" +
+          "lastName=Eleven" +
+          "&dateOfBirth=01-10-2001",
+      )
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).contains("Validation failure(s): Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate';")
+  }
+
+  @Test
+  fun `should get bad request when searched with no last name`() {
+    val errors = webTestClient.get()
+      .uri(
+        "contact/search?"
+      )
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
+
+    assertThat(errors.userMessage).contains("Validation failure(s): Parameter specified as non-null is null: ")
+  }
+
+  fun getFormattedDateOneDayInFuture(): String {
+    val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy")
+    val futureDate = LocalDate.now().plusDays(1)
+    return futureDate.format(formatter)
   }
 }
