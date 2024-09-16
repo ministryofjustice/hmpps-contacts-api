@@ -31,11 +31,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
-import java.time.Clock
 import java.time.LocalDate
 import java.time.LocalDateTime
-import java.time.ZoneId
-import java.time.ZonedDateTime
 import java.util.*
 
 class ContactServiceTest {
@@ -44,13 +41,10 @@ class ContactServiceTest {
   private val prisonerContactRepository: PrisonerContactRepository = mock()
   private val prisonerService: PrisonerService = mock()
   private val contactSearchRepository: ContactSearchRepository = mock()
-  private val clock =
-    Clock.fixed(ZonedDateTime.of(2000, 1, 1, 10, 30, 0, 0, ZoneId.of("UTC")).toInstant(), ZoneId.of("UTC"))
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
     prisonerService,
-    clock,
     contactSearchRepository,
   )
 
@@ -248,10 +242,10 @@ class ContactServiceTest {
     private val id = 123456L
 
     @TestFactory
-    fun `should get a contact with a dob and is over 18 calculated given today is 1st January 2000`() = listOf(
-      LocalDate.of(1981, 12, 31) to IsOverEighteen.YES,
-      LocalDate.of(1982, 1, 1) to IsOverEighteen.YES,
-      LocalDate.of(1982, 1, 2) to IsOverEighteen.NO,
+    fun `should get a contact with a dob and is over 18 calculated`() = listOf(
+      LocalDate.now().minusYears(19) to IsOverEighteen.YES,
+      LocalDate.now().minusYears(18) to IsOverEighteen.YES,
+      LocalDate.now().minusYears(18).plusDays(1) to IsOverEighteen.NO,
     ).map { (dob, expectedIsOverEighteen) ->
       DynamicTest.dynamicTest("when dob is $dob then expected is $expectedIsOverEighteen") {
         val entity = ContactEntity(

@@ -209,7 +209,7 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   fun `should get bad request when searched with no last name`() {
     val errors = webTestClient.get()
       .uri(
-        "contact/search?"
+        "contact/search?",
       )
       .accept(MediaType.APPLICATION_JSON)
       .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
