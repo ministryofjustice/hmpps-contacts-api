@@ -113,5 +113,4 @@ class SyncService(
   // TODO: PrisonerContact
 
   // TODO: PrisonerContactRestriction
-
 }
