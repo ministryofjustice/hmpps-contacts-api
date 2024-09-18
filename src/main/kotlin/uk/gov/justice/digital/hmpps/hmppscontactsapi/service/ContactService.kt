@@ -11,6 +11,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -45,7 +46,7 @@ class ContactService(
       ?.toModel()
   }
 
-  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<Contact> =
+  fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearch> =
     contactSearchRepository.searchContacts(request, pageable).toModel()
 
   private fun validate(request: CreateContactRequest) {

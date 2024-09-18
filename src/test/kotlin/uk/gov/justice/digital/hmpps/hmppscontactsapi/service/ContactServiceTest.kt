@@ -21,13 +21,14 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -335,10 +336,12 @@ class ContactServiceTest {
     fun `test searchContacts with lastName , firstName , middleName and date of birth`() {
       // Given
       val pageable = PageRequest.of(0, 10)
-      val contactEntities = listOf(
-        getContactEntity(1L),
-      )
-      val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
+      val contact = getContactEntity(1L)
+      val contactAddress = getContactAddressEntity(1L)
+
+      val results = listOf(arrayOf(contact, contactAddress))
+
+      val pageContacts = PageImpl(results, pageable, results.size.toLong())
 
       // When
       whenever(
@@ -349,7 +352,10 @@ class ContactServiceTest {
       ).thenReturn(pageContacts)
 
       // Act
-      val result: Page<Contact> = service.searchContacts(pageable, ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)))
+      val result: Page<ContactSearch> = service.searchContacts(
+        pageable,
+        ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
+      )
 
       // Then
       assertNotNull(result)
@@ -368,6 +374,18 @@ class ContactServiceTest {
       isOverEighteen = null,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
+    )
+
+    private fun getContactAddressEntity(contactAddressId: Long) = ContactAddressEntity(
+      contactAddressId = contactAddressId,
+      flat = "Mr",
+      property = "last",
+      street = "middle",
+      area = "first",
+      cityCode = "",
+      countyCode = "null",
+      postCode = "user",
+      countryCode = "user",
     )
   }
 }

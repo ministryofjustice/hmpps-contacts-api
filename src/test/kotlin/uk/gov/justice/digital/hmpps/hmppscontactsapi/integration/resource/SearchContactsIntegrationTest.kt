@@ -161,8 +161,19 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       .jsonPath("$.totalElements").isNumber()
       .jsonPath("$.totalPages").isNumber()
       .jsonPath("$.content[0].id").isNotEmpty()
-      .jsonPath("$.content[0].firstName").isNotEmpty()
-      .jsonPath("$.content[0].lastName").isNotEmpty()
+      .jsonPath("$.content[0].firstName").isEqualTo("Jack")
+      .jsonPath("$.content[0].lastName").isEqualTo("Last")
+      .jsonPath("$.content[0].middleName").isEqualTo("Middle")
+      .jsonPath("$.content[0].dateOfBirth").isEqualTo("2000-11-21")
+      .jsonPath("$.content[0].createdBy").isEqualTo("TIM")
+      .jsonPath("$.content[0].createdTime").isNotEmpty
+      .jsonPath("$.content[0].property").isEqualTo("24")
+      .jsonPath("$.content[0].street").isEqualTo("Acacia Avenue")
+      .jsonPath("$.content[0].area").isEqualTo("Bunting")
+      .jsonPath("$.content[0].cityCode").isEqualTo("SHEF")
+      .jsonPath("$.content[0].countyCode").isEqualTo("SYORKS")
+      .jsonPath("$.content[0].postCode").isEqualTo("S2 3LK")
+      .jsonPath("$.content[0].countryCode").isEqualTo("UK")
   }
 
   @Test
