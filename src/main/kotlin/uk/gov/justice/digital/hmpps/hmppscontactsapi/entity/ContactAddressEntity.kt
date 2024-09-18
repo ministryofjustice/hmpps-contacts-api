@@ -20,44 +20,44 @@ data class ContactAddressEntity(
   val contactId: Long,
 
   @Column(name = "address_type")
-  val addressType: String,
+  var addressType: String,
 
   @Column(name = "primary_address")
-  val primaryAddress: Boolean,
+  var primaryAddress: Boolean,
 
   @Column(name = "flat")
-  val flat: String?,
+  var flat: String?,
 
   @Column(name = "property")
-  val property: String?,
+  var property: String?,
 
   @Column(name = "street")
-  val street: String?,
+  var street: String?,
 
   @Column(name = "area")
-  val area: String?,
+  var area: String?,
 
   @Column(name = "city_code")
-  val cityCode: String?,
+  var cityCode: String?,
 
   @Column(name = "county_code")
-  val countyCode: String?,
+  var countyCode: String?,
 
   @Column(name = "post_code")
-  val postCode: String?,
+  var postCode: String?,
 
   @Column(name = "country_code")
-  val countryCode: String?,
+  var countryCode: String?,
 
   // Has this address been postcode-verified via a lookup?
   @Column(name = "verified")
-  val verified: Boolean,
+  var verified: Boolean,
 
   @Column(name = "verifiedBy")
-  val verifiedBy: String? = null,
+  var verifiedBy: String? = null,
 
   @Column(name = "verified_time")
-  val verifiedTime: LocalDateTime? = null,
+  var verifiedTime: LocalDateTime? = null,
 
   @Column(updatable = false, name = "created_by")
   val createdBy: String,
@@ -67,8 +67,21 @@ data class ContactAddressEntity(
   val createdTime: LocalDateTime,
 
   @Column(updatable = false, name = "amended_by")
-  val amendedBy: String? = null,
+  var amendedBy: String? = null,
 
   @Column(updatable = false, name = "amended_time")
-  val amendedTime: LocalDateTime? = null,
-)
+  var amendedTime: LocalDateTime? = null,
+) {
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as ContactAddressEntity
+
+    return contactAddressId == other.contactAddressId
+  }
+
+  override fun hashCode(): Int {
+    return contactAddressId.hashCode()
+  }
+}

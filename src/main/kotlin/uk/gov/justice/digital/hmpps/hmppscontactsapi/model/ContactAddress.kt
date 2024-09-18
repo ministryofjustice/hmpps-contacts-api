@@ -7,7 +7,7 @@ import java.time.LocalDateTime
 data class ContactAddress(
 
   @Schema(description = "The id of the contact address", example = "123456")
-  val contactAddressId: Long,
+  val contactAddressId: Long = 0,
 
   @Schema(description = "The id of the contact", example = "123456")
   val contactId: Long,

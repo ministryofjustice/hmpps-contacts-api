@@ -36,7 +36,7 @@ class ContactAddressSyncController(
       Used to get the details for one contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('XXX_MIGRATION')")
+  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
   fun getContactAddressById(
     @Parameter(description = "The internal ID for a contact address.", required = true)
     @PathVariable contactAddressId: Long,
@@ -51,7 +51,7 @@ class ContactAddressSyncController(
       Used to delete a contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('XXX_MIGRATION')")
+  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
   fun deleteContactAddressById(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
@@ -67,7 +67,7 @@ class ContactAddressSyncController(
       Used to create a contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('XXX_MIGRATION')")
+  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
   fun createContactAddress(
     @Valid @RequestBody createContactAddressRequest: CreateContactAddressRequest,
   ) = syncService.createContactAddress(createContactAddressRequest)
@@ -82,7 +82,7 @@ class ContactAddressSyncController(
       Used to update a contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('XXX_MIGRATION')")
+  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
   fun updateContactAddress(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,

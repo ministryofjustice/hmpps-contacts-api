@@ -5,7 +5,6 @@ import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.ContactAddress
@@ -30,6 +29,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
  */
 
 @Service
+@Transactional
 class SyncService(
   private val contactRepository: ContactRepository,
   private val contactAddressRepository: ContactAddressRepository,
@@ -45,21 +45,18 @@ class SyncService(
     return contactAddress.toModel()
   }
 
-  @Transactional
   fun deleteContactAddressById(contactAddressId: Long) {
     contactAddressRepository.findById(contactAddressId)
       .orElseThrow { EntityNotFoundException("Contact address with ID $contactAddressId not found") }
     contactAddressRepository.deleteById(contactAddressId)
   }
 
-  @Transactional
   fun createContactAddress(request: CreateContactAddressRequest): ContactAddress {
     contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
     return contactAddressRepository.saveAndFlush(request.toEntity()).toModel()
   }
 
-  @Transactional
   fun updateContactAddress(contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddress {
     val contact = contactRepository.findById(request.contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID ${request.contactId} not found") }
@@ -72,45 +69,31 @@ class SyncService(
       throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${contactAddress.contactAddressId}")
     }
 
-    val updatedAddress = applyContactAddressUpdates(request, contactAddress)
+    with(contactAddress) {
+      this.primaryAddress = request.primaryAddress
+      this.addressType = request.addressType
+      this.flat = request.flat
+      this.property = request.property
+      this.street = request.street
+      this.area = request.area
+      this.cityCode = request.cityCode
+      this.countyCode = request.countyCode
+      this.countryCode = request.countryCode
+      this.postCode = request.postcode
+      this.verified = request.verified
+      this.amendedBy = request.updatedBy
+      this.amendedTime = request.updatedTime
+    }
 
-    return contactAddressRepository.save(updatedAddress).toModel()
-  }
-
-  private fun applyContactAddressUpdates(
-    request: UpdateContactAddressRequest,
-    contactAddressEntity: ContactAddressEntity,
-  ): ContactAddressEntity {
-    return contactAddressEntity.copy(
-      primaryAddress = request.primaryAddress,
-      addressType = request.addressType,
-      flat = request.flat,
-      property = request.property,
-      street = request.street,
-      area = request.area,
-      cityCode = request.cityCode,
-      countyCode = request.countyCode,
-      countryCode = request.countryCode,
-      postCode = request.postcode,
-      verified = request.verified,
-      amendedBy = request.updatedBy,
-      amendedTime = request.updatedTime,
-    )
+    return contactAddressRepository.save(contactAddress).toModel()
   }
 
   // TODO: Similar methods for the other entity types
-
   // TODO: Contact
-
   // TODO: ContactIdentity
-
   // TODO: ContactPhone
-
   // TODO: ContactEmail
-
   // TODO: ContactRestriction
-
   // TODO: PrisonerContact
-
   // TODO: PrisonerContactRestriction
 }

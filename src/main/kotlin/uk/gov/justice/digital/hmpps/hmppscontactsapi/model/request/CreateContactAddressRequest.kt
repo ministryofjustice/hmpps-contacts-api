@@ -45,5 +45,5 @@ data class CreateContactAddressRequest(
   val createdBy: String,
 
   @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
-  val createdTime: LocalDateTime,
+  val createdTime: LocalDateTime = LocalDateTime.now(),
 )
