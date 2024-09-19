@@ -1,15 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.CountyEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.CountyRepository
@@ -41,22 +41,22 @@ class CountyServiceTest {
         nomisDescription = "Test County",
         displaySequence = 123,
       )
-      `when`(countyRepository.findByCountyId(countyId)).thenReturn(Optional.of(county))
+      whenever(countyRepository.findByCountyId(countyId)).thenReturn(Optional.of(county))
 
       // When
       val result = countyService.getCountyById(countyId)
 
       // Then
       assertNotNull(result)
-      assertEquals("ABC", result.nomisCode)
-      assertEquals("Test County", result.nomisDescription)
+      assertThat(result.nomisCode).isEqualTo("ABC")
+      assertThat(result.nomisDescription).isEqualTo("Test County")
     }
 
     @Test
     fun `should return not found exception when county id does not exist`() {
       // Given
       val countyId = 1L
-      `when`(countyRepository.findByCountyId(countyId)).thenReturn(Optional.empty())
+      whenever(countyRepository.findByCountyId(countyId)).thenReturn(Optional.empty())
 
       // When
 
@@ -89,15 +89,15 @@ class CountyServiceTest {
           displaySequence = 123,
         ),
       )
-      `when`(countyRepository.findAll()).thenReturn(countries)
+      whenever(countyRepository.findAll()).thenReturn(countries)
 
       // When
       val result = countyService.getAllCountries()
 
       // Then
-      assertEquals(2, result.size)
-      assertEquals("USA", result[0].nomisCode)
-      assertEquals("CAN", result[1].nomisCode)
+      assertThat(result.size).isEqualTo(2)
+      assertThat(result[0].nomisCode).isEqualTo("USA")
+      assertThat(result[1].nomisCode).isEqualTo("CAN")
     }
   }
 
@@ -113,21 +113,21 @@ class CountyServiceTest {
         displaySequence = 123,
         nomisDescription = "Test County",
       )
-      `when`(countyRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(county))
+      whenever(countyRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(county))
 
       // When
       val result = countyService.getCountyByNomisCode(nomisCode)
 
       // Then
       assertNotNull(result)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when nomis code does not exist`() {
       // Given
       val nomisCode = "XXX"
-      `when`(countyRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
+      whenever(countyRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
 
       // When
 

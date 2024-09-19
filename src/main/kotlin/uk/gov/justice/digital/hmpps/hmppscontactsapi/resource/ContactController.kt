@@ -126,8 +126,8 @@ class ContactController(val contactService: ContactService) {
 
   @GetMapping("/search")
   @Operation(
-    summary = "Get contact",
-    description = "Gets all contacts by their last name or first name or middle name or date of birth",
+    summary = "Search contacts",
+    description = "Search all contacts by their last name or first name or middle name or date of birth",
   )
   @ApiResponses(
     value = [

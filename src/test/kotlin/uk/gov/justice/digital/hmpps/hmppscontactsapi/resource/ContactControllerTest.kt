@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
 import org.assertj.core.api.Assertions.assertThat
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -138,9 +137,9 @@ class ContactControllerTest {
 
       // Then
       assertNotNull(result)
-      assertEquals(1, result.totalElements)
-      assertEquals("last", result.content[0].lastName)
-      assertEquals("first", result.content[0].firstName)
+      assertThat(result.totalElements).isEqualTo(1)
+      assertThat(result.content[0].lastName).isEqualTo("last")
+      assertThat(result.content[0].firstName).isEqualTo("first")
     }
   }
 

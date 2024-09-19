@@ -1,15 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.CityEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.CityRepository
@@ -41,22 +41,22 @@ class CityServiceTest {
         nomisDescription = "Test City",
         displaySequence = 123,
       )
-      `when`(cityRepository.findByCityId(cityId)).thenReturn(Optional.of(city))
+      whenever(cityRepository.findByCityId(cityId)).thenReturn(Optional.of(city))
 
       // When
       val result = cityService.getCityById(cityId)
 
       // Then
       assertNotNull(result)
-      assertEquals("ABC", result.nomisCode)
-      assertEquals("Test City", result.nomisDescription)
+      assertThat(result.nomisCode).isEqualTo("ABC")
+      assertThat(result.nomisDescription).isEqualTo("Test City")
     }
 
     @Test
     fun `should return null when city id does not exist`() {
       // Given
       val cityId = 1009L
-      `when`(cityRepository.findByCityId(cityId)).thenReturn(Optional.empty())
+      whenever(cityRepository.findByCityId(cityId)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
@@ -88,15 +88,15 @@ class CityServiceTest {
           displaySequence = 123,
         ),
       )
-      `when`(cityRepository.findAll()).thenReturn(countries)
+      whenever(cityRepository.findAll()).thenReturn(countries)
 
       // When
       val result = cityService.getAllCountries()
 
       // Then
-      assertEquals(2, result.size)
-      assertEquals("USA", result[0].nomisCode)
-      assertEquals("CAN", result[1].nomisCode)
+      assertThat(result.size).isEqualTo(2)
+      assertThat(result[0].nomisCode).isEqualTo("USA")
+      assertThat(result[1].nomisCode).isEqualTo("CAN")
     }
   }
 
@@ -112,14 +112,14 @@ class CityServiceTest {
         displaySequence = 123,
         nomisDescription = "Test City",
       )
-      `when`(cityRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(city))
+      whenever(cityRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(city))
 
       // When
       val result = cityService.getCityByNomisCode(nomisCode)
 
       // Then
       assertNotNull(result)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
   }
 }

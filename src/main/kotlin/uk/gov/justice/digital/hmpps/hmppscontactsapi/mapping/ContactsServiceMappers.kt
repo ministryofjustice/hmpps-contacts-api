@@ -56,7 +56,7 @@ fun Array<Any>.toModel(): ContactSearch {
 
 fun PageImpl<Array<Any>>.toModel(): Page<ContactSearch> = map { it.toModel() }
 
-fun CreateContactRequest.mapRelationShip(
+fun CreateContactRequest.mapRelationship(
   createdContact: Contact,
 ) = this.relationship?.let {
   newPrisonerContact(

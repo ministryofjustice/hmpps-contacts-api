@@ -77,26 +77,29 @@ class ContactSearchRepository(
       predicates.add(
         cb.like(
           cb.upper(contact.get("lastName")),
-          "%${it.trim().uppercase()}%",
+          cb.literal("%${it.trim().uppercase()}%"),
         ),
       )
     }
+
     request.firstName?.let {
       predicates.add(
         cb.like(
           cb.upper(contact.get("firstName")),
-          "%${it.trim().uppercase()}%",
+          cb.literal("%${it.trim().uppercase()}%"),
         ),
       )
     }
+
     request.middleName?.let {
       predicates.add(
         cb.like(
           cb.upper(contact.get("middleName")),
-          "%${it.trim().uppercase()}%",
+          cb.literal("%${it.trim().uppercase()}%"),
         ),
       )
     }
+
     request.dateOfBirth?.let {
       predicates.add(
         cb.equal(
@@ -105,6 +108,7 @@ class ContactSearchRepository(
         ),
       )
     }
+
     return predicates
   }
 

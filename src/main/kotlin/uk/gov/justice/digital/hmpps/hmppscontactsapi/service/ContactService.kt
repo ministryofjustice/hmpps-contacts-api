@@ -6,7 +6,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapRelationShip
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -33,7 +33,7 @@ class ContactService(
     validate(request)
     val newContact = request.toModel()
     val createdContact = contactRepository.saveAndFlush(newContact).toModel()
-    val newRelationship = request.mapRelationShip(createdContact)
+    val newRelationship = request.mapRelationship(createdContact)
       ?.let { prisonerContactRepository.saveAndFlush(it) }
 
     logger.info("Created new contact {}", createdContact)

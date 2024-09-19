@@ -1,15 +1,15 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
-import org.junit.jupiter.api.Assertions.assertEquals
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.MockitoAnnotations
+import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.LanguageEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.LanguageRepository
@@ -44,22 +44,22 @@ class LanguageServiceTest {
         isoLanguageDesc = "Test Language",
         displaySequence = 123,
       )
-      `when`(languageRepository.findByLanguageId(languageId)).thenReturn(Optional.of(language))
+      whenever(languageRepository.findByLanguageId(languageId)).thenReturn(Optional.of(language))
 
       // When
       val result = languageService.getLanguageById(languageId)
 
       // Then
       assertNotNull(result)
-      assertEquals("ABC", result.nomisCode)
-      assertEquals("Test Language", result.nomisDescription)
+      assertThat(result.nomisCode).isEqualTo("ABC")
+      assertThat(result.nomisDescription).isEqualTo("Test Language")
     }
 
     @Test
     fun `should return not found exception when language id does not exist`() {
       // Given
       val languageId = 1L
-      `when`(languageRepository.findByLanguageId(languageId)).thenReturn(Optional.empty())
+      whenever(languageRepository.findByLanguageId(languageId)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
@@ -97,15 +97,15 @@ class LanguageServiceTest {
           displaySequence = 123,
         ),
       )
-      `when`(languageRepository.findAll()).thenReturn(countries)
+      whenever(languageRepository.findAll()).thenReturn(countries)
 
       // When
       val result = languageService.getAllCountries()
 
       // Then
-      assertEquals(2, result.size)
-      assertEquals("USA", result[0].nomisCode)
-      assertEquals("CAN", result[1].nomisCode)
+      assertThat(result.size).isEqualTo(2)
+      assertThat(result[0].nomisCode).isEqualTo("USA")
+      assertThat(result[1].nomisCode).isEqualTo("CAN")
     }
   }
 
@@ -125,22 +125,22 @@ class LanguageServiceTest {
         isoLanguageDesc = "Test Language",
         nomisDescription = "Test Language",
       )
-      `when`(languageRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.of(language))
+      whenever(languageRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.of(language))
 
       // When
       val result = languageService.getLanguageByIsoAlpha2(isoAlpha2)
 
       // Then
       assertNotNull(result)
-      assertEquals("US", result.isoAlpha2)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.isoAlpha2).isEqualTo("US")
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when ISO Alpha2 code does not exist`() {
       // Given
       val isoAlpha2 = "XX"
-      `when`(languageRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.empty())
+      whenever(languageRepository.findByIsoAlpha2(isoAlpha2)).thenReturn(Optional.empty())
 
       // When
 
@@ -169,22 +169,22 @@ class LanguageServiceTest {
         isoLanguageDesc = "Test Language",
         nomisDescription = "Test Language",
       )
-      `when`(languageRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.of(language))
+      whenever(languageRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.of(language))
 
       // When
       val result = languageService.getLanguageByIsoAlpha3(isoAlpha3)
 
       // Then
       assertNotNull(result)
-      assertEquals("US", result.isoAlpha3)
-      assertEquals("USA", result.nomisCode)
+      assertThat(result.isoAlpha3).isEqualTo("US")
+      assertThat(result.nomisCode).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when ISO Alpha3 code does not exist`() {
       // Given
       val isoAlpha3 = "XXX"
-      `when`(languageRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.empty())
+      whenever(languageRepository.findByIsoAlpha3(isoAlpha3)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
@@ -211,23 +211,23 @@ class LanguageServiceTest {
         isoLanguageDesc = "Test Language",
         nomisDescription = "Test Language",
       )
-      `when`(languageRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(language))
+      whenever(languageRepository.findByNomisCode(nomisCode)).thenReturn(Optional.of(language))
 
       // When
       val result = languageService.getLanguageByNomisCode(nomisCode)
 
       // Then
       assertNotNull(result)
-      assertEquals("USA", result.nomisCode)
-      assertEquals("US", result.isoAlpha2)
-      assertEquals("USA", result.isoAlpha3)
+      assertThat(result.nomisCode).isEqualTo("USA")
+      assertThat(result.isoAlpha2).isEqualTo("US")
+      assertThat(result.isoAlpha3).isEqualTo("USA")
     }
 
     @Test
     fun `should return not found exception when nomis code does not exist`() {
       // Given
       val nomisCode = "XXX"
-      `when`(languageRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
+      whenever(languageRepository.findByNomisCode(nomisCode)).thenReturn(Optional.empty())
 
       // When
       val exception = assertThrows<EntityNotFoundException> {
