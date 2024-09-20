@@ -2,19 +2,19 @@
 -- Reference data
 -- =============================================
 
-insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, place_of_birth, gender, marital_status, language_code, comments, created_by, active)
-values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
-       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
-       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
+insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active)
+values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', 'DO_NOT_KNOW', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', 'NO', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', 'DO_NOT_KNOW', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', 'YES', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', 'NO', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', 'YES', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', 'NO', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', 'DO_NOT_KNOW', 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true),
+       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false),
+       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', 'DO_NOT_KNOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false);
 
 insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
 values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
