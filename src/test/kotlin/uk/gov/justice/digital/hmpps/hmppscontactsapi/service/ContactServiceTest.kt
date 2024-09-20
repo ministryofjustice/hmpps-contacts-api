@@ -298,7 +298,7 @@ class ContactServiceTest {
       middleName = null,
       firstName = "first",
       dateOfBirth = null,
-      isOverEighteen = null,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )
