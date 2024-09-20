@@ -1,5 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.entity
 
+import jakarta.persistence.Column
 import jakarta.persistence.Entity
 import jakarta.persistence.EnumType
 import jakarta.persistence.Enumerated
@@ -30,10 +31,12 @@ data class ContactEntity(
   val dateOfBirth: LocalDate?,
 
   @Enumerated(EnumType.STRING)
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen,
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
+  @Column(updatable = false)
   val createdBy: String,
 
+  @Column(updatable = false)
   @CreationTimestamp
   val createdTime: LocalDateTime,
 )

@@ -27,7 +27,7 @@ data class Contact(
   val dateOfBirth: LocalDate? = null,
 
   @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen,
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

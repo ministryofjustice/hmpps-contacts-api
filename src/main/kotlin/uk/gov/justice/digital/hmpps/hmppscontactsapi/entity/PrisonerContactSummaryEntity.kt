@@ -29,7 +29,7 @@ data class PrisonerContactSummaryEntity(
   val dateOfBirth: LocalDate?,
 
   @Enumerated(EnumType.STRING)
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen,
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   val contactAddressId: Long?,
 

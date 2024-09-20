@@ -29,7 +29,7 @@ data class PrisonerContactSummary(
   val dateOfBirth: LocalDate?,
 
   @Schema(description = "YES if the contact is over 18 years old, NO if under, null if unknown", example = "YES")
-  val estimatedIsOverEighteen: EstimatedIsOverEighteen,
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
   @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
   val relationshipCode: String,

@@ -77,9 +77,12 @@ fun CreateContactRequest.toModel() =
     firstName = this.firstName,
     middleName = this.middleName,
     dateOfBirth = this.dateOfBirth,
-    estimatedIsOverEighteen = this.estimatedIsOverEighteen!!,
+    estimatedIsOverEighteen = mapIsOverEighteen(this),
     createdBy = this.createdBy,
   )
+
+private fun mapIsOverEighteen(entity: CreateContactRequest): EstimatedIsOverEighteen? =
+  if (entity.dateOfBirth != null) null else entity.estimatedIsOverEighteen
 
 private fun newContact(
   title: String?,
@@ -87,7 +90,7 @@ private fun newContact(
   lastName: String,
   middleName: String?,
   dateOfBirth: LocalDate?,
-  estimatedIsOverEighteen: EstimatedIsOverEighteen,
+  estimatedIsOverEighteen: EstimatedIsOverEighteen?,
   createdBy: String,
 ): ContactEntity {
   return ContactEntity(
