@@ -1,18 +1,28 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.resource
 
 import org.assertj.core.api.Assertions.assertThat
+import org.junit.jupiter.api.Assertions.assertNotNull
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
+import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.PageImpl
+import org.springframework.data.domain.PageRequest
 import org.springframework.http.HttpStatus
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.IsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
 import java.net.URI
+import java.time.LocalDate
 import java.time.LocalDateTime
 
 class ContactControllerTest {
@@ -33,7 +43,7 @@ class ContactControllerTest {
         id = 99,
         lastName = request.lastName,
         firstName = request.firstName,
-        isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
         createdBy = request.createdBy,
         createdTime = LocalDateTime.now(),
       )
@@ -69,7 +79,7 @@ class ContactControllerTest {
       id = id,
       lastName = "last",
       firstName = "first",
-      isOverEighteen = IsOverEighteen.DO_NOT_KNOW,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
       createdBy = "user",
       createdTime = LocalDateTime.now(),
     )
@@ -104,4 +114,80 @@ class ContactControllerTest {
       }
     }
   }
+
+  @Nested
+  inner class AddContactRelationship {
+    private val id = 123456L
+    private val relationship = ContactRelationship(
+      prisonerNumber = "A1234BC",
+      relationshipCode = "MOT",
+      isNextOfKin = true,
+      isEmergencyContact = false,
+      comments = "Foo",
+    )
+    private val request = AddContactRelationshipRequest(relationship, "USER")
+
+    @Test
+    fun `should create a contact relationship successfully`() {
+      doNothing().whenever(contactService).addContactRelationship(id, request)
+
+      controller.addContactRelationship(id, request)
+
+      verify(contactService).addContactRelationship(id, request)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      whenever(contactService.addContactRelationship(id, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.addContactRelationship(id, request)
+      }
+    }
+  }
+
+  @Nested
+  inner class SearchContact {
+
+    @Test
+    fun `test searchContacts with surname ,forename ,middle and date of birth`() {
+      // Given
+      val pageable = PageRequest.of(0, 10)
+      val contactEntities = listOf(
+        getContact(1L),
+      )
+      val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
+
+      // When
+      whenever(
+        contactService.searchContacts(
+          pageable,
+          ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
+        ),
+      ).thenReturn(pageContacts)
+
+      // Act
+      val result: Page<ContactSearch> = controller.searchContacts(pageable, ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)))
+
+      // Then
+      assertNotNull(result)
+      assertThat(result.totalElements).isEqualTo(1)
+      assertThat(result.content[0].lastName).isEqualTo("last")
+      assertThat(result.content[0].firstName).isEqualTo("first")
+    }
+  }
+
+  private fun getContact(contactId: Long) = ContactSearch(
+    id = contactId,
+    lastName = "last",
+    firstName = "first",
+    middleName = "first",
+    dateOfBirth = LocalDate.of(1980, 2, 1),
+    createdBy = "user",
+    createdTime = LocalDateTime.now(),
+    flat = "user",
+    street = "user",
+    area = "user",
+    postCode = "user",
+  )
 }

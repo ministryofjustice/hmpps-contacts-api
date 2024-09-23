@@ -16,50 +16,35 @@ data class ContactAddressEntity(
   @GeneratedValue(strategy = GenerationType.IDENTITY)
   val contactAddressId: Long = 0,
 
-  @Column(name = "contact_id")
   val contactId: Long,
 
-  @Column(name = "address_type")
   var addressType: String,
 
-  @Column(name = "primary_address")
   var primaryAddress: Boolean,
 
-  @Column(name = "flat")
   var flat: String?,
 
-  @Column(name = "property")
   var property: String?,
 
-  @Column(name = "street")
   var street: String?,
 
-  @Column(name = "area")
   var area: String?,
 
-  @Column(name = "city_code")
   var cityCode: String?,
 
-  @Column(name = "county_code")
   var countyCode: String?,
 
-  @Column(name = "post_code")
   var postCode: String?,
 
-  @Column(name = "country_code")
   var countryCode: String?,
 
   // Has this address been postcode-verified via a lookup?
-  @Column(name = "verified")
   var verified: Boolean,
 
-  @Column(name = "verifiedBy")
   var verifiedBy: String? = null,
 
-  @Column(name = "verified_time")
   var verifiedTime: LocalDateTime? = null,
 
-  @Column(updatable = false, name = "created_by")
   val createdBy: String,
 
   @Column(updatable = false, name = "created_time")

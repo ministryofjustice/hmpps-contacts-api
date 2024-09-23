@@ -29,10 +29,10 @@ data class CreateContactRequest(
   val dateOfBirth: LocalDate? = null,
 
   @Schema(description = "If the date of birth is not known, this indicates whether they are believed to be over 18 or not", example = "YES", nullable = true)
-  val isOverEighteen: IsOverEighteen? = null,
+  val estimatedIsOverEighteen: EstimatedIsOverEighteen? = null,
 
-  @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationshipRequest::class])
-  val relationship: ContactRelationshipRequest? = null,
+  @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationship::class])
+  val relationship: ContactRelationship? = null,
 
   @Schema(description = "The id of the user creating the contact", example = "JD000001", maxLength = 100)
   @field:Size(max = 100, message = "createdBy must be <= 100 characters")
