@@ -7,7 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 fun ContactAddressEntity.toModel(): ContactAddress {
   return ContactAddress(
     contactAddressId = this.contactAddressId,
-    contactId = this.contactId,
+    contactId = this.contactId!!,
     addressType = this.addressType,
     primaryAddress = this.primaryAddress,
     flat = this.flat,

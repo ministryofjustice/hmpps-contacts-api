@@ -85,7 +85,7 @@ class SyncService(
       this.amendedTime = request.updatedTime
     }
 
-    return contactAddressRepository.save(contactAddress).toModel()
+    return contactAddressRepository.saveAndFlush(contactAddress).toModel()
   }
 
   // TODO: Similar methods for the other entity types
