@@ -69,23 +69,24 @@ class SyncService(
       throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${contactAddress.contactAddressId}")
     }
 
-    with(contactAddress) {
-      this.primaryAddress = request.primaryAddress
-      this.addressType = request.addressType
-      this.flat = request.flat
-      this.property = request.property
-      this.street = request.street
-      this.area = request.area
-      this.cityCode = request.cityCode
-      this.countyCode = request.countyCode
-      this.countryCode = request.countryCode
-      this.postCode = request.postcode
-      this.verified = request.verified
-      this.amendedBy = request.updatedBy
-      this.amendedTime = request.updatedTime
+    val changedContactAddress = contactAddress.copy(
+      primaryAddress = request.primaryAddress,
+      addressType = request.addressType,
+      flat = request.flat,
+      property = request.property,
+      street = request.street,
+      area = request.area,
+      cityCode = request.cityCode,
+      countyCode = request.countyCode,
+      countryCode = request.countryCode,
+      postCode = request.postcode,
+      verified = request.verified,
+    ).also {
+      it.amendedBy = request.updatedBy
+      it.amendedTime = request.updatedTime
     }
 
-    return contactAddressRepository.saveAndFlush(contactAddress).toModel()
+    return contactAddressRepository.saveAndFlush(changedContactAddress).toModel()
   }
 
   // TODO: Similar methods for the other entity types

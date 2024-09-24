@@ -18,33 +18,33 @@ data class ContactAddressEntity(
 
   val contactId: Long? = null,
 
-  var addressType: String,
+  val addressType: String,
 
-  var primaryAddress: Boolean = false,
+  val primaryAddress: Boolean = false,
 
-  var flat: String? = null,
+  val flat: String? = null,
 
-  var property: String? = null,
+  val property: String? = null,
 
-  var street: String? = null,
+  val street: String? = null,
 
-  var area: String? = null,
+  val area: String? = null,
 
-  var cityCode: String? = null,
+  val cityCode: String? = null,
 
-  var countyCode: String? = null,
+  val countyCode: String? = null,
 
-  var postCode: String? = null,
+  val postCode: String? = null,
 
-  var countryCode: String? = null,
+  val countryCode: String? = null,
 
-  var verified: Boolean = false,
+  val verified: Boolean = false,
 
-  var verifiedBy: String? = null,
+  val verifiedBy: String? = null,
 
-  var verifiedTime: LocalDateTime? = null,
+  val verifiedTime: LocalDateTime? = null,
 
-  var createdBy: String,
+  val createdBy: String,
 
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),

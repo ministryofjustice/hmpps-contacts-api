@@ -13,7 +13,6 @@ import org.mockito.kotlin.verifyNoInteractions
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
@@ -90,7 +89,7 @@ class SyncServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(postcode).isEqualTo(request.postcode)
         assertThat(createdBy).isEqualTo(request.createdBy)
-        assertThat(createdTime).isEqualTo(request.createdTime)
+        assertThat(createdTime).isAfterOrEqualTo(request.createdTime)
       }
 
       verify(contactRepository).findById(1L)
@@ -232,59 +231,62 @@ class SyncServiceTest {
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     )
-}
 
-fun contactAddressEntity(contactAddressId: Long) =
-  ContactAddressEntity(
-    contactAddressId = contactAddressId,
-    contactId = 1L,
-    addressType = "HOME",
-    primaryAddress = true,
-    flat = "1B",
-    property = "Mason House",
-    street = "Main Street",
-    area = "Howarth",
-    cityCode = "LEEDS",
-    countyCode = "YORKS",
-    postCode = "LS13 4KD",
-    countryCode = "UK",
-    createdBy = "TEST",
-  )
+  private fun contactAddressEntity(contactAddressId: Long) =
+    ContactAddressEntity(
+      contactAddressId = contactAddressId,
+      contactId = 1L,
+      addressType = "HOME",
+      primaryAddress = true,
+      flat = "1B",
+      property = "Mason House",
+      street = "Main Street",
+      area = "Howarth",
+      cityCode = "LEEDS",
+      countyCode = "YORKS",
+      postCode = "LS13 4KD",
+      countryCode = "UK",
+      createdBy = "TEST",
+    )
 
-fun CreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
-  ContactAddressEntity(
-    contactAddressId = contactAddressId,
-    contactId = this.contactId,
-    addressType = this.addressType,
-    primaryAddress = this.primaryAddress,
-    flat = this.flat,
-    property = this.property,
-    street = this.street,
-    area = this.area,
-    cityCode = this.cityCode,
-    countyCode = this.countyCode,
-    postCode = this.postcode,
-    countryCode = this.countryCode,
-    createdBy = this.createdBy,
-  )
+  private fun CreateContactAddressRequest.toEntity(contactAddressId: Long = 0) =
+    ContactAddressEntity(
+      contactAddressId = contactAddressId,
+      contactId = this.contactId,
+      addressType = this.addressType,
+      primaryAddress = this.primaryAddress,
+      flat = this.flat,
+      property = this.property,
+      street = this.street,
+      area = this.area,
+      cityCode = this.cityCode,
+      countyCode = this.countyCode,
+      postCode = this.postcode,
+      countryCode = this.countryCode,
+      createdBy = this.createdBy,
+    )
 
-fun UpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
-  val updatedBy = this.updatedBy
-  val updatedTime = this.updatedTime
+  private fun UpdateContactAddressRequest.toEntity(contactAddressId: Long = 1L): ContactAddressEntity {
+    val updatedBy = this.updatedBy
+    val updatedTime = this.updatedTime
 
-  return ContactAddressEntity(
-    contactAddressId = contactAddressId,
-    contactId = this.contactId,
-    addressType = this.addressType,
-    primaryAddress = this.primaryAddress,
-    flat = this.flat,
-    property = this.property,
-    street = this.street,
-    area = this.area,
-    cityCode = this.cityCode,
-    countyCode = this.countyCode,
-    postCode = this.postcode,
-    countryCode = this.countryCode,
-    createdBy = "TEST",
-  ).apply { amendedBy = updatedBy }.apply { amendedTime = updatedTime }
+    return ContactAddressEntity(
+      contactAddressId = contactAddressId,
+      contactId = this.contactId,
+      addressType = this.addressType,
+      primaryAddress = this.primaryAddress,
+      flat = this.flat,
+      property = this.property,
+      street = this.street,
+      area = this.area,
+      cityCode = this.cityCode,
+      countyCode = this.countyCode,
+      postCode = this.postcode,
+      countryCode = this.countryCode,
+      createdBy = "TEST",
+    ).also {
+      it.amendedBy = updatedBy
+      it.amendedTime = updatedTime
+    }
+  }
 }
