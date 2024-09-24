@@ -32,11 +32,11 @@ class ContactAddressSyncController(
   @Operation(
     summary = "Returns the data for a contact address by contactAddressId",
     description = """
-      Requires role: ROLE_XXX_MIGRATION.
+      Requires role: ROLE_CONTACTS_MIGRATION.
       Used to get the details for one contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
+  @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun getContactAddressById(
     @Parameter(description = "The internal ID for a contact address.", required = true)
     @PathVariable contactAddressId: Long,
@@ -47,11 +47,11 @@ class ContactAddressSyncController(
   @Operation(
     summary = "Deletes one contact address by internal ID",
     description = """
-      Requires role: ROLE_XXX_MIGRATION.
+      Requires role: ROLE_CONTACTS_MIGRATION.
       Used to delete a contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
+  @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun deleteContactAddressById(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
@@ -63,11 +63,11 @@ class ContactAddressSyncController(
   @Operation(
     summary = "Creates a new contact address",
     description = """
-      Requires role: ROLE_XXX_MIGRATION.
-      Used to create a contact address.
+      Requires role: ROLE_CONTACTS_MIGRATION.
+      Used to create a contact address and associate it with a contact.
       """,
   )
-  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
+  @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactAddress(
     @Valid @RequestBody createContactAddressRequest: CreateContactAddressRequest,
   ) = syncService.createContactAddress(createContactAddressRequest)
@@ -78,11 +78,11 @@ class ContactAddressSyncController(
   @Operation(
     summary = "Updates a contact address with new or extra detail",
     description = """
-      Requires role: ROLE_XXX_MIGRATION.
+      Requires role: ROLE_CONTACTS_MIGRATION.
       Used to update a contact address.
       """,
   )
-  @PreAuthorize("hasAnyRole('CONTACT_SYNC')")
+  @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun updateContactAddress(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,

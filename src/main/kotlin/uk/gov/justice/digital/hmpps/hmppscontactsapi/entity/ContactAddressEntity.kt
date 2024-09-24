@@ -14,7 +14,7 @@ import java.time.LocalDateTime.now
 data class ContactAddressEntity(
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  val contactAddressId: Long = 0,
+  var contactAddressId: Long,
 
   val contactId: Long? = null,
 

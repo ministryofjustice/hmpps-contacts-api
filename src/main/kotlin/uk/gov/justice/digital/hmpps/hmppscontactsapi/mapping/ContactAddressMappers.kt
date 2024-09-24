@@ -32,6 +32,7 @@ fun List<ContactAddressEntity>.toModel() = map { it.toModel() }
 
 fun CreateContactAddressRequest.toEntity(): ContactAddressEntity {
   return ContactAddressEntity(
+    contactAddressId = 0L,
     contactId = this.contactId,
     addressType = this.addressType,
     primaryAddress = this.primaryAddress,
