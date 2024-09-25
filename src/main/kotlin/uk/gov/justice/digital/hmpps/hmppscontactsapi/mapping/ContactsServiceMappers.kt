@@ -2,8 +2,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -27,7 +27,7 @@ fun ContactEntity.toModel() = Contact(
 
 fun Page<ContactEntity>.toModel(): Page<Contact> = map { it.toModel() }
 
-fun ContactAddressSummaryEntity.toModel() = ContactSearch(
+fun ContactSummaryEntity.toModel() = ContactSearch(
   id = this.contactId,
   lastName = this.lastName,
   firstName = this.firstName,
@@ -45,7 +45,7 @@ fun ContactAddressSummaryEntity.toModel() = ContactSearch(
   countryCode = this.countryCode,
 )
 
-fun PageImpl<ContactAddressSummaryEntity>.toModel(): Page<ContactSearch> = map { it.toModel() }
+fun PageImpl<ContactSummaryEntity>.toModel(): Page<ContactSearch> = map { it.toModel() }
 
 fun ContactRelationship.toEntity(
   contactId: Long,

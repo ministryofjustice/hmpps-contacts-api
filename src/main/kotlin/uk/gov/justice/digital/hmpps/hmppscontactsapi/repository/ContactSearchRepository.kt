@@ -9,7 +9,7 @@ import jakarta.persistence.criteria.Root
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Repository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import java.time.LocalDate
 
@@ -18,10 +18,10 @@ class ContactSearchRepository(
   @PersistenceContext
   private var entityManager: EntityManager,
 ) {
-  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): PageImpl<ContactAddressSummaryEntity> {
+  fun searchContacts(request: ContactSearchRequest, pageable: Pageable): PageImpl<ContactSummaryEntity> {
     val cb = entityManager.criteriaBuilder
-    val cq = cb.createQuery(ContactAddressSummaryEntity::class.java)
-    val contact = cq.from(ContactAddressSummaryEntity::class.java)
+    val cq = cb.createQuery(ContactSummaryEntity::class.java)
+    val contact = cq.from(ContactSummaryEntity::class.java)
 
     val predicates: List<Predicate> = buildPredicates(request, cb, contact)
 
@@ -41,9 +41,9 @@ class ContactSearchRepository(
 
   private fun applySorting(
     pageable: Pageable,
-    cq: CriteriaQuery<ContactAddressSummaryEntity>,
+    cq: CriteriaQuery<ContactSummaryEntity>,
     cb: CriteriaBuilder,
-    contact: Root<ContactAddressSummaryEntity>,
+    contact: Root<ContactSummaryEntity>,
   ) {
     if (pageable.sort.isSorted) {
       pageable.sort.forEach {
@@ -58,7 +58,7 @@ class ContactSearchRepository(
   private fun buildPredicates(
     request: ContactSearchRequest,
     cb: CriteriaBuilder,
-    contact: Root<ContactAddressSummaryEntity>,
+    contact: Root<ContactSummaryEntity>,
   ): MutableList<Predicate> {
     val predicates: MutableList<Predicate> = ArrayList()
 
@@ -106,7 +106,7 @@ class ContactSearchRepository(
   ): Long {
     val cb = entityManager.criteriaBuilder
     val countQuery = cb.createQuery(Long::class.java)
-    val contact = countQuery.from(ContactAddressSummaryEntity::class.java)
+    val contact = countQuery.from(ContactSummaryEntity::class.java)
 
     val predicates: List<Predicate> = buildPredicates(request, cb, contact)
 

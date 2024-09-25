@@ -3,7 +3,7 @@
 -- to return a list of active or inactive contacts, and their primary addresses,
 -- for a prisoner.
 --
-CREATE OR REPLACE VIEW v_contact_address
+CREATE OR REPLACE VIEW v_contact_summary
 AS
 select
     c.contact_id,

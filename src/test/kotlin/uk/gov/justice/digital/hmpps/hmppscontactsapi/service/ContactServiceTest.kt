@@ -19,8 +19,8 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
@@ -387,7 +387,7 @@ class ContactServiceTest {
       assertThat(result.content[0].firstName).isEqualTo("first")
     }
 
-    private fun getContactAddressSummaryEntity() = ContactAddressSummaryEntity(
+    private fun getContactAddressSummaryEntity() = ContactSummaryEntity(
       contactId = 1L,
       title = "Mr",
       lastName = "last",
