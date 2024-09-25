@@ -19,7 +19,7 @@ import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressSummaryEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
@@ -360,10 +360,9 @@ class ContactServiceTest {
     fun `test searchContacts with lastName , firstName , middleName and date of birth`() {
       // Given
       val pageable = PageRequest.of(0, 10)
-      val contact = getContactEntity(1L)
-      val contactAddress = getContactAddressEntity(1L, 1L)
+      val contactAddressSummaryEntity = getContactAddressSummaryEntity()
 
-      val results = listOf(arrayOf(contact, contactAddress))
+      val results = listOf(contactAddressSummaryEntity)
 
       val pageContacts = PageImpl(results, pageable, results.size.toLong())
 
@@ -388,21 +387,15 @@ class ContactServiceTest {
       assertThat(result.content[0].firstName).isEqualTo("first")
     }
 
-    private fun getContactEntity(contactId: Long) = ContactEntity(
-      contactId = contactId,
+    private fun getContactAddressSummaryEntity() = ContactAddressSummaryEntity(
+      contactId = 1L,
       title = "Mr",
       lastName = "last",
       middleName = "middle",
       firstName = "first",
       dateOfBirth = LocalDate.of(1980, 2, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-      createdBy = "user",
-      createdTime = LocalDateTime.now(),
-    )
-
-    private fun getContactAddressEntity(contactId: Long, contactAddressId: Long) = ContactAddressEntity(
-      contactAddressId = contactAddressId,
-      contactId = contactId,
+      contactAddressId = 1L,
       primaryAddress = true,
       verified = false,
       addressType = "HOME",

@@ -202,6 +202,32 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
+  fun `should get the contacts with no addresses associated with them when searched by last name `() {
+    val uri = UriComponentsBuilder.fromPath("contact/search")
+      .queryParam("lastName", "Last")
+      .build()
+      .toUri()
+
+    val body = testAPIClient.getSearchContactResults(uri)
+
+    with(body!!) {
+      assertThat(content).isNotEmpty()
+      assertThat(content.size).isEqualTo(5)
+      assertThat(totalElements).isEqualTo(5)
+
+      assertThat(totalPages).isEqualTo(1)
+
+      val contact = content.first()
+      assertThat(contact.id).isEqualTo(1)
+      assertThat(contact.firstName).isEqualTo("Jack")
+
+      val lastContact = content.last()
+      assertThat(lastContact.id).isEqualTo(17)
+      assertThat(lastContact.firstName).isEqualTo("Hannah")
+    }
+  }
+
+  @Test
   fun `should get bad request when searched with empty last name`() {
     val uri = UriComponentsBuilder.fromPath("contact/search")
       .queryParam("lastName", "")
