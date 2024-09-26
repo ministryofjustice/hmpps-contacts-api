@@ -106,17 +106,17 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
   private fun authorised() = setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN"))
 
   data class ContactSearchResponse(
-      val content: List<ContactSearchResultItem>,
-      val pageable: Pageable,
-      val last: Boolean,
-      val totalPages: Int,
-      val totalElements: Int,
-      val first: Boolean,
-      val size: Int,
-      val number: Int,
-      val sort: Sort,
-      val numberOfElements: Int,
-      val empty: Boolean,
+    val content: List<ContactSearchResultItem>,
+    val pageable: Pageable,
+    val last: Boolean,
+    val totalPages: Int,
+    val totalElements: Int,
+    val first: Boolean,
+    val size: Int,
+    val number: Int,
+    val sort: Sort,
+    val numberOfElements: Int,
+    val empty: Boolean,
   )
 
   data class Pageable(
