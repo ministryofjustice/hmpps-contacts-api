@@ -360,9 +360,9 @@ class ContactServiceTest {
     fun `test searchContacts with lastName , firstName , middleName and date of birth`() {
       // Given
       val pageable = PageRequest.of(0, 10)
-      val contactAddressSummaryEntity = getContactAddressSummaryEntity()
+      val contactWithAddressEntity = getContactWithAddressEntity()
 
-      val results = listOf(contactAddressSummaryEntity)
+      val results = listOf(contactWithAddressEntity)
 
       val pageContacts = PageImpl(results, pageable, results.size.toLong())
 
@@ -387,7 +387,7 @@ class ContactServiceTest {
       assertThat(result.content[0].firstName).isEqualTo("first")
     }
 
-    private fun getContactAddressSummaryEntity() = ContactWithAddressEntity(
+    private fun getContactWithAddressEntity() = ContactWithAddressEntity(
       contactId = 1L,
       title = "Mr",
       lastName = "last",

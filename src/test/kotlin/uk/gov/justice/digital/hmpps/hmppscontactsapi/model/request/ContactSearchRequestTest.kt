@@ -6,7 +6,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.time.LocalDate
 
-class ContactSearchResultItemRequestTest {
+class ContactSearchRequestTest {
 
   private val validatorFactory: ValidatorFactory = Validation.buildDefaultValidatorFactory()
   private val validator = validatorFactory.validator
