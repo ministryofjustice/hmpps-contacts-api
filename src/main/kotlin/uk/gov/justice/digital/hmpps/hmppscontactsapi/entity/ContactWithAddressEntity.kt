@@ -11,8 +11,8 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "v_contact_summary")
-data class ContactSummaryEntity(
+@Table(name = "v_contacts_with_primary_address")
+data class ContactWithAddressEntity(
 
   @Id
   val contactId: Long,

@@ -20,14 +20,14 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearch.Prisoner
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactSearchRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
@@ -375,7 +375,7 @@ class ContactServiceTest {
       ).thenReturn(pageContacts)
 
       // Act
-      val result: Page<ContactSearch> = service.searchContacts(
+      val result: Page<ContactSearchResultItem> = service.searchContacts(
         pageable,
         ContactSearchRequest("last", "first", "middle", LocalDate.of(1980, 1, 1)),
       )
@@ -387,7 +387,7 @@ class ContactServiceTest {
       assertThat(result.content[0].firstName).isEqualTo("first")
     }
 
-    private fun getContactAddressSummaryEntity() = ContactSummaryEntity(
+    private fun getContactAddressSummaryEntity() = ContactWithAddressEntity(
       contactId = 1L,
       title = "Mr",
       lastName = "last",

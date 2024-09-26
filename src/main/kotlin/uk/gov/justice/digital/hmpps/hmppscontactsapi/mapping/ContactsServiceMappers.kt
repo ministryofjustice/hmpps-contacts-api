@@ -3,13 +3,13 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactSummaryEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactWithAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.PrisonerContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Contact
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearch
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -27,7 +27,7 @@ fun ContactEntity.toModel() = Contact(
 
 fun Page<ContactEntity>.toModel(): Page<Contact> = map { it.toModel() }
 
-fun ContactSummaryEntity.toModel() = ContactSearch(
+fun ContactWithAddressEntity.toModel() = ContactSearchResultItem(
   id = this.contactId,
   lastName = this.lastName,
   firstName = this.firstName,
@@ -45,7 +45,7 @@ fun ContactSummaryEntity.toModel() = ContactSearch(
   countryCode = this.countryCode,
 )
 
-fun PageImpl<ContactSummaryEntity>.toModel(): Page<ContactSearch> = map { it.toModel() }
+fun PageImpl<ContactWithAddressEntity>.toModel(): Page<ContactSearchResultItem> = map { it.toModel() }
 
 fun ContactRelationship.toEntity(
   contactId: Long,
