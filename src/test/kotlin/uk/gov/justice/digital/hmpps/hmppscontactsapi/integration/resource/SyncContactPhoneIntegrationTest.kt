@@ -21,7 +21,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
 
   @Nested
   inner class ContactPhoneSyncTests {
-    private var contactId = 0L
+    private var savedContactId = 0L
 
     @BeforeEach
     fun initialiseData() {
@@ -29,7 +29,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
       val contactReturnedOnCreate = testAPIClient.createAContact(request)
       assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
       assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
-      contactId = contactReturnedOnCreate.id
+      savedContactId = contactReturnedOnCreate.id
     }
 
     @Test
@@ -45,7 +45,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .uri("/sync/contact-phone")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(createContactPhoneRequest(contactId))
+        .bodyValue(createContactPhoneRequest(savedContactId))
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -54,7 +54,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .uri("/sync/contact-phone/1")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(updateContactPhoneRequest(contactId))
+        .bodyValue(updateContactPhoneRequest(savedContactId))
         .exchange()
         .expectStatus()
         .isUnauthorized
@@ -81,7 +81,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .uri("/sync/contact-phone")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(createContactPhoneRequest(contactId))
+        .bodyValue(createContactPhoneRequest(savedContactId))
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -91,7 +91,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .uri("/sync/contact-phone/1")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
-        .bodyValue(updateContactPhoneRequest(contactId))
+        .bodyValue(updateContactPhoneRequest(savedContactId))
         .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
         .exchange()
         .expectStatus()
@@ -135,7 +135,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(createContactPhoneRequest(contactId))
+        .bodyValue(createContactPhoneRequest(savedContactId))
         .exchange()
         .expectStatus()
         .isOk
@@ -145,6 +145,8 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
 
       // The created phone is returned
       with(contactPhone) {
+        assertThat(contactPhoneId).isGreaterThan(10L)
+        assertThat(contactId).isEqualTo(savedContactId)
         assertThat(phoneType).isEqualTo("Mobile")
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(extNumber).isEqualTo("101")
@@ -161,7 +163,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(createContactPhoneRequest(contactId))
+        .bodyValue(createContactPhoneRequest(savedContactId))
         .exchange()
         .expectStatus()
         .isOk
@@ -183,7 +185,7 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
-        .bodyValue(updateContactPhoneRequest(contactId))
+        .bodyValue(updateContactPhoneRequest(savedContactId))
         .exchange()
         .expectStatus()
         .isOk
@@ -193,6 +195,8 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
 
       // Check the updated copy
       with(updatedPhone) {
+        assertThat(contactPhoneId).isGreaterThan(10)
+        assertThat(contactId).isEqualTo(savedContactId)
         assertThat(phoneType).isEqualTo("Mobile")
         assertThat(phoneNumber).isEqualTo("555-1234")
         assertThat(amendedBy).isEqualTo("UPDATE")
@@ -204,18 +208,23 @@ class SyncContactPhoneIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should delete an existing contact phone`() {
-      val beforeCount = contactPhoneRepository.count()
+      val contactPhoneId = 11L
 
       webTestClient.delete()
-        .uri("/sync/contact-phone/1")
+        .uri("/sync/contact-phone/{contactPhoneId}", contactPhoneId)
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()
         .expectStatus()
         .isOk
 
-      val afterCount = contactPhoneRepository.count()
-      assertThat(beforeCount).isEqualTo((afterCount + 1))
+      webTestClient.get()
+        .uri("/sync/contact-phone/{contactPhoneId}", contactPhoneId)
+        .accept(MediaType.APPLICATION_JSON)
+        .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
+        .exchange()
+        .expectStatus()
+        .isNotFound
     }
 
     private fun assertContactsAreEqualExcludingTimestamps(contact: Contact, request: CreateContactRequest) {
