@@ -32,6 +32,10 @@ jobs:
           path: build/test-results
       - store_artifacts:
           path: build/reports/tests
+      - slack/notify:
+          channel: $managing-contacts-internal-dev
+          event: fail
+          ignore_errors: true
 
 workflows:
   version: 2
