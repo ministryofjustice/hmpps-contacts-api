@@ -15,7 +15,7 @@ data class UpdateContactRestrictionRequest(
   @Schema(description = "Restriction start date", example = "2024-01-01")
   val startDate: LocalDate? = null,
 
-  @Schema(description =  "Restriction end date ",  example = "2024-01-01")
+  @Schema(description = "Restriction end date ", example = "2024-01-01")
   val expiryDate: LocalDate? = null,
 
   @Schema(description = "Any comments about the restriction ", example = "N/A")

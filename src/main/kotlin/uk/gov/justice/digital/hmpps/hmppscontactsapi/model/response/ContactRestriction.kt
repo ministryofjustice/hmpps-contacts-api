@@ -18,7 +18,7 @@ data class ContactRestriction(
   @Schema(description = "Restriction created date", example = "2024-01-01")
   val startDate: LocalDate? = null,
 
-  @Schema(description =  "Restriction end date ",  example = "2024-01-01")
+  @Schema(description = "Restriction end date ", example = "2024-01-01")
   val expiryDate: LocalDate? = null,
 
   @Schema(description = "Comments for the restriction ", example = "N/A")
