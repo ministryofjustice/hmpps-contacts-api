@@ -73,4 +73,4 @@ sonar-project.properties
 **/Chart.lock
 
 #hmpps-contacts-api specific
-.env
+.env-cloud-db
