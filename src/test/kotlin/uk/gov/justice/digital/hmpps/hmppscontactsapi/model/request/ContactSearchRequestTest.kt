@@ -4,6 +4,8 @@ import jakarta.validation.Validation
 import jakarta.validation.ValidatorFactory
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import java.time.LocalDate
 
 class ContactSearchRequestTest {
@@ -70,6 +72,22 @@ class ContactSearchRequestTest {
       lastName = "Smith",
       firstName = null,
       middleName = null,
+      dateOfBirth = pastDate,
+    )
+
+    val violations = validator.validate(request)
+
+    assertThat(violations).isEmpty()
+  }
+
+  @ParameterizedTest
+  @ValueSource(strings = ["Doe-Smith", "O'Hare", " Luther King"])
+  fun `should pass validation if any Name field contain space , apostrophe or hyphen characters`(input: String) {
+    val pastDate = LocalDate.now().minusDays(1)
+    val request = ContactSearchRequest(
+      lastName = input,
+      firstName = input,
+      middleName = input,
       dateOfBirth = pastDate,
     )
 
