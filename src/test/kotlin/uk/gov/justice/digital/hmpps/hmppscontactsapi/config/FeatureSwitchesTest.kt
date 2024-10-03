@@ -6,20 +6,13 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.mock.mockito.MockBean
 import org.springframework.test.context.ActiveProfiles
 import org.springframework.test.context.TestPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.isBool
-import uk.gov.justice.hmpps.sqs.HmppsQueueService
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.MOCK)
 @ActiveProfiles("test")
 class FeatureSwitchesTest {
-
-  // Beans are mocked out so as not to interfere with the running of the tests. We do not want/need them on the context.
-  @MockBean
-  private lateinit var hmppsQueueService: HmppsQueueService
-
   @TestPropertySource(properties = ["feature.events.sns.enabled=true"])
   @Nested
   @DisplayName("Features are enabled when set")
@@ -27,7 +20,7 @@ class FeatureSwitchesTest {
     @Test
     fun `features are enabled`() {
       Feature.entries.forEach {
-        assertThat(featureSwitches.isEnabled(it)).withFailMessage("${it.label} not enabled").isTrue
+        assertThat(featureSwitches.isEnabled(it)).isTrue
       }
     }
   }
