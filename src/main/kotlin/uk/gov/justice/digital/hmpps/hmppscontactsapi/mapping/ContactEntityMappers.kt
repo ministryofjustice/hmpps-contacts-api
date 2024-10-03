@@ -4,7 +4,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 
-fun ContactEntity.syncFromEntityToModel(): Contact {
+fun ContactEntity.mapEntityToSyncResponse(): Contact {
   return Contact(
     id = this.contactId,
     title = this.title,
@@ -20,7 +20,7 @@ fun ContactEntity.syncFromEntityToModel(): Contact {
     active = this.active,
     suspended = this.suspended,
     staffFlag = this.staffFlag,
-    deceasedFlag = this.deceasedFlag,
+    deceasedFlag = this.isDeceased,
     deceasedDate = this.deceasedDate,
     coronerNumber = this.coronerNumber,
     gender = this.gender,
@@ -34,9 +34,7 @@ fun ContactEntity.syncFromEntityToModel(): Contact {
   )
 }
 
-fun List<ContactEntity>.toModel() = map { it.toModel() }
-
-fun CreateContactRequest.toEntity() = ContactEntity(
+fun CreateContactRequest.mapSyncRequestToEntity() = ContactEntity(
   contactId = 0L,
   title = this.title,
   firstName = this.firstName,
@@ -45,6 +43,8 @@ fun CreateContactRequest.toEntity() = ContactEntity(
   dateOfBirth = this.dateOfBirth,
   estimatedIsOverEighteen = this.estimatedIsOverEighteen,
   createdBy = this.createdBy,
+  isDeceased = this.deceasedFlag!!,
+  deceasedDate = this.deceasedDate,
   createdTime = this.createdTime,
 ).also {
   it.contactTypeCode = this.contactTypeCode
@@ -52,8 +52,6 @@ fun CreateContactRequest.toEntity() = ContactEntity(
   it.active = this.active
   it.suspended = this.suspended
   it.staffFlag = this.staffFlag
-  it.deceasedFlag = this.deceasedFlag
-  it.deceasedDate = this.deceasedDate
   it.coronerNumber = this.coronerNumber
   it.gender = this.gender
   it.maritalStatus = this.maritalStatus

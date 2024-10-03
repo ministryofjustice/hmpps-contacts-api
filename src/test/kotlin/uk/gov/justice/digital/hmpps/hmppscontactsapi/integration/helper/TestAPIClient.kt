@@ -31,22 +31,6 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun createAFullContact(request: uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest): uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact {
-    return webTestClient.post()
-      .uri("/contact")
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(authorised())
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isCreated
-      .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
-      .expectBody(uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact::class.java)
-      .returnResult().responseBody!!
-  }
-
   fun getContact(id: Long): GetContactResponse {
     return webTestClient.get()
       .uri("/contact/$id")

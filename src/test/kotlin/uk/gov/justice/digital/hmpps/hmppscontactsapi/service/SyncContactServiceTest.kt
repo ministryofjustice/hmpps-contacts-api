@@ -11,7 +11,7 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
@@ -68,7 +68,7 @@ class SyncContactServiceTest {
     @Test
     fun `should create a contact`() {
       val request = createContactRequest()
-      whenever(contactRepository.saveAndFlush(request.toEntity())).thenReturn(request.toEntity())
+      whenever(contactRepository.saveAndFlush(request.mapSyncRequestToEntity())).thenReturn(request.mapSyncRequestToEntity())
 
       val contact = syncService.createContact(request)
       val contactCaptor = argumentCaptor<ContactEntity>()
@@ -213,6 +213,8 @@ class SyncContactServiceTest {
       lastName = "Smith",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     ).also {
@@ -221,8 +223,6 @@ class SyncContactServiceTest {
       it.active = true
       it.suspended = false
       it.staffFlag = false
-      it.deceasedFlag = false
-      it.deceasedDate = null
       it.coronerNumber = null
       it.gender = "Male"
       it.maritalStatus = "Single"
@@ -241,6 +241,8 @@ class SyncContactServiceTest {
       lastName = "Smith",
       dateOfBirth = null,
       estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     ).also {
@@ -249,8 +251,6 @@ class SyncContactServiceTest {
       it.active = true
       it.suspended = false
       it.staffFlag = false
-      it.deceasedFlag = false
-      it.deceasedDate = null
       it.coronerNumber = null
       it.gender = "Male"
       it.maritalStatus = "Single"
@@ -272,6 +272,8 @@ class SyncContactServiceTest {
       middleName = this.middleName,
       dateOfBirth = this.dateOfBirth,
       estimatedIsOverEighteen = this.estimatedIsOverEighteen,
+      isDeceased = false,
+      deceasedDate = null,
       createdBy = "Admin",
     ).also {
       it.contactTypeCode = this.contactTypeCode
@@ -279,8 +281,6 @@ class SyncContactServiceTest {
       it.active = this.active
       it.suspended = this.suspended
       it.staffFlag = this.staffFlag
-      it.deceasedFlag = this.deceasedFlag
-      it.deceasedDate = this.deceasedDate
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
       it.maritalStatus = this.maritalStatus

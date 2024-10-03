@@ -1,11 +1,10 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
-import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.syncFromEntityToModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapEntityToSyncResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.mapSyncRequestToEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
@@ -17,15 +16,11 @@ class SyncContactService(
   val contactRepository: ContactRepository,
 ) {
 
-  companion object {
-    private val logger = LoggerFactory.getLogger(this::class.java)
-  }
-
   @Transactional(readOnly = true)
   fun getContactById(contactId: Long): Contact {
     val contactEntity = contactRepository.findById(contactId)
       .orElseThrow { EntityNotFoundException("Contact with ID $contactId not found") }
-    return contactEntity.syncFromEntityToModel()
+    return contactEntity.mapEntityToSyncResponse()
   }
 
   fun deleteContact(contactId: Long) {
@@ -35,7 +30,7 @@ class SyncContactService(
   }
 
   fun createContact(request: CreateContactRequest): Contact {
-    return contactRepository.saveAndFlush(request.toEntity()).syncFromEntityToModel()
+    return contactRepository.saveAndFlush(request.mapSyncRequestToEntity()).mapEntityToSyncResponse()
   }
 
   fun updateContact(contactId: Long, request: UpdateContactRequest): Contact {
@@ -48,6 +43,8 @@ class SyncContactService(
       lastName = request.lastName,
       middleName = request.middleName,
       dateOfBirth = request.dateOfBirth,
+      isDeceased = request.deceasedFlag!!,
+      deceasedDate = request.deceasedDate,
       estimatedIsOverEighteen = request.estimatedIsOverEighteen,
     ).also {
       it.contactTypeCode = request.contactTypeCode
@@ -55,8 +52,6 @@ class SyncContactService(
       it.active = request.active
       it.suspended = request.suspended
       it.staffFlag = request.staffFlag
-      it.deceasedFlag = request.deceasedFlag
-      it.deceasedDate = request.deceasedDate
       it.coronerNumber = request.coronerNumber
       it.gender = request.gender
       it.maritalStatus = request.maritalStatus
@@ -68,6 +63,6 @@ class SyncContactService(
       it.amendedTime = request.updatedTime
     }
 
-    return contactRepository.saveAndFlush(changedContact).syncFromEntityToModel()
+    return contactRepository.saveAndFlush(changedContact).mapEntityToSyncResponse()
   }
 }

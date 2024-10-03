@@ -75,6 +75,6 @@ data class CreateContactRequest(
   @Schema(description = "The id of the user creating the contact", example = "JD000001", maxLength = 100)
   val createdBy: String,
 
-  @Schema(description = "The id of the user creating the contact", example = "JD000001", maxLength = 100)
-  val createdTime: LocalDateTime,
+  @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
+  val createdTime: LocalDateTime = LocalDateTime.now(),
 )

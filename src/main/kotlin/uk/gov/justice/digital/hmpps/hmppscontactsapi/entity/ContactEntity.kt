@@ -56,10 +56,6 @@ data class ContactEntity(
 
   var staffFlag: Boolean? = false
 
-  var deceasedFlag: Boolean? = false
-
-  var deceasedDate: LocalDate? = null
-
   var coronerNumber: String? = null
 
   var gender: String? = null

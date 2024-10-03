@@ -27,7 +27,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.SyncContactService
 class ContactSyncController(
   val syncService: SyncContactService,
 ) {
-  @GetMapping(path = ["/contact-restriction/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+  @GetMapping(path = ["/contact/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
   @Operation(
     summary = "Returns the data for a contact by contactId",
@@ -42,7 +42,7 @@ class ContactSyncController(
     @PathVariable contactId: Long,
   ) = syncService.getContactById(contactId)
 
-  @DeleteMapping(path = ["/contact-restriction/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+  @DeleteMapping(path = ["/contact/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
   @Operation(
     summary = "Deletes one contact by internal ID",
@@ -57,7 +57,7 @@ class ContactSyncController(
     @PathVariable contactId: Long,
   ) = syncService.deleteContact(contactId)
 
-  @PutMapping(path = ["/contact-restriction"], produces = [MediaType.APPLICATION_JSON_VALUE])
+  @PutMapping(path = ["/contact"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   @Operation(
@@ -72,7 +72,7 @@ class ContactSyncController(
     @Valid @RequestBody createContactRequest: CreateContactRequest,
   ) = syncService.createContact(createContactRequest)
 
-  @PostMapping(path = ["/contact-restriction/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
+  @PostMapping(path = ["/contact/{contactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
   @ResponseBody
   @Operation(
