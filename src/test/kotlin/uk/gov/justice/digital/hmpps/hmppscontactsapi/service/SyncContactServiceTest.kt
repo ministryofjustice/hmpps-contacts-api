@@ -204,34 +204,6 @@ class SyncContactServiceTest {
       comments = "Special requirements for contact.",
     )
 
-  private fun contactEntity(contactId: Long = 1L) =
-    ContactEntity(
-      contactId = contactId,
-      title = "Mr",
-      firstName = "John",
-      middleName = null,
-      lastName = "Smith",
-      dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
-    ).also {
-      it.contactTypeCode = "PERSON"
-      it.placeOfBirth = "London"
-      it.active = true
-      it.suspended = false
-      it.staffFlag = false
-      it.coronerNumber = null
-      it.gender = "Male"
-      it.maritalStatus = "Single"
-      it.languageCode = "EN"
-      it.nationalityCode = "GB"
-      it.interpreterRequired = false
-      it.comments = "Special requirements for contact."
-    }
-
   private fun contactEntity() =
     ContactEntity(
       contactId = 1L,
