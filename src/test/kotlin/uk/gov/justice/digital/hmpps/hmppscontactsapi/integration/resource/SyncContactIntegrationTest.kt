@@ -62,7 +62,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         .expectStatus()
         .isForbidden
 
-      webTestClient.put()
+      webTestClient.post()
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -72,7 +72,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         .expectStatus()
         .isForbidden
 
-      webTestClient.post()
+      webTestClient.put()
         .uri("/sync/contact/1")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -137,7 +137,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should create a new contact`() {
-      val contact = webTestClient.put()
+      val contact = webTestClient.post()
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -180,7 +180,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should create and then update a contact`() {
-      val contact = webTestClient.put()
+      val contact = webTestClient.post()
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -204,7 +204,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
 
-      val updatedContact = webTestClient.post()
+      val updatedContact = webTestClient.put()
         .uri("/sync/contact/{contactId}", contact.id)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
@@ -248,7 +248,7 @@ class SyncContactIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `should delete an existing contact`() {
-      val contact = webTestClient.put()
+      val contact = webTestClient.post()
         .uri("/sync/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
