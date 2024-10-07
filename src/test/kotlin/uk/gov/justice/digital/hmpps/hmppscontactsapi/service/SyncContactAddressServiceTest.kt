@@ -21,17 +21,17 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 import java.time.LocalDateTime
 import java.util.Optional
 
-class SyncServiceTest {
+class SyncContactAddressServiceTest {
   private val contactRepository: ContactRepository = mock()
   private val contactAddressRepository: ContactAddressRepository = mock()
-  private val syncService = SyncService(contactRepository, contactAddressRepository)
+  private val syncContactAddressService = SyncContactAddressService(contactRepository, contactAddressRepository)
 
   @Nested
   inner class ContactAddressTests {
     @Test
     fun `should get a contact address by ID`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.of(contactAddressEntity(1L)))
-      val contactAddress = syncService.getContactAddressById(1L)
+      val contactAddress = syncContactAddressService.getContactAddressById(1L)
       with(contactAddress) {
         assertThat(addressType).isEqualTo("HOME")
         assertThat(primaryAddress).isTrue()
@@ -47,7 +47,7 @@ class SyncServiceTest {
     fun `should fail to get a contact address by ID when not found`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncService.getContactAddressById(1L)
+        syncContactAddressService.getContactAddressById(1L)
       }
       verify(contactAddressRepository).findById(1L)
     }
@@ -58,7 +58,7 @@ class SyncServiceTest {
       whenever(contactRepository.findById(1L)).thenReturn(Optional.of(contactEntity()))
       whenever(contactAddressRepository.saveAndFlush(request.toEntity())).thenReturn(request.toEntity())
 
-      val contactAddress = syncService.createContactAddress(request)
+      val contactAddress = syncContactAddressService.createContactAddress(request)
       val addressCaptor = argumentCaptor<ContactAddressEntity>()
 
       verify(contactAddressRepository).saveAndFlush(addressCaptor.capture())
@@ -100,7 +100,7 @@ class SyncServiceTest {
       val request = createContactAddressRequest(1L)
       whenever(contactRepository.findById(1L)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncService.createContactAddress(request)
+        syncContactAddressService.createContactAddress(request)
       }
       verifyNoInteractions(contactAddressRepository)
     }
@@ -108,7 +108,7 @@ class SyncServiceTest {
     @Test
     fun `should delete contact address by ID`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.of(contactAddressEntity(1L)))
-      syncService.deleteContactAddressById(1L)
+      syncContactAddressService.deleteContactAddressById(1L)
       verify(contactAddressRepository).deleteById(1L)
     }
 
@@ -116,7 +116,7 @@ class SyncServiceTest {
     fun `should fail to delete contact address by ID when not found`() {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncService.deleteContactAddressById(1L)
+        syncContactAddressService.deleteContactAddressById(1L)
       }
       verify(contactAddressRepository).findById(1L)
     }
@@ -128,7 +128,7 @@ class SyncServiceTest {
       whenever(contactAddressRepository.findById(1L)).thenReturn(Optional.of(request.toEntity()))
       whenever(contactAddressRepository.saveAndFlush(any())).thenReturn(request.toEntity())
 
-      val updated = syncService.updateContactAddress(1L, request)
+      val updated = syncContactAddressService.updateContactAddress(1L, request)
 
       val addressCaptor = argumentCaptor<ContactAddressEntity>()
 
@@ -170,7 +170,7 @@ class SyncServiceTest {
       val updateRequest = updateContactAddressRequest()
       whenever(contactRepository.findById(1L)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncService.updateContactAddress(1L, updateRequest)
+        syncContactAddressService.updateContactAddress(1L, updateRequest)
       }
       verifyNoInteractions(contactAddressRepository)
     }
@@ -181,7 +181,7 @@ class SyncServiceTest {
       whenever(contactRepository.findById(1L)).thenReturn(Optional.of(contactEntity(1L)))
       whenever(contactAddressRepository.findById(updateRequest.contactId)).thenReturn(Optional.empty())
       assertThrows<EntityNotFoundException> {
-        syncService.updateContactAddress(1L, updateRequest)
+        syncContactAddressService.updateContactAddress(1L, updateRequest)
       }
       verify(contactRepository).findById(updateRequest.contactId)
       verify(contactAddressRepository).findById(1L)

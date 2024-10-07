@@ -23,10 +23,10 @@ values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', n
        (18, 'SOCIAL',  null,   'Address', 'Minimal',    null, null, null, null, null, null, null, null, 'TIM', true, false, null),
        (19, 'SOCIAL',  null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, null, 'TIM', true, true, '2000-01-01');
 
-insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, created_by)
-values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'TIM'),
-       (2, 2, 'PASSPORT', 'PP87878787878', 'TIM'),
-       (3, 3, 'NI_NUMBER', 'NI989989AA', 'TIM');
+insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, issuing_authority, created_by)
+values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'DVLA', 'TIM'),
+       (2, 2, 'PASSPORT', 'PP87878787878', 'UKBORDER', 'TIM'),
+       (3, 3, 'NI_NUMBER', 'NI989989AA', 'HMRC', 'TIM');
 
 insert into contact_restriction(contact_id, restriction_type, start_date, expiry_date, comments, created_by)
 values (1, 'DRIVING', '2000-11-21','2000-11-21','N/A', 'TIM'),

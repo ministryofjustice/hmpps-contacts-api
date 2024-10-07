@@ -19,13 +19,13 @@ import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.SyncService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.SyncContactAddressService
 
 @Tag(name = "Sync endpoints")
 @RestController
 @RequestMapping(value = ["/sync"], produces = [MediaType.APPLICATION_JSON_VALUE])
 class ContactAddressSyncController(
-  val syncService: SyncService,
+  val syncContactAddressService: SyncContactAddressService,
 ) {
   @GetMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
@@ -40,7 +40,7 @@ class ContactAddressSyncController(
   fun getContactAddressById(
     @Parameter(description = "The internal ID for a contact address.", required = true)
     @PathVariable contactAddressId: Long,
-  ) = syncService.getContactAddressById(contactAddressId)
+  ) = syncContactAddressService.getContactAddressById(contactAddressId)
 
   @DeleteMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
@@ -55,7 +55,7 @@ class ContactAddressSyncController(
   fun deleteContactAddressById(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
-  ) = syncService.deleteContactAddressById(contactAddressId)
+  ) = syncContactAddressService.deleteContactAddressById(contactAddressId)
 
   @PutMapping(path = ["/contact-address"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
@@ -70,7 +70,7 @@ class ContactAddressSyncController(
   @PreAuthorize("hasAnyRole('CONTACTS_MIGRATION')")
   fun createContactAddress(
     @Valid @RequestBody createContactAddressRequest: CreateContactAddressRequest,
-  ) = syncService.createContactAddress(createContactAddressRequest)
+  ) = syncContactAddressService.createContactAddress(createContactAddressRequest)
 
   @PostMapping(path = ["/contact-address/{contactAddressId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
   @ResponseStatus(HttpStatus.OK)
@@ -87,5 +87,5 @@ class ContactAddressSyncController(
     @Parameter(description = "The internal ID for the contact address.", required = true)
     @PathVariable contactAddressId: Long,
     @Valid @RequestBody updateContactAddressRequest: UpdateContactAddressRequest,
-  ) = syncService.updateContactAddress(contactAddressId, updateContactAddressRequest)
+  ) = syncContactAddressService.updateContactAddress(contactAddressId, updateContactAddressRequest)
 }
