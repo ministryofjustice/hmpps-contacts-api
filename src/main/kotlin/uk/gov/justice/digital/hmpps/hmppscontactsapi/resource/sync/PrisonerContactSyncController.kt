@@ -147,7 +147,7 @@ class PrisonerContactSyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "PrisonerContact not found",
+        description = "Prisoner contact not found",
       ),
       ApiResponse(
         responseCode = "400",

@@ -43,7 +43,7 @@ class ContactIdentitySyncController(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Found the contact",
+        description = "Found the contact identity",
         content = [
           Content(
             mediaType = "application/json",
@@ -53,7 +53,7 @@ class ContactIdentitySyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "No contact reference with that id could be found",
+        description = "No contact identity with that id could be found",
       ),
     ],
   )
@@ -75,11 +75,11 @@ class ContactIdentitySyncController(
     value = [
       ApiResponse(
         responseCode = "204",
-        description = "Successfully deleted contact",
+        description = "Successfully deleted contact identity",
       ),
       ApiResponse(
         responseCode = "404",
-        description = "No contact reference with that id could be found",
+        description = "No contact identity with that id could be found",
       ),
     ],
   )
@@ -102,7 +102,7 @@ class ContactIdentitySyncController(
     value = [
       ApiResponse(
         responseCode = "201",
-        description = "Successfully created contact address",
+        description = "Successfully created contact identity",
         content = [
           Content(
             mediaType = "application/json",
@@ -135,7 +135,7 @@ class ContactIdentitySyncController(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Successfully updated contact address",
+        description = "Successfully updated contact identity",
         content = [
           Content(
             mediaType = "application/json",
@@ -145,7 +145,7 @@ class ContactIdentitySyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Contact address not found",
+        description = "Contact identity not found",
       ),
       ApiResponse(
         responseCode = "400",
