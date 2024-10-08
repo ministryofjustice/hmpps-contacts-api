@@ -43,7 +43,7 @@ class ContactRestrictionSyncController(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Found the contact address",
+        description = "Found the contact restriction",
         content = [
           Content(
             mediaType = "application/json",
@@ -53,7 +53,7 @@ class ContactRestrictionSyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "No contact address reference with that id could be found",
+        description = "No contact restriction reference with that id could be found",
       ),
     ],
   )
@@ -75,11 +75,11 @@ class ContactRestrictionSyncController(
     value = [
       ApiResponse(
         responseCode = "204",
-        description = "Successfully deleted contact address",
+        description = "Successfully deleted contact restriction",
       ),
       ApiResponse(
         responseCode = "404",
-        description = "No contact address reference with that id could be found",
+        description = "No contact restriction reference with that id could be found",
       ),
     ],
   )
@@ -102,7 +102,7 @@ class ContactRestrictionSyncController(
     value = [
       ApiResponse(
         responseCode = "201",
-        description = "Successfully created contact address",
+        description = "Successfully created contact restriction",
         content = [
           Content(
             mediaType = "application/json",
@@ -135,7 +135,7 @@ class ContactRestrictionSyncController(
     value = [
       ApiResponse(
         responseCode = "200",
-        description = "Successfully updated contact address",
+        description = "Successfully updated contact restriction",
         content = [
           Content(
             mediaType = "application/json",
@@ -145,7 +145,7 @@ class ContactRestrictionSyncController(
       ),
       ApiResponse(
         responseCode = "404",
-        description = "Contact address not found",
+        description = "Contact restriction not found",
       ),
       ApiResponse(
         responseCode = "400",
