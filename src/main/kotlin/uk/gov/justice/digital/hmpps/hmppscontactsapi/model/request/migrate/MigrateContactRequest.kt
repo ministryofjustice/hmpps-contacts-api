@@ -74,11 +74,11 @@ data class MigrateContactRequest(
 )
 
 data class CodedValue(
-  @Schema(description = "The title of the contact, if any", maxLength = 12)
+  @Schema(description = "A code representation a NOMIS reference data item", maxLength = 12)
   @field:Size(max = 12, message = "Title coded value must be <= 12 characters")
   val code: String,
 
-  @Schema(description = "The text description for this coded value")
+  @Schema(description = "The text description for this coded value in NOMIS")
   val description: String,
 )
 
