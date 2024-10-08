@@ -35,11 +35,26 @@ data class GetContactResponse(
   @Schema(description = "The date the contact deceased, if known", example = "1980-01-01", nullable = true)
   val deceasedDate: LocalDate? = null,
 
+  @Schema(description = "The NOMIS code for the contacts language", example = "ENG", nullable = true)
+  val languageCode: String?,
+
+  @Schema(description = "The description of the language code", example = "English", nullable = true)
+  val languageDescription: String?,
+
+  @Schema(description = "Whether an interpreter is required for this contact", example = "true", nullable = true)
+  val interpreterRequired: Boolean,
+
   @Schema(description = "All addresses for the contact")
   val addresses: List<ContactAddressDetails>,
 
   @Schema(description = "All phone numbers for the contact")
   val phoneNumbers: List<ContactPhoneNumberDetails>,
+
+  @Schema(description = "All email addresses for the contact")
+  val emailAddresses: List<ContactEmailDetails>,
+
+  @Schema(description = "All identities for the contact")
+  val identities: List<ContactIdentityDetails>,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,

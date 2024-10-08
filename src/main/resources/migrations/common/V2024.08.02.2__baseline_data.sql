@@ -2,31 +2,32 @@
 -- Reference data
 -- =============================================
 
-insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date)
-values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null),
-       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (13, 'SOCIAL',  'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', '2000-11-26', 'DO_NOT_KNOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, '2024-01-26'),
-       (16, 'SOCIAL',  'MRS',  'NoAddress', 'Liam',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',  'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null),
-       (18, 'SOCIAL',  null,   'Address', 'Minimal',    null, null, null, null, null, null, null, null, 'TIM', true, false, null),
-       (19, 'SOCIAL',  null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, null, 'TIM', true, true, '2000-01-01');
+insert into contact(contact_id, contact_type_code, title, last_name, first_name, middle_name, date_of_birth, estimated_is_over_eighteen, place_of_birth, gender, marital_status, language_code, comments, created_by, active, deceased_flag, deceased_date, interpreter_required)
+values (1, 'SOCIAL',   'MR',   'Last',   'Jack',       'Middle', '2000-11-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (2, 'SOCIAL',   'MISS', 'Last',   'Jacqueline', 'Middle', '2000-11-22', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (3, 'OFFICIAL', 'MRS', 'Last',    'Jane',       'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (4, 'SOCIAL',   'MR',   'Four',   'John',       'Middle', '2000-05-18', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (5, 'SOCIAL',   'MR',   'Five',   'Jon',        'Middle', '2000-09-21', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (6, 'SOCIAL',   'MR',   'Six',    'Johnny',     'Middle', '2000-10-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (7, 'SOCIAL',   'MR',   'Seven',  'Pete',       'Middle', '2015-08-29', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (8, 'SOCIAL',   'MR',   'Eight',  'Harry',      'Middle', '2015-12-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (9, 'SOCIAL',   'MR',   'Nine',   'Donald',     'Middle', '2000-11-23', null, 'London', 'Male',   'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (10, 'SOCIAL',  'MS',   'Ten',    'Freya',      'Middle', '2000-11-24', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', true, false, null, false),
+       (11, 'SOCIAL',  'MS',   'Eleven', 'Suki',       'Middle', '2000-11-25', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (12, 'SOCIAL',  'MRS',  'Twelve', 'Jane',       'Middle', '2000-11-26', null, 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (13, 'SOCIAL',  'MRS',  'Thirteen', 'Mark',     'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (14, 'SOCIAL',  'MRS',  'Fourteen', 'Phil',     'Middle', null, 'NO', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (15, 'SOCIAL',  'MRS',  'Fifteen', 'Carl',      'Middle', '2000-11-26', 'DO_NOT_KNOW', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, '2024-01-26', false),
+       (16, 'SOCIAL',  'MRS',  'NoAddress', 'Liam',    'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (17, 'SOCIAL',  'MRS',  'NoAddress', 'Hannah',  'Middle', null, 'YES', 'London', 'Female', 'SINGLE', 'ENG', 'Comment', 'TIM', false, false, null, false),
+       (18, 'SOCIAL',  null,   'Address', 'Minimal',    null, null, null, null, null, null, null, null, 'TIM', true, false, null, false),
+       (19, 'SOCIAL',  null,   'Dead', 'Currently',     null, '1980-01-01', null, null, null, null, null, null, 'TIM', true, true, '2000-01-01', false),
+       (20, 'SOCIAL',  null,   'French', 'Only',     null, '1980-01-01', null, null, null, null, 'FRE-FRA', null, 'TIM', true, true, '2000-01-01', true);
 
-insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, issuing_authority, created_by)
-values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'DVLA', 'TIM'),
-       (2, 2, 'PASSPORT', 'PP87878787878', 'UKBORDER', 'TIM'),
-       (3, 3, 'NI_NUMBER', 'NI989989AA', 'HMRC', 'TIM');
+insert into contact_identity(contact_identity_id, contact_id, identity_type, identity_value, issuing_authority, verified, verified_by, verified_time, created_by)
+values (1, 1, 'DRIVING_LIC', 'LAST-87736799M', 'DVLA', true, 'JAMES', current_timestamp, 'TIM'),
+       (2, 2, 'PASSPORT', 'PP87878787878', 'UKBORDER', false, null, null, 'TIM'),
+       (3, 3, 'NI_NUMBER', 'NI989989AA', 'HMRC', false, null, null, 'TIM');
 
 insert into contact_restriction(contact_id, restriction_type, start_date, expiry_date, comments, created_by)
 values (1, 'DRIVING', '2000-11-21','2000-11-21','N/A', 'TIM'),
@@ -71,9 +72,10 @@ insert into contact_address_phone(contact_address_phone_id, contact_id, contact_
 values (1, 1, 1, 2, 'JAMES');
 
 insert into contact_email(contact_email_id, contact_id, email_type, email_address, primary_email, created_by)
-values (1, 1, 'PERSONAL', 'mr.last@hotmail.com', true, 'TIM'),
-       (2, 2, 'PERSONAL', 'miss.last@hotmail.com', true,  'TIM'),
-       (3, 3, 'PERSONAL', 'mrs.last@hotmail.com', false, 'TIM');
+values (1, 1, 'PERSONAL', 'mr.last@example.com', true, 'TIM'),
+       (2, 2, 'PERSONAL', 'miss.last@example.com', true,  'TIM'),
+       (3, 3, 'PERSONAL', 'mrs.last@example.com', false, 'TIM'),
+       (4, 3, 'WORK', 'work@example.com', true, 'JAMES');
 
 insert into reference_codes(reference_code_id, group_code, code, description, created_by)
 values (1, 'CONTACT_TYPE', 'SOCIAL', 'Social contact', 'TIM'),
@@ -191,6 +193,12 @@ values (1, 1, 'A1234BB', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp)
        (27, 1, 'A4385DZ', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        (28, 10, 'A4385DZ', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
        (29, 18, 'A4385DZ', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
+
+insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, authorised_by, authorised_time, created_by, created_time, amended_by, amended_time )
+values
+    (12, 'NoContact', '2024-01-01', '2024-12-31', 'Restriction due to ongoing investigation', 'John Doe', '2024-10-01 12:00:00', 'admin', '2024-10-01 12:00:00', 'editor', '2024-10-02 15:30:00'),
+    (12, 'Limited', '2023-06-01', '2024-01-01', 'Limited contact allowed', 'Jane Doe', '2023-05-31 09:00:00', 'supervisor', '2023-05-31 09:00:00', 'manager', '2023-07-01 10:00:00'),
+    (12, 'NoContact', '2022-08-15', '2023-08-15', 'No contact allowed due to past incidents', 'Alex Smith', '2022-08-14 11:00:00', 'officer', '2022-08-14 11:00:00', 'reviewer', '2022-09-15 16:00:00');
 
 Insert into nationality_reference (nationality_id, nomis_code, nomis_description, iso_numeric, iso_alpha2, iso_alpha3, iso_nationality_desc, display_sequence)
 values
