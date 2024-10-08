@@ -187,6 +187,29 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
   }
 
   @Test
+  fun `should get the contact with identities`() {
+    val contact = testAPIClient.getContact(1)
+
+    with(contact) {
+      assertThat(id).isEqualTo(1)
+      assertThat(contact.identities).hasSize(1)
+      with(contact.identities[0]) {
+        assertThat(contactIdentityId).isEqualTo(1)
+        assertThat(contactId).isEqualTo(1)
+        assertThat(identityType).isEqualTo("DRIVING_LIC")
+        assertThat(identityTypeDescription).isEqualTo("Driving licence")
+        assertThat(identityValue).isEqualTo("LAST-87736799M")
+        assertThat(issuingAuthority).isEqualTo("UK")
+        assertThat(verified).isTrue()
+        assertThat(verifiedBy).isEqualTo("JAMES")
+        assertThat(verifiedTime).isNotNull()
+        assertThat(createdBy).isEqualTo("TIM")
+        assertThat(createdTime).isNotNull()
+      }
+    }
+  }
+
+  @Test
   fun `should get deceased contacts`() {
     val contact = testAPIClient.getContact(19)
 

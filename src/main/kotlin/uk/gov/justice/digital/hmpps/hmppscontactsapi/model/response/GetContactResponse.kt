@@ -44,6 +44,9 @@ data class GetContactResponse(
   @Schema(description = "All email addresses for the contact")
   val emailAddresses: List<ContactEmailDetails>,
 
+  @Schema(description = "All identities for the contact")
+  val identities: List<ContactIdentityDetails>,
+
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   val createdBy: String,
 
