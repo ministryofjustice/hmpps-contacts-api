@@ -19,6 +19,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRestrictionRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRepository
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactRestrictionRepository
 import java.time.LocalDateTime
 
 @Service
@@ -31,31 +32,28 @@ class MigrationService(
   private val contactIdentityRepository: ContactIdentityRepository,
   private val contactRestrictionRepository: ContactRestrictionRepository,
   private val prisonerContactRepository: PrisonerContactRepository,
-  private val prisonerContactRestrictionRepository: ContactRestrictionRepository,
+  private val prisonerContactRestrictionRepository: PrisonerContactRestrictionRepository,
 ) {
 
   /**
    * Accept a full contact migration object, validate and create the equivalent objects
    * in the contacts database locally. Do NOT emit sync events for objects created as these
    * will already exist in NOMIS and the mapping tables - we're not generating new copies of
-   * this data, as we did for A&A 1-way sync.
+   * this data, as we did for A&A, these are the same copies as currently exist.
    *
    * Assemble a response object to contain both the NOMIS and DPS IDs for each
    * entity and sub-entity saved to allow the mapping service to link them.
    */
   fun migrateContact(request: MigrateContactRequest): MigrateContactResponse {
+    // TODO: Any minimal additional validation? Over and above the request body annotated validations
+
     val contactPair = extractAndSaveContact(request)
     val phoneNumberPairs = extractAndSavePhones(request, contactPair.second.contactId)
     val addressPairs = extractAndSaveAddresses(request, contactPair.second.contactId)
     val emailPairs = extractAndSaveEmails(request, contactPair.second.contactId)
     val identityPairs = extractAndSaveIdentities(request, contactPair.second.contactId)
 
-    /*
-    employmentPairs - official contacts
-    restrictionPairs
-    prisonerContactPairs
-    prisonerContactRestrictionPairs
-     */
+    // TODO: Add restrictions, prisoner contacts, prisoner contact restrictions, employments
 
     return MigrateContactResponse(
       nomisPersonId = contactPair.first,
@@ -148,7 +146,7 @@ class MigrationService(
             startDate = addr.startDate,
             endDate = addr.endDate,
             noFixedAddress = addr.noFixedAddress,
-            // Check any linked phone numbers are also supplied as phone numbers!
+            // TODO: Check any linked phone numbers are also supplied as phone numbers!
             createdBy = req.audit?.createUsername ?: "MIGRATION",
             createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
           ).also {
@@ -199,22 +197,4 @@ class MigrationService(
         ),
       )
     }
-
-//  private fun List<MigrateAlert>.alertCodes() =
-//    map { it.alertCode }.distinct().let { requestAlertCodes ->
-//      alertCodeRepository.findByCodeIn(requestAlertCodes).associateBy { it.code }
-//    }
-//
-//  private fun List<MigrateAlert>.checkForNotFoundAlertCodes(alertCodes: Map<String, AlertCode>) =
-//    with(map { it.alertCode }.distinct().filterNot { alertCodes.containsKey(it) }.sorted()) {
-//      require(isEmpty()) {
-//        joinToString(prefix = "Alert code(s) '", separator = "', '", postfix = "' not found")
-//      }
-//    }
-//
-//  private fun List<MigrateAlert>.logActiveToBeforeActiveFrom(prisonNumber: String) {
-//    this.filter { it.activeTo?.isBefore(it.activeFrom) == true }.forEach {
-//      log.warn("Alert with sequence '${it.alertSeq}' for person with prison number '$prisonNumber' from booking with id '${it.offenderBookId}' and sequence '${it.bookingSeq}' has an active to date '${it.activeTo}' that is before the active from date '${it.activeFrom}'")
-//    }
-//  }
 }
