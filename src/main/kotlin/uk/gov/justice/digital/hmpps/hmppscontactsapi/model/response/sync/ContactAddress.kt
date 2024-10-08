@@ -1,4 +1,4 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDate

@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
 
 fun ContactAddressEntity.toModel(): ContactAddress {
   return ContactAddress(

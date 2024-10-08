@@ -10,7 +10,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDateTime
 

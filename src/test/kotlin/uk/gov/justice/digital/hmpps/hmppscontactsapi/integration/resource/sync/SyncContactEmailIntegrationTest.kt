@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactEmailRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactEmail
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactEmail
 import java.time.LocalDateTime
 
 class SyncContactEmailIntegrationTest : IntegrationTestBase() {

@@ -2,7 +2,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync
 
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactRestrictionEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactRestrictionRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactRestriction
 
 fun ContactRestrictionEntity.toModel(): ContactRestriction {
   return ContactRestriction(

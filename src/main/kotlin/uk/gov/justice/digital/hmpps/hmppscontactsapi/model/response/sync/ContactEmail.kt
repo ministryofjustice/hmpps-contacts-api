@@ -1,21 +1,24 @@
-package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response
+package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync
 
 import io.swagger.v3.oas.annotations.media.Schema
 import java.time.LocalDateTime
 
-@Schema(description = "Identity related to a contact")
-data class ContactIdentity(
-  @Schema(description = "Unique identifier for the contact identity", example = "1")
-  val contactIdentityId: Long,
+@Schema(description = "Email related to a contact")
+data class ContactEmail(
+  @Schema(description = "Unique identifier for the contact email", example = "1")
+  val contactEmailId: Long,
 
   @Schema(description = "Unique identifier for the contact", example = "123")
   val contactId: Long,
 
-  @Schema(description = "Type of identity", example = "MOBILE")
-  val identityType: String,
+  @Schema(description = "Type of email", example = "WORK")
+  val emailType: String,
 
-  @Schema(description = "Identity ", example = "+1234567890")
-  val identityValue: String,
+  @Schema(description = "Email address", example = "work@example.com")
+  val emailAddress: String,
+
+  @Schema(description = "Indicates if this is the primary Email address", example = "true")
+  val primaryEmail: Boolean,
 
   @Schema(description = "User who created the entry", example = "admin")
   val createdBy: String,

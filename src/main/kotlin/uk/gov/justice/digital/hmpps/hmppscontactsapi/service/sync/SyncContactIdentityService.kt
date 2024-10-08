@@ -9,7 +9,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.sync.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactIdentityRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactIdentity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 

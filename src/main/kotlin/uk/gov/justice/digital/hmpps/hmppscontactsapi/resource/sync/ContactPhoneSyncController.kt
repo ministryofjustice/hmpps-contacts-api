@@ -21,7 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody
 import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactPhoneRequest
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.ContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactPhoneService
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 
