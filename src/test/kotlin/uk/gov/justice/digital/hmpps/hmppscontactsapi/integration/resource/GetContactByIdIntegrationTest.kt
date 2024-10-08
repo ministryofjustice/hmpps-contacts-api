@@ -228,6 +228,18 @@ class GetContactByIdIntegrationTest : IntegrationTestBase() {
     }
   }
 
+  @Test
+  fun `should get contacts with language details`() {
+    val contact = testAPIClient.getContact(20)
+
+    with(contact) {
+      assertThat(id).isEqualTo(20)
+      assertThat(languageCode).isEqualTo("FRE-FRA")
+      assertThat(languageDescription).isEqualTo("French")
+      assertThat(interpreterRequired).isTrue()
+    }
+  }
+
   @ParameterizedTest
   @EnumSource(EstimatedIsOverEighteen::class)
   fun `should return is over eighteen when DOB is not known`(estimatedIsOverEighteen: EstimatedIsOverEighteen) {

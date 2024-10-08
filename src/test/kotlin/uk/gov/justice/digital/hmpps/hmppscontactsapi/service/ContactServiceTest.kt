@@ -34,6 +34,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressDetailsRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailDetailsRepository
@@ -57,6 +58,7 @@ class ContactServiceTest {
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository = mock()
   private val contactEmailDetailsRepository: ContactEmailDetailsRepository = mock()
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository = mock()
+  private val languageService: LanguageService = mock()
   private val service = ContactService(
     contactRepository,
     prisonerContactRepository,
@@ -67,6 +69,7 @@ class ContactServiceTest {
     contactAddressPhoneRepository,
     contactEmailDetailsRepository,
     contactIdentityDetailsRepository,
+    languageService,
   )
 
   private val aContactAddressDetailsEntity = createContactAddressDetailsEntity()
@@ -424,6 +427,67 @@ class ContactServiceTest {
         assertThat(identities[0].contactIdentityId).isEqualTo(1)
         assertThat(identities[1].contactIdentityId).isEqualTo(2)
       }
+    }
+
+    @Test
+    fun `should get a contact with language code`() {
+      whenever(languageService.getLanguageByNomisCode("FRE-FRA")).thenReturn(
+        Language(1, "FRE-FRA", "French", "Foo", "Bar", "X", 99),
+      )
+
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleName = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      entity.languageCode = "FRE-FRA"
+      entity.interpreterRequired = true
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(languageCode).isEqualTo("FRE-FRA")
+        assertThat(languageDescription).isEqualTo("French")
+        assertThat(interpreterRequired).isTrue()
+      }
+    }
+
+    @Test
+    fun `should get a contact if language code null and not lookup the null`() {
+      val entity = ContactEntity(
+        contactId = contactId,
+        title = "Mr",
+        lastName = "last",
+        middleName = "middle",
+        firstName = "first",
+        dateOfBirth = null,
+        estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+        isDeceased = false,
+        deceasedDate = null,
+        createdBy = "user",
+        createdTime = LocalDateTime.now(),
+      )
+      entity.languageCode = null
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(entity))
+
+      val contact = service.getContact(contactId)
+      assertNotNull(contact)
+      with(contact!!) {
+        assertThat(id).isEqualTo(entity.contactId)
+        assertThat(languageCode).isNull()
+        assertThat(languageDescription).isNull()
+      }
+      verify(languageService, never()).getLanguageByNomisCode(any())
     }
 
     @Test

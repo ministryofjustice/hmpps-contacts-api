@@ -38,6 +38,7 @@ class ContactService(
   private val contactAddressPhoneRepository: ContactAddressPhoneRepository,
   private val contactEmailDetailsRepository: ContactEmailDetailsRepository,
   private val contactIdentityDetailsRepository: ContactIdentityDetailsRepository,
+  private val languageService: LanguageService,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -93,6 +94,7 @@ class ContactService(
       }
     val emailAddresses = contactEmailDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
     val identities = contactIdentityDetailsRepository.findByContactId(contactEntity.contactId).map { it.toModel() }
+    val languageDescription = contactEntity.languageCode?.let { languageService.getLanguageByNomisCode(it).nomisDescription }
     return GetContactResponse(
       id = contactEntity.contactId,
       title = contactEntity.title,
@@ -103,6 +105,9 @@ class ContactService(
       estimatedIsOverEighteen = contactEntity.estimatedIsOverEighteen,
       isDeceased = contactEntity.isDeceased,
       deceasedDate = contactEntity.deceasedDate,
+      languageCode = contactEntity.languageCode,
+      languageDescription = languageDescription,
+      interpreterRequired = contactEntity.interpreterRequired,
       addresses = addresses,
       phoneNumbers = phoneNumbers,
       emailAddresses = emailAddresses,
