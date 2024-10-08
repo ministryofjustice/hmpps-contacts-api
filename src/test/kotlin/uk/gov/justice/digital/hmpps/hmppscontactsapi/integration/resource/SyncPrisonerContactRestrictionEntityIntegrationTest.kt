@@ -106,7 +106,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
         .returnResult().responseBody!!
 
       with(prisonerContactRestriction) {
-        assertThat(id).isEqualTo(1L)
+        assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -138,7 +138,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
 
       // The created is returned
       with(prisonerContactRestriction) {
-        assertThat(id).isGreaterThan(0)
+        assertThat(prisonerContactRestrictionId).isGreaterThan(0)
         assertThat(contactId).isEqualTo(1L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -169,7 +169,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
         .returnResult().responseBody!!
 
       with(prisonerContactRestriction) {
-        assertThat(id).isGreaterThan(3L)
+        assertThat(prisonerContactRestrictionId).isGreaterThan(3L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -184,7 +184,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
       }
 
       val updatedPrisonerContactRestriction = webTestClient.put()
-        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.id)
+        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.prisonerContactRestrictionId)
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
@@ -198,7 +198,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
 
       // Check the updated copy
       with(updatedPrisonerContactRestriction) {
-        assertThat(id).isGreaterThan(3L)
+        assertThat(prisonerContactRestrictionId).isGreaterThan(3L)
         assertThat(contactId).isEqualTo(1L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -229,7 +229,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
         .returnResult().responseBody!!
 
       webTestClient.delete()
-        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.id)
+        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.prisonerContactRestrictionId)
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()
@@ -237,7 +237,7 @@ class SyncPrisonerContactRestrictionEntityIntegrationTest : IntegrationTestBase(
         .isOk
 
       webTestClient.get()
-        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.id)
+        .uri("/sync/prisoner-contact-restriction/{id}", prisonerContactRestriction.prisonerContactRestrictionId)
         .accept(MediaType.APPLICATION_JSON)
         .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_MIGRATION")))
         .exchange()

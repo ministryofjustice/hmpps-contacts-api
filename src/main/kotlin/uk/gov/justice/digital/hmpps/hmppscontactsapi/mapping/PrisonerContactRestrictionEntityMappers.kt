@@ -21,7 +21,7 @@ fun CreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestricti
 
 fun PrisonerContactRestrictionEntity.toResponse(): PrisonerContactRestriction {
   return PrisonerContactRestriction(
-    id = this.prisonerContactRestrictionId,
+    prisonerContactRestrictionId = this.prisonerContactRestrictionId,
     contactId = this.prisonerContactId,
     restrictionType = this.restrictionType,
     startDate = this.startDate,

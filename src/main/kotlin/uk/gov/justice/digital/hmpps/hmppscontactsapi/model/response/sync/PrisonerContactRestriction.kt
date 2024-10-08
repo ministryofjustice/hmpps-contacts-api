@@ -8,7 +8,7 @@ import java.time.LocalDateTime
 data class PrisonerContactRestriction(
 
   @Schema(description = "ID of the prisoner contact restriction to which the restriction applies", example = "232")
-  val id: Long,
+  val prisonerContactRestrictionId: Long,
 
   @Schema(description = "ID of the contact to which the restriction applies", example = "12345")
   val contactId: Long,

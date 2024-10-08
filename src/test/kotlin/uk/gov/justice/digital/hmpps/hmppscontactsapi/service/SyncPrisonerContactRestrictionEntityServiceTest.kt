@@ -34,7 +34,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       )
       val prisonerContactRestriction = syncService.getPrisonerContactRestrictionById(1L)
       with(prisonerContactRestriction) {
-        assertThat(id).isEqualTo(1L)
+        assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -87,7 +87,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
 
       // Checks the model response
       with(contact) {
-        assertThat(id).isGreaterThan(0)
+        assertThat(prisonerContactRestrictionId).isGreaterThan(0)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
@@ -157,7 +157,7 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
 
       // Checks the model returned
       with(updated) {
-        assertThat(id).isEqualTo(1L)
+        assertThat(prisonerContactRestrictionId).isEqualTo(1L)
         assertThat(contactId).isEqualTo(12345L)
         assertThat(restrictionType).isEqualTo("NoContact")
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
