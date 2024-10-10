@@ -10,12 +10,15 @@ parameters:
   releases-slack-channel:
     type: string
     default: dps-releases
+  java-version:
+    type: string
+    default: "21.0"
 
 jobs:
   validate:
     executor:
       name: hmpps/java
-      tag: "21.0"
+      tag: << pipeline.parameters.java-version >>
     steps:
       - checkout
       - restore_cache:
@@ -122,7 +125,7 @@ workflows:
           context:
             - hmpps-common-vars
       - hmpps/veracode_pipeline_scan:
-          jdk_tag: "21.0"
+          jdk_tag: << pipeline.parameters.java-version >>
           slack_channel: << pipeline.parameters.alerts-slack-channel >>
           context:
             - veracode-credentials
