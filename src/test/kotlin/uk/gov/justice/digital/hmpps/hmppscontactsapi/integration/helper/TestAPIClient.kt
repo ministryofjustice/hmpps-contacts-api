@@ -6,6 +6,7 @@ import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
@@ -28,6 +29,36 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectHeader().valuesMatch("Location", "/contact/(\\d)+")
       .expectBody(GetContactResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun patchAContact(request: Any, url: String): PatchContactResponse {
+    return webTestClient.patch()
+      .uri(url)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PatchContactResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun patchAContactReturnErrors(request: Any, url: String): ErrorResponse {
+    return webTestClient.patch()
+      .uri(url)
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
   }
 

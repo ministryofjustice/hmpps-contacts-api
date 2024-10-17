@@ -33,6 +33,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -712,4 +714,161 @@ class ContactServiceTest {
       createdTime = LocalDateTime.now(),
     )
   }
+
+  @Nested
+  inner class PatchContact {
+
+    @Test
+    fun `should patch a contact when fields are provided`() {
+      val contactId = 1L
+
+      val existingContact = getDummyContactEntity()
+
+      val patchRequest = patchContactRequest()
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(existingContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      assertThat(contactCaptor.firstValue).isEqualTo(mapToEntity(patchRequest))
+      assertThat(response).isEqualTo(mapToResponse(patchRequest))
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException if contact does not exist`() {
+      val contactId = 1L
+      val patchRequest = PatchContactRequest(
+        firstName = "Jane",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      assertThrows<EntityNotFoundException> {
+        service.patch(contactId, patchRequest)
+      }
+    }
+  }
+
+  fun mapToResponse(request: PatchContactRequest): PatchContactResponse {
+    return PatchContactResponse(
+      id = 1L,
+      title = request.title,
+      firstName = request.firstName!!,
+      lastName = request.lastName!!,
+      middleNames = request.middleNames,
+      dateOfBirth = request.dateOfBirth,
+      estimatedIsOverEighteen = request.estimatedIsOverEighteen,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+      placeOfBirth = request.placeOfBirth,
+      active = request.active,
+      suspended = request.suspended,
+      staffFlag = request.staffFlag,
+      deceasedFlag = request.deceasedFlag!!,
+      deceasedDate = request.deceasedDate,
+      coronerNumber = request.coronerNumber,
+      gender = request.gender,
+      domesticStatus = request.domesticStatus,
+      languageCode = request.languageCode,
+      nationalityCode = request.nationalityCode,
+      interpreterRequired = request.interpreterRequired,
+      comments = request.comments,
+      amendedBy = request.updatedBy,
+      amendedTime = request.updatedTime,
+    )
+  }
+
+  fun getDummyContactEntity(): ContactEntity {
+    val existingContact = ContactEntity(
+      contactId = 1L,
+      title = "Mr.",
+      firstName = "John",
+      lastName = "Doe",
+      middleNames = "A",
+      dateOfBirth = LocalDate.of(1990, 1, 1),
+      isDeceased = false,
+      deceasedDate = null,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    ).also {
+      it.placeOfBirth = "London"
+      it.active = true
+      it.suspended = false
+      it.staffFlag = false
+      it.coronerNumber = null
+      it.gender = "M"
+      it.domesticStatus = "Single"
+      it.languageCode = "FRE-FRA"
+      it.nationalityCode = "GB"
+      it.interpreterRequired = false
+      it.comments = "No comments"
+      it.amendedBy = "admin"
+      it.amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0)
+    }
+    return existingContact
+  }
+
+  fun mapToEntity(request: PatchContactRequest): ContactEntity {
+    return ContactEntity(
+      contactId = 1L,
+      title = request.title,
+      firstName = request.firstName!!,
+      lastName = request.lastName!!,
+      middleNames = request.middleNames,
+      dateOfBirth = request.dateOfBirth,
+      estimatedIsOverEighteen = request.estimatedIsOverEighteen,
+      isDeceased = request.deceasedFlag!!,
+      deceasedDate = request.deceasedDate,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    ).also {
+      it.placeOfBirth = request.placeOfBirth
+      it.active = request.active
+      it.suspended = request.suspended
+      it.staffFlag = request.staffFlag
+      it.coronerNumber = request.coronerNumber
+      it.gender = request.gender
+      it.domesticStatus = request.domesticStatus
+      it.languageCode = request.languageCode
+      it.nationalityCode = request.nationalityCode
+      it.interpreterRequired = request.interpreterRequired!!
+      it.comments = request.comments
+      it.amendedBy = request.updatedBy
+      it.amendedTime = request.updatedTime
+    }
+  }
+
+  private fun patchContactRequest(): PatchContactRequest {
+    val patchRequest = PatchContactRequest(
+      title = "Mr",
+      firstName = "Martin",
+      lastName = "Carty",
+      middleNames = "William",
+      dateOfBirth = LocalDate.of(1983, 1, 1),
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
+      placeOfBirth = "Birmingham",
+      active = false,
+      suspended = true,
+      staffFlag = true,
+      deceasedFlag = true,
+      deceasedDate = LocalDate.of(2024, 1, 1),
+      coronerNumber = "DCD1101",
+      gender = "Female",
+      domesticStatus = "Married",
+      languageCode = "FR",
+      nationalityCode = "FRENCH",
+      interpreterRequired = true,
+      comments = "Special requirements for contact removed.",
+      updatedBy = "Modifier",
+      updatedTime = LocalDateTime.of(2024, 1, 23, 0, 0, 0),
+    )
+    return patchRequest
+  }
+
 }
