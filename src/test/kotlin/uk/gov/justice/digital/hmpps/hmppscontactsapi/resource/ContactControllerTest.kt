@@ -22,9 +22,12 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchService
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -32,7 +35,8 @@ import java.time.LocalDateTime
 class ContactControllerTest {
 
   private val contactService: ContactService = mock()
-  private val controller = ContactController(contactService)
+  private val contactPatchService: ContactPatchService = mock()
+  private val controller = ContactController(contactService, contactPatchService)
 
   @Nested
   inner class CreateContact {
@@ -180,7 +184,7 @@ class ContactControllerTest {
       // Given
       val pageable = PageRequest.of(0, 10)
       val contactEntities = listOf(
-        getContact(1L),
+        getContact(),
       )
       val pageContacts = PageImpl(contactEntities, pageable, contactEntities.size.toLong())
 
@@ -205,8 +209,69 @@ class ContactControllerTest {
     }
   }
 
-  private fun getContact(contactId: Long) = ContactSearchResultItem(
-    id = contactId,
+  @Nested
+  inner class PatchContact {
+    private val id = 123456L
+    private val contact = PatchContactResponse(
+      id = id,
+      title = "Mr",
+      lastName = "Doe",
+      firstName = "John",
+      middleNames = "William",
+      dateOfBirth = LocalDate.of(1980, 1, 1),
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
+      placeOfBirth = "London",
+      active = true,
+      suspended = false,
+      staffFlag = false,
+      deceasedFlag = false,
+      deceasedDate = null,
+      coronerNumber = null,
+      gender = "Male",
+      domesticStatus = "Single",
+      languageCode = "EN",
+      nationalityCode = "GB",
+      interpreterRequired = false,
+      comments = "Special requirements for contact.",
+      createdBy = "JD000001",
+      createdTime = LocalDateTime.now(),
+      amendedBy = "UPDATE",
+      amendedTime = LocalDateTime.now(),
+    )
+
+    @Test
+    fun `should patch a contact successfully`() {
+      val request = PatchContactRequest(firstName = "Joe")
+      whenever(contactPatchService.patch(id, request)).thenReturn(contact)
+
+      val result = controller.patchContact(id, request)
+
+      assertThat(result).isEqualTo(contact)
+    }
+
+    @Test
+    fun `should return 404 if contact not found`() {
+      val request = PatchContactRequest(firstName = "Joe")
+      whenever(contactPatchService.patch(id, request)).thenReturn(null)
+
+      val response = controller.patchContact(id, request)
+
+      assertThat(response).isEqualTo(null)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      val request = PatchContactRequest(firstName = "Joe")
+      whenever(contactPatchService.patch(id, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.patchContact(id, request)
+      }
+    }
+  }
+
+  private fun getContact() = ContactSearchResultItem(
+    id = 1L,
     lastName = "last",
     firstName = "first",
     middleNames = "first",

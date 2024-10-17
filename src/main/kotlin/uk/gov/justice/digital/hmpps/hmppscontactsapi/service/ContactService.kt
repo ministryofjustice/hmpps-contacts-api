@@ -8,12 +8,16 @@ import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.patchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
@@ -73,6 +77,17 @@ class ContactService(
     validateRelationship(request.relationship)
     getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
     prisonerContactRepository.saveAndFlush(request.relationship.toEntity(contactId, request.createdBy))
+  }
+
+  @Transactional
+  fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
+    val contact = contactRepository.findById(id)
+      .orElseThrow { EntityNotFoundException("Contact not found") }
+
+    val changedContact = contact.patchRequest(request)
+
+    val savedContact = contactRepository.saveAndFlush(changedContact)
+    return savedContact.mapToResponse()
   }
 
   private fun validateRelationship(relationship: ContactRelationship) {
