@@ -870,5 +870,4 @@ class ContactServiceTest {
     )
     return patchRequest
   }
-
 }

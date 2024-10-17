@@ -1,6 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch
 
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
@@ -8,7 +8,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import java.time.LocalDate
 import java.time.LocalDateTime
 
-class ContactEntityMappingTest {
+class PatchContactEntityMappersKtTest {
 
   @Test
   fun `mapToResponse should correctly map ContactEntity to PatchContactResponse`() {
