@@ -6,7 +6,7 @@ import org.openapitools.generator.gradle.plugin.tasks.GenerateTask
 
 plugins {
   id("uk.gov.justice.hmpps.gradle-spring-boot") version "6.0.6"
-  id("org.openapi.generator") version "7.8.0"
+  id("org.openapi.generator") version "7.9.0"
   kotlin("plugin.spring") version "2.0.21"
   kotlin("plugin.jpa") version "2.0.21"
 }
@@ -29,11 +29,11 @@ dependencies {
   implementation("org.springframework.boot:spring-boot-starter-webflux")
   implementation("uk.gov.justice.service.hmpps:hmpps-kotlin-spring-boot-starter:1.0.7")
   implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:4.4.4")
+  implementation("uk.gov.justice.service.hmpps:hmpps-sqs-spring-boot-starter:5.0.1")
   implementation("org.springframework.boot:spring-boot-starter-validation")
 
   // CSV dependencies
-  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.17.2")
+  implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-csv:2.18.0")
 
   // Database dependencies
   runtimeOnly("org.flywaydb:flyway-database-postgresql")
