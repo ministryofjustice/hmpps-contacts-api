@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import java.time.LocalDateTime
 
 fun ContactEntity.mapToResponse(): PatchContactResponse {
   return PatchContactResponse(
@@ -27,7 +28,6 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     languageCode = this.languageCode,
     nationalityCode = this.nationalityCode,
     interpreterRequired = this.interpreterRequired,
-    comments = this.comments,
     amendedBy = this.amendedBy,
     amendedTime = this.amendedTime,
   )
@@ -37,28 +37,28 @@ fun ContactEntity.patchRequest(
   request: PatchContactRequest,
 ): ContactEntity {
   val changedContact = this.copy(
-    title = request.title ?: this.title,
-    firstName = request.firstName ?: this.firstName,
-    lastName = request.lastName ?: this.lastName,
-    middleNames = request.middleNames ?: this.middleNames,
-    dateOfBirth = request.dateOfBirth ?: this.dateOfBirth,
-    isDeceased = request.deceasedFlag ?: this.isDeceased,
-    deceasedDate = request.deceasedDate ?: this.deceasedDate,
-    estimatedIsOverEighteen = request.estimatedIsOverEighteen ?: this.estimatedIsOverEighteen,
+    title = request.title.orElse(this.title),
+    firstName = request.firstName.orElse(this.firstName),
+    lastName = request.lastName.orElse(this.lastName),
+    middleNames = request.middleNames.orElse(this.middleNames),
+    dateOfBirth = request.dateOfBirth.orElse(this.dateOfBirth),
+    isDeceased = request.deceasedFlag.orElse(this.isDeceased),
+    deceasedDate = request.deceasedDate.orElse(this.deceasedDate),
+    estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
   ).also {
-    it.placeOfBirth = request.placeOfBirth ?: this.placeOfBirth
-    it.active = request.active ?: this.active
-    it.suspended = request.suspended ?: this.suspended
-    it.staffFlag = request.staffFlag ?: this.staffFlag
-    it.coronerNumber = request.coronerNumber ?: this.coronerNumber
-    it.gender = request.gender ?: this.gender
-    it.domesticStatus = request.domesticStatus ?: this.domesticStatus
-    it.languageCode = request.languageCode ?: this.languageCode
-    it.nationalityCode = request.nationalityCode ?: this.nationalityCode
-    it.interpreterRequired = request.interpreterRequired ?: this.interpreterRequired
-    it.comments = request.comments ?: this.comments
-    it.amendedBy = request.updatedBy ?: this.amendedBy
-    it.amendedTime = request.updatedTime ?: this.amendedTime
+    it.placeOfBirth = request.placeOfBirth.orElse(this.placeOfBirth)
+    it.active = request.active.orElse(this.active)
+    it.suspended = request.suspended.orElse(this.suspended)
+    it.staffFlag = request.staffFlag.orElse(this.staffFlag)
+    it.coronerNumber = request.coronerNumber.orElse(this.coronerNumber)
+    it.gender = request.gender.orElse(this.gender)
+    it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
+    it.languageCode = request.languageCode.orElse(this.languageCode)
+    it.nationalityCode = request.nationalityCode.orElse(this.nationalityCode)
+    it.interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired)
+    it.amendedBy = request.updatedBy.orElse(this.amendedBy)
+    it.amendedTime = LocalDateTime.now()
   }
+
   return changedContact
 }

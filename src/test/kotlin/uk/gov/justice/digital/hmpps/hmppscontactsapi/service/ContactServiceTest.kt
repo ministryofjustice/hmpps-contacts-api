@@ -15,6 +15,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -735,15 +736,22 @@ class ContactServiceTest {
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
 
-      assertThat(contactCaptor.firstValue).isEqualTo(mapToEntity(patchRequest))
-      assertThat(response).isEqualTo(mapToResponse(patchRequest))
+      assertThat(contactCaptor.firstValue)
+        .usingRecursiveComparison()
+        .ignoringFields("amendedTime")
+        .isEqualTo(mapToEntity(patchRequest))
+
+      assertThat(response)
+        .usingRecursiveComparison()
+        .ignoringFields("amendedTime")
+        .isEqualTo(mapToResponse(patchRequest))
     }
 
     @Test
     fun `should throw EntityNotFoundException if contact does not exist`() {
       val contactId = 1L
       val patchRequest = PatchContactRequest(
-        firstName = "Jane",
+        firstName = JsonNullable.of("Jane"),
       )
 
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
@@ -757,29 +765,28 @@ class ContactServiceTest {
   fun mapToResponse(request: PatchContactRequest): PatchContactResponse {
     return PatchContactResponse(
       id = 1L,
-      title = request.title,
-      firstName = request.firstName!!,
-      lastName = request.lastName!!,
-      middleNames = request.middleNames,
-      dateOfBirth = request.dateOfBirth,
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen,
+      title = request.title.get(),
+      firstName = request.firstName.get()!!,
+      lastName = request.lastName.get()!!,
+      middleNames = request.middleNames.get(),
+      dateOfBirth = request.dateOfBirth.get(),
+      estimatedIsOverEighteen = request.estimatedIsOverEighteen.get(),
       createdBy = "Admin",
       createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-      placeOfBirth = request.placeOfBirth,
-      active = request.active,
-      suspended = request.suspended,
-      staffFlag = request.staffFlag,
-      deceasedFlag = request.deceasedFlag!!,
-      deceasedDate = request.deceasedDate,
-      coronerNumber = request.coronerNumber,
-      gender = request.gender,
-      domesticStatus = request.domesticStatus,
-      languageCode = request.languageCode,
-      nationalityCode = request.nationalityCode,
-      interpreterRequired = request.interpreterRequired,
-      comments = request.comments,
-      amendedBy = request.updatedBy,
-      amendedTime = request.updatedTime,
+      placeOfBirth = request.placeOfBirth.get(),
+      active = request.active.get(),
+      suspended = request.suspended.get(),
+      staffFlag = request.staffFlag.get(),
+      deceasedFlag = request.deceasedFlag.get(),
+      deceasedDate = request.deceasedDate.get(),
+      coronerNumber = request.coronerNumber.get(),
+      gender = request.gender.get(),
+      domesticStatus = request.domesticStatus.get(),
+      languageCode = request.languageCode.get(),
+      nationalityCode = request.nationalityCode.get(),
+      interpreterRequired = request.interpreterRequired.get(),
+      amendedBy = request.updatedBy.get(),
+      amendedTime = LocalDateTime.now(),
     )
   }
 
@@ -807,7 +814,6 @@ class ContactServiceTest {
       it.languageCode = "FRE-FRA"
       it.nationalityCode = "GB"
       it.interpreterRequired = false
-      it.comments = "No comments"
       it.amendedBy = "admin"
       it.amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0)
     }
@@ -817,56 +823,53 @@ class ContactServiceTest {
   fun mapToEntity(request: PatchContactRequest): ContactEntity {
     return ContactEntity(
       contactId = 1L,
-      title = request.title,
-      firstName = request.firstName!!,
-      lastName = request.lastName!!,
-      middleNames = request.middleNames,
-      dateOfBirth = request.dateOfBirth,
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen,
-      isDeceased = request.deceasedFlag!!,
-      deceasedDate = request.deceasedDate,
+      title = request.title.get(),
+      firstName = request.firstName.get(),
+      lastName = request.lastName.get(),
+      middleNames = request.middleNames.get(),
+      dateOfBirth = request.dateOfBirth.get(),
+      estimatedIsOverEighteen = request.estimatedIsOverEighteen.get(),
+      isDeceased = request.deceasedFlag.get(),
+      deceasedDate = request.deceasedDate.get(),
       createdBy = "Admin",
       createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
     ).also {
-      it.placeOfBirth = request.placeOfBirth
-      it.active = request.active
-      it.suspended = request.suspended
-      it.staffFlag = request.staffFlag
-      it.coronerNumber = request.coronerNumber
-      it.gender = request.gender
-      it.domesticStatus = request.domesticStatus
-      it.languageCode = request.languageCode
-      it.nationalityCode = request.nationalityCode
-      it.interpreterRequired = request.interpreterRequired!!
-      it.comments = request.comments
-      it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
+      it.placeOfBirth = request.placeOfBirth.get()
+      it.active = request.active.get()
+      it.suspended = request.suspended.get()
+      it.staffFlag = request.staffFlag.get()
+      it.coronerNumber = request.coronerNumber.get()
+      it.gender = request.gender.get()
+      it.domesticStatus = request.domesticStatus.get()
+      it.languageCode = request.languageCode.get()
+      it.nationalityCode = request.nationalityCode.get()
+      it.interpreterRequired = request.interpreterRequired.get()
+      it.amendedBy = request.updatedBy.get()
+      it.amendedTime = LocalDateTime.now()
     }
   }
 
   private fun patchContactRequest(): PatchContactRequest {
     val patchRequest = PatchContactRequest(
-      title = "Mr",
-      firstName = "Martin",
-      lastName = "Carty",
-      middleNames = "William",
-      dateOfBirth = LocalDate.of(1983, 1, 1),
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.NO,
-      placeOfBirth = "Birmingham",
-      active = false,
-      suspended = true,
-      staffFlag = true,
-      deceasedFlag = true,
-      deceasedDate = LocalDate.of(2024, 1, 1),
-      coronerNumber = "DCD1101",
-      gender = "Female",
-      domesticStatus = "Married",
-      languageCode = "FR",
-      nationalityCode = "FRENCH",
-      interpreterRequired = true,
-      comments = "Special requirements for contact removed.",
-      updatedBy = "Modifier",
-      updatedTime = LocalDateTime.of(2024, 1, 23, 0, 0, 0),
+      title = JsonNullable.of("Mr"),
+      firstName = JsonNullable.of("Martin"),
+      lastName = JsonNullable.of("Carty"),
+      middleNames = JsonNullable.of("William"),
+      dateOfBirth = JsonNullable.of(LocalDate.of(1983, 1, 1)),
+      estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.NO),
+      placeOfBirth = JsonNullable.of("Birmingham"),
+      active = JsonNullable.of(false),
+      suspended = JsonNullable.of(true),
+      staffFlag = JsonNullable.of(true),
+      deceasedFlag = JsonNullable.of(true),
+      deceasedDate = JsonNullable.of(LocalDate.of(2024, 1, 1)),
+      coronerNumber = JsonNullable.of("DCD1101"),
+      gender = JsonNullable.of("Female"),
+      domesticStatus = JsonNullable.of("Married"),
+      languageCode = JsonNullable.of("FR"),
+      nationalityCode = JsonNullable.of("FRENCH"),
+      interpreterRequired = JsonNullable.of(true),
+      updatedBy = JsonNullable.of("Modifier"),
     )
     return patchRequest
   }

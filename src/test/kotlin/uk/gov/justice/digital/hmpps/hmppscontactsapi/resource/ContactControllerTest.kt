@@ -9,6 +9,7 @@ import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -232,7 +233,6 @@ class ContactControllerTest {
       languageCode = "EN",
       nationalityCode = "GB",
       interpreterRequired = false,
-      comments = "Special requirements for contact.",
       createdBy = "JD000001",
       createdTime = LocalDateTime.now(),
       amendedBy = "UPDATE",
@@ -241,7 +241,7 @@ class ContactControllerTest {
 
     @Test
     fun `should patch a contact successfully`() {
-      val request = PatchContactRequest(firstName = "Joe")
+      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
       whenever(contactPatchService.patch(id, request)).thenReturn(contact)
 
       val result = controller.patchContact(id, request)
@@ -251,7 +251,7 @@ class ContactControllerTest {
 
     @Test
     fun `should return 404 if contact not found`() {
-      val request = PatchContactRequest(firstName = "Joe")
+      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
       whenever(contactPatchService.patch(id, request)).thenReturn(null)
 
       val response = controller.patchContact(id, request)
@@ -261,7 +261,7 @@ class ContactControllerTest {
 
     @Test
     fun `should propagate exceptions getting a contact`() {
-      val request = PatchContactRequest(firstName = "Joe")
+      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
       whenever(contactPatchService.patch(id, request)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
