@@ -46,27 +46,61 @@ class PatchContactEntityMappersKtTest {
   fun `full patchRequest should correctly update ContactEntity fields`() {
     val originalContact = contactEntity()
 
-    val patchRequest = patchContactRequest()
+    val patchRequest = PatchContactRequest(
+      languageCode = JsonNullable.of("FR"),
+      updatedBy = "system",
+    )
 
     val updatedContact = originalContact.patchRequest(patchRequest)
 
-    assertThat(updatedContact.title).isEqualTo(patchRequest.title.get())
-    assertThat(updatedContact.firstName).isEqualTo(patchRequest.firstName.get())
-    assertThat(updatedContact.lastName).isEqualTo(patchRequest.lastName.get())
-    assertThat(updatedContact.middleNames).isEqualTo(patchRequest.middleNames.get())
-    assertThat(updatedContact.dateOfBirth).isEqualTo(patchRequest.dateOfBirth.get())
-    assertThat(updatedContact.placeOfBirth).isEqualTo(patchRequest.placeOfBirth.get())
-    assertThat(updatedContact.active).isEqualTo(patchRequest.active.get())
-    assertThat(updatedContact.suspended).isEqualTo(patchRequest.suspended.get())
-    assertThat(updatedContact.staffFlag).isEqualTo(patchRequest.staffFlag.get())
-    assertThat(updatedContact.coronerNumber).isEqualTo(patchRequest.coronerNumber.get())
-    assertThat(updatedContact.gender).isEqualTo(patchRequest.gender.get())
-    assertThat(updatedContact.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
-    assertThat(updatedContact.languageCode).isEqualTo(patchRequest.languageCode.get())
-    assertThat(updatedContact.nationalityCode).isEqualTo(patchRequest.nationalityCode.get())
-    assertThat(updatedContact.interpreterRequired).isEqualTo(patchRequest.interpreterRequired.get())
-    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy.get())
+    assertThat(updatedContact.title).isEqualTo(originalContact.title)
+    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
+    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
+    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
+    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
+    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
+    assertThat(updatedContact.active).isEqualTo(originalContact.active)
+    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
+    assertThat(updatedContact.staffFlag).isEqualTo(originalContact.staffFlag)
+    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
+    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
+    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
+    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
+    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
     assertThat(updatedContact.amendedTime).isInThePast()
+    assertThat(updatedContact.languageCode).isEqualTo(patchRequest.languageCode.get())
+    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+  }
+
+  @Test
+  fun `when languageCode is set to null in patchRequest then should correctly update ContactEntity`() {
+    val originalContact = contactEntity()
+
+    val patchRequest = PatchContactRequest(
+      languageCode = JsonNullable.of(null),
+      updatedBy = "system",
+    )
+
+    val updatedContact = originalContact.patchRequest(patchRequest)
+
+    assertThat(updatedContact.title).isEqualTo(originalContact.title)
+    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
+    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
+    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
+    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
+    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
+    assertThat(updatedContact.active).isEqualTo(originalContact.active)
+    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
+    assertThat(updatedContact.staffFlag).isEqualTo(originalContact.staffFlag)
+    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
+    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
+    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
+    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
+    assertThat(updatedContact.amendedTime).isInThePast()
+    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
+    // patched fields
+    assertThat(updatedContact.languageCode).isNull()
+    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
   }
 
   @Test
@@ -74,9 +108,7 @@ class PatchContactEntityMappersKtTest {
     val originalContact = contactEntity()
 
     val patchRequest = PatchContactRequest(
-      domesticStatus = JsonNullable.of("Married"),
-      languageCode = JsonNullable.of("FR"),
-      updatedBy = JsonNullable.of("system"),
+      updatedBy = "system",
     )
 
     val updatedContact = originalContact.patchRequest(patchRequest)
@@ -94,36 +126,11 @@ class PatchContactEntityMappersKtTest {
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
     assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
-    // Updated fields
-    assertThat(updatedContact.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
-    assertThat(updatedContact.languageCode).isEqualTo(patchRequest.languageCode.get())
-    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy.get())
+    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
     assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
-  }
-
-  private fun patchContactRequest(): PatchContactRequest {
-    val patchRequest = PatchContactRequest(
-      title = JsonNullable.of("Dr"),
-      firstName = JsonNullable.of("Jane"),
-      lastName = JsonNullable.of("Doe"),
-      middleNames = JsonNullable.of(null),
-      dateOfBirth = JsonNullable.of(LocalDate.of(1985, 5, 5)),
-      deceasedFlag = JsonNullable.of(false),
-      deceasedDate = JsonNullable.of(null),
-      estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.YES),
-      placeOfBirth = JsonNullable.of("Paris"),
-      active = JsonNullable.of(false),
-      suspended = JsonNullable.of(true),
-      staffFlag = JsonNullable.of(true),
-      coronerNumber = JsonNullable.of("5678"),
-      gender = JsonNullable.of("Female"),
-      domesticStatus = JsonNullable.of("Married"),
-      languageCode = JsonNullable.of("FR"),
-      nationalityCode = JsonNullable.of("FR"),
-      interpreterRequired = JsonNullable.of(true),
-      updatedBy = JsonNullable.of("system"),
-    )
-    return patchRequest
+    assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
+    // patched fields
+    assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
   }
 
   private fun contactEntity(): ContactEntity {
