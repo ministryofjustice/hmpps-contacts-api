@@ -15,6 +15,7 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -33,6 +34,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -711,5 +714,147 @@ class ContactServiceTest {
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
     )
+  }
+
+  @Nested
+  inner class PatchContact {
+
+    @Test
+    fun `should patch a contact when fields are provided`() {
+      val contactId = 1L
+
+      val existingContact = getDummyContactEntity()
+
+      val patchRequest = patchContactRequest()
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(existingContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      assertThat(contactCaptor.firstValue)
+        .usingRecursiveComparison()
+        .ignoringFields("amendedTime")
+        .isEqualTo(mapToEntity(patchRequest, existingContact))
+
+      assertThat(response)
+        .usingRecursiveComparison()
+        .ignoringFields("amendedTime")
+        .isEqualTo(mapToResponse(patchRequest, existingContact))
+    }
+
+    @Test
+    fun `should throw EntityNotFoundException if contact does not exist`() {
+      val contactId = 1L
+      val patchRequest = PatchContactRequest(
+        languageCode = JsonNullable.of("Jane"),
+        updatedBy = "system",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
+
+      assertThrows<EntityNotFoundException> {
+        service.patch(contactId, patchRequest)
+      }
+    }
+  }
+
+  fun mapToResponse(request: PatchContactRequest, existingContact: ContactEntity): PatchContactResponse {
+    return PatchContactResponse(
+      id = 1L,
+      title = existingContact.title,
+      firstName = existingContact.firstName,
+      lastName = existingContact.lastName,
+      middleNames = existingContact.middleNames,
+      dateOfBirth = existingContact.dateOfBirth,
+      estimatedIsOverEighteen = existingContact.estimatedIsOverEighteen,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+      placeOfBirth = existingContact.placeOfBirth,
+      active = existingContact.active,
+      suspended = existingContact.suspended,
+      staffFlag = existingContact.staffFlag,
+      deceasedFlag = existingContact.isDeceased,
+      deceasedDate = existingContact.deceasedDate,
+      coronerNumber = existingContact.coronerNumber,
+      gender = existingContact.gender,
+      domesticStatus = existingContact.domesticStatus,
+      languageCode = request.languageCode.get(),
+      nationalityCode = existingContact.nationalityCode,
+      interpreterRequired = existingContact.interpreterRequired,
+      amendedBy = request.updatedBy,
+      amendedTime = LocalDateTime.now(),
+    )
+  }
+
+  fun getDummyContactEntity(): ContactEntity {
+    val existingContact = ContactEntity(
+      contactId = 1L,
+      title = "Mr.",
+      firstName = "John",
+      lastName = "Doe",
+      middleNames = "A",
+      dateOfBirth = LocalDate.of(1990, 1, 1),
+      isDeceased = false,
+      deceasedDate = null,
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    ).also {
+      it.placeOfBirth = "London"
+      it.active = true
+      it.suspended = false
+      it.staffFlag = false
+      it.coronerNumber = null
+      it.gender = "M"
+      it.domesticStatus = "Single"
+      it.languageCode = "FRE-FRA"
+      it.nationalityCode = "GB"
+      it.interpreterRequired = false
+      it.amendedBy = "admin"
+      it.amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0)
+    }
+    return existingContact
+  }
+
+  fun mapToEntity(request: PatchContactRequest, existingContact: ContactEntity): ContactEntity {
+    return ContactEntity(
+      contactId = 1L,
+      title = existingContact.title,
+      firstName = existingContact.firstName,
+      lastName = existingContact.lastName,
+      middleNames = existingContact.middleNames,
+      dateOfBirth = existingContact.dateOfBirth,
+      estimatedIsOverEighteen = existingContact.estimatedIsOverEighteen,
+      isDeceased = existingContact.isDeceased,
+      deceasedDate = existingContact.deceasedDate,
+      createdBy = "Admin",
+      createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
+    ).also {
+      it.placeOfBirth = existingContact.placeOfBirth
+      it.active = existingContact.active
+      it.suspended = existingContact.suspended
+      it.staffFlag = existingContact.staffFlag
+      it.coronerNumber = existingContact.coronerNumber
+      it.gender = existingContact.gender
+      it.domesticStatus = existingContact.domesticStatus
+      it.languageCode = request.languageCode.get()
+      it.nationalityCode = existingContact.nationalityCode
+      it.interpreterRequired = existingContact.interpreterRequired
+      it.amendedBy = request.updatedBy
+      it.amendedTime = LocalDateTime.now()
+    }
+  }
+
+  private fun patchContactRequest(): PatchContactRequest {
+    val patchRequest = PatchContactRequest(
+      languageCode = JsonNullable.of("FR"),
+      updatedBy = "Modifier",
+    )
+    return patchRequest
   }
 }
