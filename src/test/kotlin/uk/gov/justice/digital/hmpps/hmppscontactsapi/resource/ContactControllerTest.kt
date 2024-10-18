@@ -9,7 +9,6 @@ import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
-import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -25,6 +24,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
@@ -213,7 +213,44 @@ class ContactControllerTest {
   @Nested
   inner class PatchContact {
     private val id = 123456L
-    private val contact = PatchContactResponse(
+    private val contact = patchContactResponse(id)
+
+    @Test
+    fun `should patch a contact successfully`() {
+      val request = patchContactRequest()
+      whenever(contactPatchService.patch(id, request)).thenReturn(contact)
+
+      val result = controller.patchContact(id, request)
+
+      assertThat(result).isEqualTo(contact)
+    }
+
+    @Test
+    fun `should return 404 if contact not found`() {
+      val request = patchContactRequest()
+      whenever(contactPatchService.patch(id, request)).thenReturn(null)
+
+      val response = controller.patchContact(id, request)
+
+      assertThat(response).isEqualTo(null)
+    }
+
+    @Test
+    fun `should propagate exceptions getting a contact`() {
+      val request = patchContactRequest()
+      whenever(contactPatchService.patch(id, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.patchContact(id, request)
+      }
+    }
+
+    private fun patchContactRequest() = PatchContactRequest(
+      languageCode = Patchable.from("ENG"),
+      updatedBy = "system",
+    )
+
+    private fun patchContactResponse(id: Long) = PatchContactResponse(
       id = id,
       title = "Mr",
       lastName = "Doe",
@@ -238,36 +275,6 @@ class ContactControllerTest {
       amendedBy = "UPDATE",
       amendedTime = LocalDateTime.now(),
     )
-
-    @Test
-    fun `should patch a contact successfully`() {
-      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
-      whenever(contactPatchService.patch(id, request)).thenReturn(contact)
-
-      val result = controller.patchContact(id, request)
-
-      assertThat(result).isEqualTo(contact)
-    }
-
-    @Test
-    fun `should return 404 if contact not found`() {
-      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
-      whenever(contactPatchService.patch(id, request)).thenReturn(null)
-
-      val response = controller.patchContact(id, request)
-
-      assertThat(response).isEqualTo(null)
-    }
-
-    @Test
-    fun `should propagate exceptions getting a contact`() {
-      val request = PatchContactRequest(firstName = JsonNullable.of("Joe"))
-      whenever(contactPatchService.patch(id, request)).thenThrow(RuntimeException("Bang!"))
-
-      assertThrows<RuntimeException>("Bang!") {
-        controller.patchContact(id, request)
-      }
-    }
   }
 
   private fun getContact() = ContactSearchResultItem(

@@ -15,7 +15,6 @@ import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.whenever
-import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -36,6 +35,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
@@ -739,19 +739,20 @@ class ContactServiceTest {
       assertThat(contactCaptor.firstValue)
         .usingRecursiveComparison()
         .ignoringFields("amendedTime")
-        .isEqualTo(mapToEntity(patchRequest))
+        .isEqualTo(mapToEntity(patchRequest, existingContact))
 
       assertThat(response)
         .usingRecursiveComparison()
         .ignoringFields("amendedTime")
-        .isEqualTo(mapToResponse(patchRequest))
+        .isEqualTo(mapToResponse(patchRequest, existingContact))
     }
 
     @Test
     fun `should throw EntityNotFoundException if contact does not exist`() {
       val contactId = 1L
       val patchRequest = PatchContactRequest(
-        firstName = JsonNullable.of("Jane"),
+        languageCode = Patchable.from("Jane"),
+        updatedBy = "system",
       )
 
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
@@ -762,30 +763,30 @@ class ContactServiceTest {
     }
   }
 
-  fun mapToResponse(request: PatchContactRequest): PatchContactResponse {
+  fun mapToResponse(request: PatchContactRequest, existingContact: ContactEntity): PatchContactResponse {
     return PatchContactResponse(
       id = 1L,
-      title = request.title.get(),
-      firstName = request.firstName.get()!!,
-      lastName = request.lastName.get()!!,
-      middleNames = request.middleNames.get(),
-      dateOfBirth = request.dateOfBirth.get(),
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen.get(),
+      title = existingContact.title,
+      firstName = existingContact.firstName,
+      lastName = existingContact.lastName,
+      middleNames = existingContact.middleNames,
+      dateOfBirth = existingContact.dateOfBirth,
+      estimatedIsOverEighteen = existingContact.estimatedIsOverEighteen,
       createdBy = "Admin",
       createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-      placeOfBirth = request.placeOfBirth.get(),
-      active = request.active.get(),
-      suspended = request.suspended.get(),
-      staffFlag = request.staffFlag.get(),
-      deceasedFlag = request.deceasedFlag.get(),
-      deceasedDate = request.deceasedDate.get(),
-      coronerNumber = request.coronerNumber.get(),
-      gender = request.gender.get(),
-      domesticStatus = request.domesticStatus.get(),
-      languageCode = request.languageCode.get(),
-      nationalityCode = request.nationalityCode.get(),
-      interpreterRequired = request.interpreterRequired.get(),
-      amendedBy = request.updatedBy.get(),
+      placeOfBirth = existingContact.placeOfBirth,
+      active = existingContact.active,
+      suspended = existingContact.suspended,
+      staffFlag = existingContact.staffFlag,
+      deceasedFlag = existingContact.isDeceased,
+      deceasedDate = existingContact.deceasedDate,
+      coronerNumber = existingContact.coronerNumber,
+      gender = existingContact.gender,
+      domesticStatus = existingContact.domesticStatus,
+      languageCode = request.languageCode?.get(),
+      nationalityCode = existingContact.nationalityCode,
+      interpreterRequired = existingContact.interpreterRequired,
+      amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
   }
@@ -820,56 +821,39 @@ class ContactServiceTest {
     return existingContact
   }
 
-  fun mapToEntity(request: PatchContactRequest): ContactEntity {
+  fun mapToEntity(request: PatchContactRequest, existingContact: ContactEntity): ContactEntity {
     return ContactEntity(
       contactId = 1L,
-      title = request.title.get(),
-      firstName = request.firstName.get(),
-      lastName = request.lastName.get(),
-      middleNames = request.middleNames.get(),
-      dateOfBirth = request.dateOfBirth.get(),
-      estimatedIsOverEighteen = request.estimatedIsOverEighteen.get(),
-      isDeceased = request.deceasedFlag.get(),
-      deceasedDate = request.deceasedDate.get(),
+      title = existingContact.title,
+      firstName = existingContact.firstName,
+      lastName = existingContact.lastName,
+      middleNames = existingContact.middleNames,
+      dateOfBirth = existingContact.dateOfBirth,
+      estimatedIsOverEighteen = existingContact.estimatedIsOverEighteen,
+      isDeceased = existingContact.isDeceased,
+      deceasedDate = existingContact.deceasedDate,
       createdBy = "Admin",
       createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
     ).also {
-      it.placeOfBirth = request.placeOfBirth.get()
-      it.active = request.active.get()
-      it.suspended = request.suspended.get()
-      it.staffFlag = request.staffFlag.get()
-      it.coronerNumber = request.coronerNumber.get()
-      it.gender = request.gender.get()
-      it.domesticStatus = request.domesticStatus.get()
-      it.languageCode = request.languageCode.get()
-      it.nationalityCode = request.nationalityCode.get()
-      it.interpreterRequired = request.interpreterRequired.get()
-      it.amendedBy = request.updatedBy.get()
+      it.placeOfBirth = existingContact.placeOfBirth
+      it.active = existingContact.active
+      it.suspended = existingContact.suspended
+      it.staffFlag = existingContact.staffFlag
+      it.coronerNumber = existingContact.coronerNumber
+      it.gender = existingContact.gender
+      it.domesticStatus = existingContact.domesticStatus
+      it.languageCode = request.languageCode?.get()
+      it.nationalityCode = existingContact.nationalityCode
+      it.interpreterRequired = existingContact.interpreterRequired
+      it.amendedBy = request.updatedBy
       it.amendedTime = LocalDateTime.now()
     }
   }
 
   private fun patchContactRequest(): PatchContactRequest {
     val patchRequest = PatchContactRequest(
-      title = JsonNullable.of("Mr"),
-      firstName = JsonNullable.of("Martin"),
-      lastName = JsonNullable.of("Carty"),
-      middleNames = JsonNullable.of("William"),
-      dateOfBirth = JsonNullable.of(LocalDate.of(1983, 1, 1)),
-      estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.NO),
-      placeOfBirth = JsonNullable.of("Birmingham"),
-      active = JsonNullable.of(false),
-      suspended = JsonNullable.of(true),
-      staffFlag = JsonNullable.of(true),
-      deceasedFlag = JsonNullable.of(true),
-      deceasedDate = JsonNullable.of(LocalDate.of(2024, 1, 1)),
-      coronerNumber = JsonNullable.of("DCD1101"),
-      gender = JsonNullable.of("Female"),
-      domesticStatus = JsonNullable.of("Married"),
-      languageCode = JsonNullable.of("FR"),
-      nationalityCode = JsonNullable.of("FRENCH"),
-      interpreterRequired = JsonNullable.of(true),
-      updatedBy = JsonNullable.of("Modifier"),
+      languageCode = Patchable.from("FR"),
+      updatedBy = "Modifier",
     )
     return patchRequest
   }

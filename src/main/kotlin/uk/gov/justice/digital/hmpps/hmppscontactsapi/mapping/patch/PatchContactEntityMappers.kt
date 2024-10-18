@@ -3,6 +3,7 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import java.time.LocalDateTime
 
 fun ContactEntity.mapToResponse(): PatchContactResponse {
@@ -37,28 +38,32 @@ fun ContactEntity.patchRequest(
   request: PatchContactRequest,
 ): ContactEntity {
   val changedContact = this.copy(
-    title = request.title.orElse(this.title),
-    firstName = request.firstName.orElse(this.firstName),
-    lastName = request.lastName.orElse(this.lastName),
-    middleNames = request.middleNames.orElse(this.middleNames),
-    dateOfBirth = request.dateOfBirth.orElse(this.dateOfBirth),
-    isDeceased = request.deceasedFlag.orElse(this.isDeceased),
-    deceasedDate = request.deceasedDate.orElse(this.deceasedDate),
-    estimatedIsOverEighteen = request.estimatedIsOverEighteen.orElse(this.estimatedIsOverEighteen),
+    title = this.title,
+    firstName = this.firstName,
+    lastName = this.lastName,
+    middleNames = this.middleNames,
+    dateOfBirth = this.dateOfBirth,
+    isDeceased = this.isDeceased,
+    deceasedDate = this.deceasedDate,
+    estimatedIsOverEighteen = this.estimatedIsOverEighteen,
   ).also {
-    it.placeOfBirth = request.placeOfBirth.orElse(this.placeOfBirth)
-    it.active = request.active.orElse(this.active)
-    it.suspended = request.suspended.orElse(this.suspended)
-    it.staffFlag = request.staffFlag.orElse(this.staffFlag)
-    it.coronerNumber = request.coronerNumber.orElse(this.coronerNumber)
-    it.gender = request.gender.orElse(this.gender)
-    it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
-    it.languageCode = request.languageCode.orElse(this.languageCode)
-    it.nationalityCode = request.nationalityCode.orElse(this.nationalityCode)
-    it.interpreterRequired = request.interpreterRequired.orElse(this.interpreterRequired)
-    it.amendedBy = request.updatedBy.orElse(this.amendedBy)
+    it.placeOfBirth = this.placeOfBirth
+    it.active = this.active
+    it.suspended = this.suspended
+    it.staffFlag = this.staffFlag
+    it.coronerNumber = this.coronerNumber
+    it.gender = this.gender
+    it.domesticStatus = this.domesticStatus
+    it.nationalityCode = this.nationalityCode
+    it.interpreterRequired = this.interpreterRequired
+    it.languageCode = resolveLanguageCode(this.languageCode, request.languageCode)
+    it.amendedBy = request.updatedBy
     it.amendedTime = LocalDateTime.now()
   }
 
   return changedContact
+}
+
+fun resolveLanguageCode(dbLanguageCode: String?, requestLanguageCode: Patchable<String>?): String? {
+  return if (requestLanguageCode == null || (requestLanguageCode.get() != null)) requestLanguageCode?.get() else dbLanguageCode
 }
