@@ -19,6 +19,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.security.access.prepost.PreAuthorize
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.ModelAttribute
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
@@ -125,6 +127,51 @@ class ContactController(val contactService: ContactService) {
     } else {
       logger.info("Couldn't find contact with id '{}'", contactId)
       ResponseEntity.notFound().build()
+    }
+  }
+
+  @PatchMapping("/{contactId}")
+  @Operation(
+    summary = "Patch a contact",
+    description = "Updates only the specified fields on a contact",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "201",
+        description = "Updated it",
+      ),
+      ApiResponse(
+        responseCode = "202",
+        description = "Deleted it (set to null)",
+      ),
+      ApiResponse(
+        responseCode = "204",
+        description = "Did nothing",
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  fun patchContact(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @Valid @RequestBody request: PatchContactRequest,
+  ): ResponseEntity<Any> {
+    if (request.languageCode.isPresent) {
+      val languageCode = request.languageCode.get()
+      if (languageCode == null) {
+        logger.info("Language code specified as null")
+        return ResponseEntity.status(202).build()
+      } else {
+        logger.info("Language code specified and updated: $languageCode")
+        return ResponseEntity.status(201).build()
+      }
+    } else {
+      logger.info("Language code not specified")
+      return ResponseEntity.status(204).build()
     }
   }
 
