@@ -7,17 +7,17 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchingService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 
-class ContactPatchServiceTest {
+class ContactPatchFacadeTest {
 
-  private val contactService: ContactService = mock()
+  private val contactService: ContactPatchingService = mock()
 
   private val outboundEventsService: OutboundEventsService = mock()
 
-  private val contactPatchService = ContactPatchService(outboundEventsService, contactService)
+  private val contactPatchFacade = ContactPatchFacade(outboundEventsService, contactService)
 
   @Test
   fun `patch should patch contact and send domain event`() {
@@ -27,7 +27,7 @@ class ContactPatchServiceTest {
 
     whenever(contactService.patch(contactId, request)).thenReturn(response)
 
-    val result = contactPatchService.patch(contactId, request)
+    val result = contactPatchFacade.patch(contactId, request)
 
     assertThat(response).isEqualTo(result)
     verify(contactService).patch(contactId, request)

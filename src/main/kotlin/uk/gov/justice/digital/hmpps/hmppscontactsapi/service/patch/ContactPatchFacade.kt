@@ -4,14 +4,14 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchingService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 
 @Service
-class ContactPatchService(
+class ContactPatchFacade(
   private val outboundEventsService: OutboundEventsService,
-  private val contactService: ContactService,
+  private val contactService: ContactPatchingService,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)

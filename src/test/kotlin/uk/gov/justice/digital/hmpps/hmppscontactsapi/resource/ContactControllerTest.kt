@@ -28,7 +28,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Pa
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import java.net.URI
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -36,8 +36,8 @@ import java.time.LocalDateTime
 class ContactControllerTest {
 
   private val contactService: ContactService = mock()
-  private val contactPatchService: ContactPatchService = mock()
-  private val controller = ContactController(contactService, contactPatchService)
+  private val contactPatchFacade: ContactPatchFacade = mock()
+  private val controller = ContactController(contactService, contactPatchFacade)
 
   @Nested
   inner class CreateContact {
@@ -218,7 +218,7 @@ class ContactControllerTest {
     @Test
     fun `should patch a contact successfully`() {
       val request = patchContactRequest()
-      whenever(contactPatchService.patch(id, request)).thenReturn(contact)
+      whenever(contactPatchFacade.patch(id, request)).thenReturn(contact)
 
       val result = controller.patchContact(id, request)
 
@@ -228,7 +228,7 @@ class ContactControllerTest {
     @Test
     fun `should return 404 if contact not found`() {
       val request = patchContactRequest()
-      whenever(contactPatchService.patch(id, request)).thenReturn(null)
+      whenever(contactPatchFacade.patch(id, request)).thenReturn(null)
 
       val response = controller.patchContact(id, request)
 
@@ -238,7 +238,7 @@ class ContactControllerTest {
     @Test
     fun `should propagate exceptions getting a contact`() {
       val request = patchContactRequest()
-      whenever(contactPatchService.patch(id, request)).thenThrow(RuntimeException("Bang!"))
+      whenever(contactPatchFacade.patch(id, request)).thenThrow(RuntimeException("Bang!"))
 
       assertThrows<RuntimeException>("Bang!") {
         controller.patchContact(id, request)

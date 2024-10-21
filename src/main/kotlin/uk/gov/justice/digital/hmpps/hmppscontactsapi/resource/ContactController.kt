@@ -34,7 +34,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactPatchFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -45,7 +45,7 @@ import java.net.URI
 @AuthApiResponses
 class ContactController(
   val contactService: ContactService,
-  val contactPatchService: ContactPatchService,
+  val contactPatchFacade: ContactPatchFacade,
 ) {
   companion object {
     private val logger = LoggerFactory.getLogger(this::class.java)
@@ -242,5 +242,5 @@ class ContactController(
       example = "123456",
     ) contactId: Long,
     @Valid @RequestBody patchContactRequest: PatchContactRequest,
-  ) = contactPatchService.patch(contactId, patchContactRequest)
+  ) = contactPatchFacade.patch(contactId, patchContactRequest)
 }
