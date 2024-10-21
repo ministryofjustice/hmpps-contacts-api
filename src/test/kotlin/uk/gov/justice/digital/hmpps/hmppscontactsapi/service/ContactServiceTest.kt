@@ -14,6 +14,7 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
+import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -735,6 +736,7 @@ class ContactServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
+      verify(languageService).getLanguageByNomisCode("FR")
 
       assertThat(contactCaptor.firstValue)
         .usingRecursiveComparison()
@@ -748,10 +750,30 @@ class ContactServiceTest {
     }
 
     @Test
+    fun `should not validate language code if it is not available in the request`() {
+      val contactId = 1L
+
+      val existingContact = getDummyContactEntity()
+
+      val patchRequest = PatchContactRequest(
+        languageCode = null,
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(existingContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      service.patch(contactId, patchRequest)
+
+      verify(languageService, never()).getLanguageByNomisCode(any())
+      verify(contactRepository, times(1)).saveAndFlush(any())
+    }
+
+    @Test
     fun `should throw EntityNotFoundException if contact does not exist`() {
       val contactId = 1L
       val patchRequest = PatchContactRequest(
-        languageCode = Patchable.from("Jane"),
+        languageCode = Patchable.from("ENG"),
         updatedBy = "system",
       )
 

@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearch
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneNumberDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
@@ -83,6 +84,11 @@ class ContactService(
   fun patch(id: Long, request: PatchContactRequest): PatchContactResponse {
     val contact = contactRepository.findById(id)
       .orElseThrow { EntityNotFoundException("Contact not found") }
+
+    val languageCode = request.languageCode
+    if (languageCode is Patchable.Present) {
+      languageService.getLanguageByNomisCode(languageCode.value)
+    }
 
     val changedContact = contact.patchRequest(request)
 
