@@ -6,7 +6,7 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactAddressRequest
@@ -14,7 +14,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDateTime
 
-class SyncContactAddressIntegrationTest : IntegrationTestBase() {
+class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
   @Autowired
   private lateinit var contactAddressRepository: ContactAddressRepository
 
@@ -143,6 +143,7 @@ class SyncContactAddressIntegrationTest : IntegrationTestBase() {
       with(contactAddress) {
         assertThat(flat).isEqualTo("1B")
         assertThat(addressType).isEqualTo("HOME")
+        assertThat(comments).isEqualTo("Some comments")
         assertThat(amendedBy).isNullOrEmpty()
         assertThat(amendedTime).isNull()
         assertThat(createdBy).isEqualTo("CREATE")
@@ -191,6 +192,7 @@ class SyncContactAddressIntegrationTest : IntegrationTestBase() {
       with(updatedAddress) {
         assertThat(flat).isEqualTo("2B")
         assertThat(addressType).isEqualTo("WORK")
+        assertThat(comments).isEqualTo("Updated comments")
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("CREATE")
@@ -276,6 +278,7 @@ class SyncContactAddressIntegrationTest : IntegrationTestBase() {
         countyCode = "WARWKS",
         postcode = "CV4 9NJ",
         countryCode = "UK",
+        comments = "Updated comments",
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
         verified = verified,
@@ -294,6 +297,7 @@ class SyncContactAddressIntegrationTest : IntegrationTestBase() {
         countyCode = "WARWKS",
         postcode = "CV4 9NJ",
         countryCode = "UK",
+        comments = "Some comments",
         createdBy = "CREATE",
       )
   }

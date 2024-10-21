@@ -4,18 +4,10 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import org.springframework.web.util.UriComponentsBuilder
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import java.net.URI
 
-private val CONTACT_SEARCH_URL = UriComponentsBuilder.fromPath("contact/search")
-  .queryParam("lastName", "Last")
-  .queryParam("firstName", "Jack")
-  .queryParam("middleNames", "Middle")
-  .queryParam("dateOfBirth", "21/11/2000")
-  .build()
-  .toUri()
-
-class SearchContactsIntegrationTest : IntegrationTestBase() {
+class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
 
   @Test
   fun `should return unauthorized if no token`() {
@@ -146,6 +138,7 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
       assertThat(contact.countryDescription).isEqualTo("England")
       assertThat(contact.mailFlag).isFalse()
       assertThat(contact.noFixedAddress).isFalse()
+      assertThat(contact.comments).isEqualTo("Some comments")
       assertThat(contact.startDate).isNull()
       assertThat(contact.startDate).isNull()
     }
@@ -289,5 +282,15 @@ class SearchContactsIntegrationTest : IntegrationTestBase() {
     val errors = testAPIClient.getBadResponseErrors(uri)
 
     assertThat(errors.userMessage).contains("Validation failure(s): Parameter specified as non-null is null: ")
+  }
+
+  companion object {
+    private val CONTACT_SEARCH_URL = UriComponentsBuilder.fromPath("contact/search")
+      .queryParam("lastName", "Last")
+      .queryParam("firstName", "Jack")
+      .queryParam("middleNames", "Middle")
+      .queryParam("dateOfBirth", "21/11/2000")
+      .build()
+      .toUri()
   }
 }
