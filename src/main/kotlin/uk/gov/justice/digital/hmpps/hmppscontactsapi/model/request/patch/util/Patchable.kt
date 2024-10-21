@@ -1,17 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util
 
-import com.fasterxml.jackson.annotation.JsonSubTypes
-import com.fasterxml.jackson.annotation.JsonTypeInfo
+import com.fasterxml.jackson.annotation.JsonInclude
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
+import com.fasterxml.jackson.databind.annotation.JsonSerialize
 
-@JsonTypeInfo(
-  use = JsonTypeInfo.Id.NAME,
-  include = JsonTypeInfo.As.PROPERTY,
-  property = "type",
-)
-@JsonSubTypes(
-  JsonSubTypes.Type(value = Patchable.Present::class, name = "Present"),
-  JsonSubTypes.Type(value = Patchable.Undefined::class, name = "Undefined"),
-)
+@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonDeserialize(using = PatchableDeserializer::class)
+@JsonSerialize(using = PatchableSerializer::class)
 @Suppress("UNCHECKED_CAST")
 sealed class Patchable<T> {
   object Undefined : Patchable<Nothing>()
@@ -20,7 +15,7 @@ sealed class Patchable<T> {
 
   fun get(): T? = when (this) {
     is Present -> value
-    Undefined -> null
+    is Undefined -> null
   }
 
   companion object {

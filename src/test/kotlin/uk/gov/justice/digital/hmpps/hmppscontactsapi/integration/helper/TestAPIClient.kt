@@ -47,21 +47,6 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .returnResult().responseBody!!
   }
 
-  fun patchAContactReturnErrors(request: Any, url: String): ErrorResponse {
-    return webTestClient.patch()
-      .uri(url)
-      .accept(MediaType.APPLICATION_JSON)
-      .contentType(MediaType.APPLICATION_JSON)
-      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-      .bodyValue(request)
-      .exchange()
-      .expectStatus()
-      .isBadRequest
-      .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(ErrorResponse::class.java)
-      .returnResult().responseBody!!
-  }
-
   fun getContact(id: Long): GetContactResponse {
     return webTestClient.get()
       .uri("/contact/$id")

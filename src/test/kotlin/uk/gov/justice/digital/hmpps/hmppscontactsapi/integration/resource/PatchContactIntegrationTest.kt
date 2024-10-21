@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
@@ -81,6 +82,54 @@ class PatchContactIntegrationTest : IntegrationTestBase() {
 
     assertExpectedResponse(contactReturnedOnPatch, contact, request)
     assertSuccessfullyPatched(testAPIClient.getContact(contactId), contact, request)
+  }
+
+  @Test
+  fun `should successfully patch the updated by field when its the only field in the request`() {
+    val request = PatchContactRequest(
+      languageCode = null,
+      updatedBy = "JD000001",
+    )
+    val contactId = contact.id
+    val contactReturnedOnPatch = testAPIClient.patchAContact(request, "/contact/$contactId")
+
+    with(contactReturnedOnPatch) {
+      assertThat(languageCode).isEqualTo(null)
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+    assertExpectedResponse(contactReturnedOnPatch, contact, request)
+    assertSuccessfullyPatched(testAPIClient.getContact(contactId), contact, request)
+  }
+
+  @Test
+  fun `should successfully patch the request`() {
+    val request = PatchContactRequest(
+      updatedBy = "JD000001",
+    )
+    val contactId = contact.id
+    val contactReturnedOnPatch = testAPIClient.patchAContact(request, "/contact/$contactId")
+
+    assertExpectedResponse(contactReturnedOnPatch, contact, request)
+    assertSuccessfullyPatched(testAPIClient.getContact(contactId), contact, request)
+  }
+
+  @Test
+  fun `should patch do not have amended by then return bad request`() {
+    val response = webTestClient.patch()
+      .uri("/contact/19")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(
+        """{
+                  }""",
+      )
+      .exchange()
+      .expectStatus()
+      .isBadRequest
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ErrorResponse::class.java)
+      .returnResult().responseBody!!
   }
 
   private fun assertExpectedResponse(
