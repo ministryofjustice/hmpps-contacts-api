@@ -7,13 +7,13 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchingService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactPatchService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 
 class ContactPatchFacadeTest {
 
-  private val contactService: ContactPatchingService = mock()
+  private val contactService: ContactPatchService = mock()
 
   private val outboundEventsService: OutboundEventsService = mock()
 

@@ -22,11 +22,11 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
-class ContactPatchingServiceTest {
+class ContactPatchServiceTest {
   private val languageService: LanguageService = mock()
   private val contactRepository: ContactRepository = mock()
 
-  private val service = ContactPatchingService(contactRepository, languageService)
+  private val service = ContactPatchService(contactRepository, languageService)
 
   @Nested
   inner class PatchContact {

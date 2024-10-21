@@ -12,7 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepositor
 import java.time.LocalDateTime
 
 @Service
-class ContactPatchingService(
+class ContactPatchService(
   private val contactRepository: ContactRepository,
   private val languageService: LanguageService,
 ) {
