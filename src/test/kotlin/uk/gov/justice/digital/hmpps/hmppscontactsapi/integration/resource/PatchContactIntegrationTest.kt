@@ -7,7 +7,7 @@ import org.junit.jupiter.api.TestInstance
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.IntegrationTestBase
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
@@ -18,7 +18,7 @@ import java.time.LocalDate
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @TestPropertySource(properties = ["feature.event.contacts-api.prisoner-contact.amended=true"])
 @TestPropertySource(properties = ["feature.events.sns.enabled=false"])
-class PatchContactIntegrationTest : IntegrationTestBase() {
+class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
   lateinit var contact: GetContactResponse
 
