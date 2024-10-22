@@ -8,10 +8,6 @@ import com.fasterxml.jackson.databind.JsonNode
 class PatchableDeserializer : JsonDeserializer<Patchable<*>>() {
   override fun deserialize(p: JsonParser, ctxt: DeserializationContext): Patchable<*> {
     val node: JsonNode = p.codec.readTree(p)
-    return if (node.isNull || node.isMissingNode) {
-      Patchable.Undefined
-    } else {
-      Patchable.Present(node.asText())
-    }
+    return Patchable.Present(node.asText())
   }
 }

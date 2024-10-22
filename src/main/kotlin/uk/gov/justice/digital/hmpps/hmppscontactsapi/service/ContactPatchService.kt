@@ -36,16 +36,7 @@ class ContactPatchService(
   fun ContactEntity.patchRequest(
     request: PatchContactRequest,
   ): ContactEntity {
-    val changedContact = this.copy(
-      title = this.title,
-      firstName = this.firstName,
-      lastName = this.lastName,
-      middleNames = this.middleNames,
-      dateOfBirth = this.dateOfBirth,
-      isDeceased = this.isDeceased,
-      deceasedDate = this.deceasedDate,
-      estimatedIsOverEighteen = this.estimatedIsOverEighteen,
-    ).also {
+    val changedContact = this.copy().also {
       it.placeOfBirth = this.placeOfBirth
       it.active = this.active
       it.suspended = this.suspended

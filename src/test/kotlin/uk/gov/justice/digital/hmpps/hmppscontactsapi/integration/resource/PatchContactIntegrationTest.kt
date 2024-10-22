@@ -86,36 +86,62 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should successfully patch the updated by field when its the only field in the request`() {
-    val request = PatchContactRequest(
-      languageCode = null,
-      updatedBy = "JD000001",
-    )
-    val contactId = contact.id
-    val contactReturnedOnPatch = testAPIClient.patchAContact(request, "/contact/$contactId")
+    val existingContact = testAPIClient.getContact(1)
+    val request = """{
+                    "updatedBy": "JD000001"
+                  }"""
+    val contactId = existingContact.id
+
+    val contactReturnedOnPatch = webTestClient.patch()
+      .uri("/contact/$contactId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PatchContactResponse::class.java)
+      .returnResult().responseBody!!
+
+    with(contactReturnedOnPatch) {
+      assertThat(languageCode).isEqualTo("ENG")
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+  }
+
+  @Test
+  fun `should successfully patch the language code with a null value `() {
+    val existingContact = testAPIClient.getContact(2)
+    val request = """{
+                        "languageCode": null,
+                        "updatedBy": "JD000001"
+                      }"""
+    val contactId = existingContact.id
+
+    val contactReturnedOnPatch = webTestClient.patch()
+      .uri("/contact/$contactId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(PatchContactResponse::class.java)
+      .returnResult().responseBody!!
 
     with(contactReturnedOnPatch) {
       assertThat(languageCode).isEqualTo(null)
       assertThat(amendedBy).isEqualTo("JD000001")
     }
-    assertExpectedResponse(contactReturnedOnPatch, contact, request)
-    assertSuccessfullyPatched(testAPIClient.getContact(contactId), contact, request)
-  }
-
-  @Test
-  fun `should successfully patch the request`() {
-    val request = PatchContactRequest(
-      updatedBy = "JD000001",
-    )
-    val contactId = contact.id
-    val contactReturnedOnPatch = testAPIClient.patchAContact(request, "/contact/$contactId")
-
-    assertExpectedResponse(contactReturnedOnPatch, contact, request)
-    assertSuccessfullyPatched(testAPIClient.getContact(contactId), contact, request)
   }
 
   @Test
   fun `should patch do not have amended by then return bad request`() {
-    val response = webTestClient.patch()
+    webTestClient.patch()
       .uri("/contact/19")
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
