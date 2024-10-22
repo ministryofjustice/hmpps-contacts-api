@@ -9,6 +9,7 @@ import org.mockito.Mockito.doNothing
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
@@ -24,7 +25,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.ContactService
@@ -246,7 +246,7 @@ class ContactControllerTest {
     }
 
     private fun patchContactRequest() = PatchContactRequest(
-      languageCode = Patchable.from("ENG"),
+      languageCode = JsonNullable.of("ENG"),
       updatedBy = "system",
     )
 

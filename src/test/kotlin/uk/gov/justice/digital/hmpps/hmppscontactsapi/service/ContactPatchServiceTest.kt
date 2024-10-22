@@ -11,11 +11,11 @@ import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
 import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
+import org.openapitools.jackson.nullable.JsonNullable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDate
@@ -107,7 +107,7 @@ class ContactPatchServiceTest {
       val originalContact = getDummyContactEntity("FRE-FRA")
 
       val patchRequest = PatchContactRequest(
-        languageCode = null,
+        languageCode = JsonNullable.of(null),
         updatedBy = "Modifier",
       )
 
@@ -148,7 +148,7 @@ class ContactPatchServiceTest {
       val originalContact = getDummyContactEntity(null)
 
       val patchRequest = PatchContactRequest(
-        languageCode = Patchable.from("FRE-FRA"),
+        languageCode = JsonNullable.of("FRE-FRA"),
         updatedBy = "Modifier",
       )
 
@@ -192,7 +192,7 @@ class ContactPatchServiceTest {
       val existingContact = getDummyContactEntity("FRE-FRA")
 
       val patchRequest = PatchContactRequest(
-        languageCode = null,
+        languageCode = JsonNullable.of(null),
         updatedBy = "Modifier",
       )
 
@@ -209,7 +209,7 @@ class ContactPatchServiceTest {
     fun `should throw EntityNotFoundException if contact does not exist`() {
       val contactId = 1L
       val patchRequest = PatchContactRequest(
-        languageCode = Patchable.from("ENG"),
+        languageCode = JsonNullable.of("ENG"),
         updatedBy = "system",
       )
 
@@ -241,7 +241,7 @@ class ContactPatchServiceTest {
       coronerNumber = existingContact.coronerNumber,
       gender = existingContact.gender,
       domesticStatus = existingContact.domesticStatus,
-      languageCode = request.languageCode?.get(),
+      languageCode = request.languageCode.get(),
       nationalityCode = existingContact.nationalityCode,
       interpreterRequired = existingContact.interpreterRequired,
       amendedBy = request.updatedBy,
@@ -303,14 +303,14 @@ class ContactPatchServiceTest {
       it.nationalityCode = existingContact.nationalityCode
       it.interpreterRequired = existingContact.interpreterRequired
       it.amendedTime = LocalDateTime.now()
-      it.languageCode = request.languageCode?.get()
+      it.languageCode = request.languageCode.get()
       it.amendedBy = request.updatedBy
     }
   }
 
   private fun patchContactRequest(): PatchContactRequest {
     val patchRequest = PatchContactRequest(
-      languageCode = Patchable.from("FR"),
+      languageCode = JsonNullable.of("FR"),
       updatedBy = "Modifier",
     )
     return patchRequest

@@ -4,6 +4,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
@@ -11,7 +12,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.GetContactResponse
 import java.time.LocalDate
 
@@ -198,12 +198,12 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(interpreterRequired).isEqualTo(originalContact.interpreterRequired)
       assertThat(createdBy).isEqualTo("created")
       assertThat(createdTime).isInThePast()
-      assertThat(languageCode).isEqualTo(patchRequest.languageCode?.get())
+      assertThat(languageCode).isEqualTo(patchRequest.languageCode.get())
     }
   }
 
   private fun aPatchContactRequest() = PatchContactRequest(
-    languageCode = Patchable.from("BEN"),
+    languageCode = JsonNullable.of("BEN"),
     updatedBy = "JD000001",
   )
 }

@@ -2,12 +2,12 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
+import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.util.Patchable
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDateTime
 
@@ -22,9 +22,8 @@ class ContactPatchService(
     val contact = contactRepository.findById(id)
       .orElseThrow { EntityNotFoundException("Contact not found") }
 
-    val languageCode = request.languageCode
-    if (languageCode is Patchable.Present) {
-      languageService.getLanguageByNomisCode(languageCode.value)
+    if (request.languageCode.isPresent && request.languageCode.get() != null) {
+      languageService.getLanguageByNomisCode(request.languageCode.get()!!)
     }
 
     val changedContact = contact.patchRequest(request)
@@ -54,7 +53,7 @@ class ContactPatchService(
     return changedContact
   }
 
-  fun resolveLanguageCode(dbLanguageCode: String?, requestLanguageCode: Patchable<String>?): String? {
-    return if (requestLanguageCode == null || (requestLanguageCode.get() != null)) requestLanguageCode?.get() else dbLanguageCode
+  fun resolveLanguageCode(dbLanguageCode: String?, requestLanguageCode: JsonNullable<String?>): String? {
+    return if (requestLanguageCode.isPresent && (requestLanguageCode.get() == null || (requestLanguageCode.get() != null))) requestLanguageCode.get() else dbLanguageCode
   }
 }
