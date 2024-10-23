@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
 import jakarta.transaction.Transactional
-import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.stereotype.Service
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.patch.mapToResponse
