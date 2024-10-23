@@ -54,6 +54,6 @@ class ContactPatchService(
   }
 
   fun resolveLanguageCode(dbLanguageCode: String?, requestLanguageCode: JsonNullable<String?>): String? {
-    return if (requestLanguageCode.isPresent && (requestLanguageCode.get() == null || (requestLanguageCode.get() != null))) requestLanguageCode.get() else dbLanguageCode
+    return if (requestLanguageCode.isPresent) requestLanguageCode.get() else dbLanguageCode
   }
 }
