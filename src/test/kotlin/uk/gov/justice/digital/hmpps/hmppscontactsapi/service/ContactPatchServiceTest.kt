@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import org.mockito.Mockito.mock
 import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
@@ -215,13 +216,13 @@ class ContactPatchServiceTest {
 
       whenever(contactRepository.findById(contactId)).thenReturn(Optional.empty())
 
-      org.junit.jupiter.api.assertThrows<EntityNotFoundException> {
+      assertThrows<EntityNotFoundException> {
         service.patch(contactId, patchRequest)
       }
     }
   }
 
-  fun mapToResponse(request: PatchContactRequest, existingContact: ContactEntity): PatchContactResponse {
+  private fun mapToResponse(request: PatchContactRequest, existingContact: ContactEntity): PatchContactResponse {
     return PatchContactResponse(
       id = 1L,
       title = existingContact.title,
@@ -249,7 +250,7 @@ class ContactPatchServiceTest {
     )
   }
 
-  fun getDummyContactEntity(languageCode: String?): ContactEntity {
+  private fun getDummyContactEntity(languageCode: String?): ContactEntity {
     val existingContact = ContactEntity(
       contactId = 1L,
       title = "Mr.",
@@ -279,7 +280,7 @@ class ContactPatchServiceTest {
     return existingContact
   }
 
-  fun mapToEntity(request: PatchContactRequest, existingContact: ContactEntity): ContactEntity {
+  private fun mapToEntity(request: PatchContactRequest, existingContact: ContactEntity): ContactEntity {
     return ContactEntity(
       contactId = 1L,
       title = existingContact.title,

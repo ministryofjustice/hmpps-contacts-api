@@ -205,8 +205,8 @@ class ContactController(
 
   @PatchMapping("/{contactId}")
   @Operation(
-    summary = "Update an contact",
-    description = "Update an contact",
+    summary = "Update a contact",
+    description = "Update a contact",
   )
   @ApiResponses(
     value = [
