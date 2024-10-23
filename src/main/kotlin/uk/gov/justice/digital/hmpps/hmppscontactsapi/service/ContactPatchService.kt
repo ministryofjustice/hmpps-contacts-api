@@ -45,15 +45,11 @@ class ContactPatchService(
       it.domesticStatus = this.domesticStatus
       it.nationalityCode = this.nationalityCode
       it.interpreterRequired = this.interpreterRequired
-      it.languageCode = resolveLanguageCode(this.languageCode, request.languageCode)
+      it.languageCode = request.languageCode.orElse(this.languageCode)
       it.amendedBy = request.updatedBy
       it.amendedTime = LocalDateTime.now()
     }
 
     return changedContact
-  }
-
-  fun resolveLanguageCode(dbLanguageCode: String?, requestLanguageCode: JsonNullable<String?>): String? {
-    return if (requestLanguageCode.isPresent) requestLanguageCode.get() else dbLanguageCode
   }
 }
