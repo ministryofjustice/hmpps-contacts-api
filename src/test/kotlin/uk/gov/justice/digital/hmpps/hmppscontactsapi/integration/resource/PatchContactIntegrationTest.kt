@@ -96,18 +96,18 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should successfully patch the contact with interpreter required`() {
-    val noLanguageCodePatchRequest = PatchContactRequest(
+    val truthyInterpreterRequiredRequest = PatchContactRequest(
       interpreterRequired = JsonNullable.of(true),
       updatedBy = "JD000001",
     )
-    val noLanguageCodePatchResponse = testAPIClient.patchAContact(noLanguageCodePatchRequest, "/contact/$contactId")
+    val truthyInterpreterRequiredPatchResponse = testAPIClient.patchAContact(truthyInterpreterRequiredRequest, "/contact/$contactId")
 
-    with(noLanguageCodePatchResponse) {
+    with(truthyInterpreterRequiredPatchResponse) {
       assertThat(interpreterRequired).isEqualTo(true)
       assertThat(amendedBy).isEqualTo("JD000001")
     }
 
-    val nullLanguageCodePatchRequest = PatchContactRequest(
+    val nullInterpreterRequiredRequest = PatchContactRequest(
       interpreterRequired = JsonNullable.of(null),
       updatedBy = "JD000001",
     )
@@ -115,17 +115,17 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       .build()
       .toUri()
 
-    val errors = testAPIClient.getBadResponseErrorsWithPatch(nullLanguageCodePatchRequest, uri)
+    val errors = testAPIClient.getBadResponseErrorsWithPatch(nullInterpreterRequiredRequest, uri)
 
     assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported interpreter required type null.")
 
-    val withLanguageCodePatchRequest = PatchContactRequest(
+    val falsyInterpreterRequiredPatchRequest = PatchContactRequest(
       interpreterRequired = JsonNullable.of(false),
       updatedBy = "JD000001",
     )
-    val withLanguageCodePatchResponse = testAPIClient.patchAContact(withLanguageCodePatchRequest, "/contact/$contactId")
+    val falsyInterpreterRequiredPatchResponse = testAPIClient.patchAContact(falsyInterpreterRequiredPatchRequest, "/contact/$contactId")
 
-    with(withLanguageCodePatchResponse) {
+    with(falsyInterpreterRequiredPatchResponse) {
       assertThat(interpreterRequired).isEqualTo(false)
       assertThat(amendedBy).isEqualTo("JD000001")
     }

@@ -240,7 +240,6 @@ class ContactPatchServiceTest {
         service.patch(contactId, patchRequest)
       }
       assertThat(exception.message).isEqualTo("Unsupported interpreter required type null.")
-
     }
   }
 
