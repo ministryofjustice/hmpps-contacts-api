@@ -6,6 +6,7 @@ import org.openapitools.jackson.nullable.JsonNullable
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import org.springframework.test.context.TestPropertySource
+import org.springframework.web.util.UriComponentsBuilder
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.model.ErrorResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
@@ -59,7 +60,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
-  fun `should successfully patch the contact`() {
+  fun `should successfully patch the Language code`() {
     val noLanguageCodePatchRequest = PatchContactRequest(
       updatedBy = "JD000001",
     )
@@ -89,6 +90,43 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
 
     with(withLanguageCodePatchResponse) {
       assertThat(languageCode).isEqualTo("BEN")
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+  }
+
+  @Test
+  fun `should successfully patch the contact with interpreter required`() {
+    val noLanguageCodePatchRequest = PatchContactRequest(
+      interpreterRequired = JsonNullable.of(true),
+      updatedBy = "JD000001",
+    )
+    val noLanguageCodePatchResponse = testAPIClient.patchAContact(noLanguageCodePatchRequest, "/contact/$contactId")
+
+    with(noLanguageCodePatchResponse) {
+      assertThat(interpreterRequired).isEqualTo(true)
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+
+    val nullLanguageCodePatchRequest = PatchContactRequest(
+      interpreterRequired = JsonNullable.of(null),
+      updatedBy = "JD000001",
+    )
+    val uri = UriComponentsBuilder.fromPath("/contact/$contactId")
+      .build()
+      .toUri()
+
+    val errors = testAPIClient.getBadResponseErrorsWithPatch(nullLanguageCodePatchRequest, uri)
+
+    assertThat(errors.userMessage).isEqualTo("Validation failure: Unsupported interpreter required type null.")
+
+    val withLanguageCodePatchRequest = PatchContactRequest(
+      interpreterRequired = JsonNullable.of(false),
+      updatedBy = "JD000001",
+    )
+    val withLanguageCodePatchResponse = testAPIClient.patchAContact(withLanguageCodePatchRequest, "/contact/$contactId")
+
+    with(withLanguageCodePatchResponse) {
+      assertThat(interpreterRequired).isEqualTo(false)
       assertThat(amendedBy).isEqualTo("JD000001")
     }
   }

@@ -1,6 +1,7 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.service
 
 import jakarta.persistence.EntityNotFoundException
+import jakarta.validation.ValidationException
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -19,6 +20,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
+import java.lang.Boolean.TRUE
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
@@ -62,7 +64,7 @@ class ContactPatchServiceTest {
     }
 
     @Test
-    fun `should patch a contact when language code fields is not provided`() {
+    fun `should patch a contact when only the updated by field is provided`() {
       val contactId = 1L
 
       val originalContact = getDummyContactEntity("FRE-FRA")
@@ -220,6 +222,26 @@ class ContactPatchServiceTest {
         service.patch(contactId, patchRequest)
       }
     }
+
+    @Test
+    fun `should return validation error when patching a contact with interpreter required is null`() {
+      val contactId = 1L
+
+      val originalContact = getDummyContactEntity("FRE-FRA")
+
+      val patchRequest = PatchContactRequest(
+        interpreterRequired = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
+
+      val exception = assertThrows<ValidationException> {
+        service.patch(contactId, patchRequest)
+      }
+      assertThat(exception.message).isEqualTo("Unsupported interpreter required type null.")
+
+    }
   }
 
   private fun mapToResponse(request: PatchContactRequest, existingContact: ContactEntity): PatchContactResponse {
@@ -244,7 +266,7 @@ class ContactPatchServiceTest {
       domesticStatus = existingContact.domesticStatus,
       languageCode = request.languageCode.get(),
       nationalityCode = existingContact.nationalityCode,
-      interpreterRequired = existingContact.interpreterRequired,
+      interpreterRequired = request.interpreterRequired.get(),
       amendedBy = request.updatedBy,
       amendedTime = LocalDateTime.now(),
     )
@@ -302,7 +324,7 @@ class ContactPatchServiceTest {
       it.gender = existingContact.gender
       it.domesticStatus = existingContact.domesticStatus
       it.nationalityCode = existingContact.nationalityCode
-      it.interpreterRequired = existingContact.interpreterRequired
+      it.interpreterRequired = request.interpreterRequired.get()
       it.amendedTime = LocalDateTime.now()
       it.languageCode = request.languageCode.get()
       it.amendedBy = request.updatedBy
@@ -312,6 +334,7 @@ class ContactPatchServiceTest {
   private fun patchContactRequest(): PatchContactRequest {
     val patchRequest = PatchContactRequest(
       languageCode = JsonNullable.of("FR"),
+      interpreterRequired = JsonNullable.of(TRUE),
       updatedBy = "Modifier",
     )
     return patchRequest
