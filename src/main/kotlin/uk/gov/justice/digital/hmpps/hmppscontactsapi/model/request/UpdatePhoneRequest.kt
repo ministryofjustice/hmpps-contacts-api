@@ -3,8 +3,8 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 
-@Schema(description = "Request to create a new phone number")
-data class CreatePhoneRequest(
+@Schema(description = "Request to update an existing phone number")
+data class UpdatePhoneRequest(
   @Schema(description = "Type of phone", example = "MOB")
   @field:Size(max = 20, message = "phoneType must be <= 20 characters")
   val phoneType: String,
@@ -17,7 +17,7 @@ data class CreatePhoneRequest(
   @field:Size(max = 7, message = "extNumber must be <= 7 characters")
   val extNumber: String? = null,
 
-  @Schema(description = "User who created the entry", example = "admin")
-  @field:Size(max = 100, message = "createdBy must be <= 100 characters")
-  val createdBy: String,
+  @Schema(description = "User who updated the entry", example = "admin")
+  @field:Size(max = 100, message = "updatedBy must be <= 100 characters")
+  val amendedBy: String,
 )

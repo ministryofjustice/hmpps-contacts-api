@@ -7,6 +7,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.prisonersearchapi.mo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
@@ -131,6 +132,35 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .expectBody(ContactPhoneDetails::class.java)
       .returnResult().responseBody!!
   }
+
+  fun updateAContactPhone(contactId: Long, contactPhoneId: Long, request: UpdatePhoneRequest): ContactPhoneDetails {
+    return webTestClient.put()
+      .uri("/contact/$contactId/phone/$contactPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun getContactPhone(contactId: Long, contactPhoneId: Long): ContactPhoneDetails {
+    return webTestClient.get()
+      .uri("/contact/$contactId/phone/$contactPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .exchange()
+      .expectStatus()
+      .isOk
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
   fun setAuthorisation(
     username: String? = "AUTH_ADM",
     roles: List<String> = listOf(),
