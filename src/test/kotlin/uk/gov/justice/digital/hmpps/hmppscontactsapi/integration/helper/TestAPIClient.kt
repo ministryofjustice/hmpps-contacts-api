@@ -118,11 +118,11 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
     .expectBody(ErrorResponse::class.java)
     .returnResult().responseBody!!
 
-  fun getBadResponseErrorsWithPatch(request: Any, uri: URI) = webTestClient.patch()
+  fun <T> getBadResponseErrorsWithPatch(request: T, uri: URI) = webTestClient.patch()
     .uri(uri.toString())
     .accept(MediaType.APPLICATION_JSON)
     .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS_ADMIN")))
-    .bodyValue(request)
+    .bodyValue(request!!)
     .exchange()
     .expectStatus()
     .isBadRequest
