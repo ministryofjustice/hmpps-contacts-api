@@ -94,6 +94,36 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
   }
 
   @Test
+  fun `should successfully patch the contact with domestic status required`() {
+    val noDomesticStatusPatchRequest = PatchContactRequest(
+      domesticStatus = JsonNullable.of("P"),
+      updatedBy = "JD000001",
+    )
+    val noDomesticStatusPatchResponse = testAPIClient.patchAContact(noDomesticStatusPatchRequest, "/contact/$contactId")
+
+    with(noDomesticStatusPatchResponse) {
+      assertThat(domesticStatus).isEqualTo("P")
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+  }
+
+  @Test
+  fun `should successfully patch the contact with domestic status with null value`() {
+    val nullDomesticStatusPatchRequest = PatchContactRequest(
+      domesticStatus = JsonNullable.of(null),
+      updatedBy = "JD000001",
+    )
+
+    val nullDomesticStatusPatchResponse =
+      testAPIClient.patchAContact(nullDomesticStatusPatchRequest, "/contact/$contactId")
+
+    with(nullDomesticStatusPatchResponse) {
+      assertThat(domesticStatus).isEqualTo(null)
+      assertThat(amendedBy).isEqualTo("JD000001")
+    }
+  }
+
+  @Test
   fun `should patch do not have amended by then return bad request`() {
     webTestClient.patch()
       .uri("/contact/$contactId")

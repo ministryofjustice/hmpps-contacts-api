@@ -18,6 +18,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOv
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ReferenceCode
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -26,8 +27,9 @@ import java.util.*
 class ContactPatchServiceTest {
   private val languageService: LanguageService = mock()
   private val contactRepository: ContactRepository = mock()
+  private val referenceCodeService: ReferenceCodeService = mock()
 
-  private val service = ContactPatchService(contactRepository, languageService)
+  private val service = ContactPatchService(contactRepository, languageService, referenceCodeService)
 
   @Nested
   inner class PatchContact {
@@ -36,7 +38,7 @@ class ContactPatchServiceTest {
     fun `should patch a contact when fields are provided`() {
       val contactId = 1L
 
-      val existingContact = getDummyContactEntity("FRE-FRA")
+      val existingContact = getDummyContactEntity("FRE-FRA", "Single")
 
       val patchRequest = patchContactRequest()
 
@@ -65,7 +67,7 @@ class ContactPatchServiceTest {
     fun `should patch a contact when language code fields is not provided`() {
       val contactId = 1L
 
-      val originalContact = getDummyContactEntity("FRE-FRA")
+      val originalContact = getDummyContactEntity("FRE-FRA", "Single")
 
       val patchRequest = PatchContactRequest(
         updatedBy = "Modifier",
@@ -105,7 +107,7 @@ class ContactPatchServiceTest {
     fun `should patch a contact when language code fields is null`() {
       val contactId = 1L
 
-      val originalContact = getDummyContactEntity("FRE-FRA")
+      val originalContact = getDummyContactEntity("FRE-FRA", "Single")
 
       val patchRequest = PatchContactRequest(
         languageCode = JsonNullable.of(null),
@@ -146,7 +148,7 @@ class ContactPatchServiceTest {
     fun `should patch a contact when language code fields is set when existing value is null`() {
       val contactId = 1L
 
-      val originalContact = getDummyContactEntity(null)
+      val originalContact = getDummyContactEntity(null, "Single")
 
       val patchRequest = PatchContactRequest(
         languageCode = JsonNullable.of("FRE-FRA"),
@@ -190,7 +192,7 @@ class ContactPatchServiceTest {
     fun `should not validate language code if it is not available in the request`() {
       val contactId = 1L
 
-      val existingContact = getDummyContactEntity("FRE-FRA")
+      val existingContact = getDummyContactEntity("FRE-FRA", "Single")
 
       val patchRequest = PatchContactRequest(
         languageCode = JsonNullable.of(null),
@@ -219,6 +221,124 @@ class ContactPatchServiceTest {
       assertThrows<EntityNotFoundException> {
         service.patch(contactId, patchRequest)
       }
+    }
+
+    @Test
+    fun `should return validation error when patching a contact with unknown domestic status`() {
+      val contactId = 1L
+
+      val originalContact = getDummyContactEntity("FRE-FRA", "Single")
+
+      val patchRequest = PatchContactRequest(
+        domesticStatus = JsonNullable.of("K"),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "K")).thenReturn(null)
+
+      val exception = assertThrows<EntityNotFoundException> {
+        service.patch(contactId, patchRequest)
+      }
+      assertThat(exception.message).isEqualTo("Reference code with groupCode DOMESTIC_STS and code 'K' not found.")
+    }
+  }
+
+  @Nested
+  inner class PatchContactWithDomesticStatus {
+
+    @Test
+    fun `should patch a contact when domestic status are provided`() {
+      val contactId = 1L
+
+      val existingContact = getDummyContactEntity("FRE-FRA", "Single")
+
+      val patchRequest = PatchContactRequest(
+        domesticStatus = JsonNullable.of("P"),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(existingContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "P")).thenReturn(
+        ReferenceCode(
+          0,
+          "PHONE_TYPE",
+          "P",
+          "Mobile",
+          90,
+        ),
+      )
+
+      val response = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      contactCaptor.firstValue.let {
+        assertThat(it.domesticStatus).isEqualTo("P")
+        assertThat(it.amendedBy).isEqualTo("Modifier")
+      }
+
+      response.let {
+        assertThat(it.domesticStatus).isEqualTo("P")
+        assertThat(it.amendedBy).isEqualTo("Modifier")
+      }
+    }
+
+    @Test
+    fun `should patch a contact when domestic status code fields is set when existing value is null`() {
+      val contactId = 1L
+
+      val originalContact = getDummyContactEntity(domesticStatus = null)
+
+      val patchRequest = PatchContactRequest(
+        domesticStatus = JsonNullable.of("M"),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+      whenever(referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", "M")).thenReturn(
+        ReferenceCode(
+          0,
+          "PHONE_TYPE",
+          "M",
+          "Mobile",
+          90,
+        ),
+      )
+
+      val updatedContact = service.patch(contactId, patchRequest)
+
+      val contactCaptor = argumentCaptor<ContactEntity>()
+
+      verify(contactRepository).saveAndFlush(contactCaptor.capture())
+
+      // patched fields
+      assertThat(updatedContact.domesticStatus).isEqualTo(patchRequest.domesticStatus.get())
+      assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
+    }
+
+    @Test
+    fun `should not validate domestic status code if it is not available in the request`() {
+      val contactId = 1L
+
+      val existingContact = getDummyContactEntity("FRE-FRA", "Single")
+
+      val patchRequest = PatchContactRequest(
+        domesticStatus = JsonNullable.of(null),
+        updatedBy = "Modifier",
+      )
+
+      whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(existingContact))
+      whenever(contactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
+
+      service.patch(contactId, patchRequest)
+
+      verify(languageService, never()).getLanguageByNomisCode(any())
+      verify(contactRepository, times(1)).saveAndFlush(any())
     }
   }
 
@@ -250,7 +370,7 @@ class ContactPatchServiceTest {
     )
   }
 
-  private fun getDummyContactEntity(languageCode: String?): ContactEntity {
+  private fun getDummyContactEntity(languageCode: String? = "FRE-FRA", domesticStatus: String?): ContactEntity {
     val existingContact = ContactEntity(
       contactId = 1L,
       title = "Mr.",
@@ -270,7 +390,7 @@ class ContactPatchServiceTest {
       it.staffFlag = false
       it.coronerNumber = null
       it.gender = "M"
-      it.domesticStatus = "Single"
+      it.domesticStatus = domesticStatus
       it.languageCode = languageCode
       it.nationalityCode = "GB"
       it.interpreterRequired = false

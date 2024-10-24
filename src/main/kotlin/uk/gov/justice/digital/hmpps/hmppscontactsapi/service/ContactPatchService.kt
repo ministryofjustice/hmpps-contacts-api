@@ -14,6 +14,7 @@ import java.time.LocalDateTime
 class ContactPatchService(
   private val contactRepository: ContactRepository,
   private val languageService: LanguageService,
+  private val referenceCodeService: ReferenceCodeService,
 ) {
 
   @Transactional
@@ -24,6 +25,8 @@ class ContactPatchService(
     if (request.languageCode.isPresent && request.languageCode.get() != null) {
       languageService.getLanguageByNomisCode(request.languageCode.get()!!)
     }
+
+    validateDomesticStatusCode(request)
 
     val changedContact = contact.patchRequest(request)
 
@@ -41,7 +44,7 @@ class ContactPatchService(
       it.staffFlag = this.staffFlag
       it.coronerNumber = this.coronerNumber
       it.gender = this.gender
-      it.domesticStatus = this.domesticStatus
+      it.domesticStatus = request.domesticStatus.orElse(this.domesticStatus)
       it.nationalityCode = this.nationalityCode
       it.interpreterRequired = this.interpreterRequired
       it.languageCode = request.languageCode.orElse(this.languageCode)
@@ -50,5 +53,13 @@ class ContactPatchService(
     }
 
     return changedContact
+  }
+
+  private fun validateDomesticStatusCode(request: PatchContactRequest) {
+    if (request.domesticStatus.isPresent && request.domesticStatus.get() != null) {
+      val code = request.domesticStatus.get()!!
+      referenceCodeService.getReferenceDataByGroupAndCode("DOMESTIC_STS", code)
+        ?: throw EntityNotFoundException("Reference code with groupCode DOMESTIC_STS and code '$code' not found.")
+    }
   }
 }
