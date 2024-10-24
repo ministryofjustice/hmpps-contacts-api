@@ -75,9 +75,9 @@ class LanguageServiceTest {
   inner class GetAllCountries {
 
     @Test
-    fun `should return a list of all countries`() {
+    fun `should return a list of all languages`() {
       // Given
-      val countries = listOf(
+      val languages = listOf(
         LanguageEntity(
           languageId = 1L,
           nomisCode = "USA",
@@ -97,10 +97,10 @@ class LanguageServiceTest {
           displaySequence = 123,
         ),
       )
-      whenever(languageRepository.findAll()).thenReturn(countries)
+      whenever(languageRepository.findAll()).thenReturn(languages)
 
       // When
-      val result = languageService.getAllCountries()
+      val result = languageService.getAll()
 
       // Then
       assertThat(result.size).isEqualTo(2)
