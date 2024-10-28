@@ -30,8 +30,8 @@ class ContactPatchServiceTest {
 
   private val contactId = 1L
   private val domesticStatusCode = "P"
-  private val COUNTRY_CODE = "FRE-FRA"
   private var originalContact = createDummyContactEntity()
+  private val countryCode = "FRE-FRA"
 
   private val languageService: LanguageService = mock()
   private val contactRepository: ContactRepository = mock()
@@ -129,14 +129,14 @@ class ContactPatchServiceTest {
       originalContact = createDummyContactEntity(languageCode = null)
 
       val patchRequest = PatchContactRequest(
-        languageCode = JsonNullable.of(COUNTRY_CODE),
+        languageCode = JsonNullable.of(countryCode),
         updatedBy = "Modifier",
       )
 
       whenContactExists()
       whenUpdateIsSuccessful()
       whenever(languageService.getLanguageByNomisCode(any())).thenReturn(
-        Language(1, COUNTRY_CODE, "French", "Foo", "Bar", "X", 99),
+        Language(1, countryCode, "French", "Foo", "Bar", "X", 99),
       )
 
       val updatedContact = service.patch(contactId, patchRequest)
@@ -144,9 +144,9 @@ class ContactPatchServiceTest {
       val contactCaptor = argumentCaptor<ContactEntity>()
 
       verify(contactRepository).saveAndFlush(contactCaptor.capture())
-      verify(languageService, times(1)).getLanguageByNomisCode(COUNTRY_CODE)
+      verify(languageService, times(1)).getLanguageByNomisCode(countryCode)
 
-      assertThat(updatedContact.languageCode).isEqualTo(COUNTRY_CODE)
+      assertThat(updatedContact.languageCode).isEqualTo(countryCode)
       assertThat(updatedContact.amendedBy).isEqualTo(patchRequest.updatedBy)
     }
 
@@ -400,26 +400,7 @@ class ContactPatchServiceTest {
     whenever(contactRepository.findById(contactId)).thenReturn(Optional.of(originalContact))
   }
 
-  private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
-    assertThat(updatedContact.title).isEqualTo(originalContact.title)
-    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
-    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
-    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
-    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
-    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
-    assertThat(updatedContact.active).isEqualTo(originalContact.active)
-    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
-    assertThat(updatedContact.staffFlag).isEqualTo(originalContact.staffFlag)
-    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
-    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
-    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
-    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
-    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
-    assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
-    assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
-  }
-
-  private fun createDummyContactEntity(languageCode: String? = COUNTRY_CODE, domesticStatus: String? = "M") = ContactEntity(
+  private fun createDummyContactEntity(languageCode: String? = countryCode, domesticStatus: String? = "M") = ContactEntity(
     contactId = 1L,
     title = "Mr.",
     firstName = "John",
@@ -444,5 +425,24 @@ class ContactPatchServiceTest {
     it.interpreterRequired = false
     it.amendedBy = "admin"
     it.amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0)
+  }
+
+  private fun assertUnchangedFields(updatedContact: PatchContactResponse) {
+    assertThat(updatedContact.title).isEqualTo(originalContact.title)
+    assertThat(updatedContact.firstName).isEqualTo(originalContact.firstName)
+    assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
+    assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
+    assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
+    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
+    assertThat(updatedContact.active).isEqualTo(originalContact.active)
+    assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
+    assertThat(updatedContact.staffFlag).isEqualTo(originalContact.staffFlag)
+    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
+    assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
+    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
+    assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
+    assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
+    assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)
+    assertThat(updatedContact.languageCode).isEqualTo(originalContact.languageCode)
   }
 }
