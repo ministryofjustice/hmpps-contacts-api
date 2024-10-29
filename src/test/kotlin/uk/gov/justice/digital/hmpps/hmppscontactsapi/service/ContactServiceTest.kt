@@ -14,7 +14,6 @@ import org.mockito.Mockito.verify
 import org.mockito.kotlin.any
 import org.mockito.kotlin.argumentCaptor
 import org.mockito.kotlin.never
-import org.mockito.kotlin.times
 import org.mockito.kotlin.whenever
 import org.springframework.data.domain.Page
 import org.springframework.data.domain.PageImpl
@@ -324,9 +323,9 @@ class ContactServiceTest {
       )
       whenever(contactAddressPhoneRepository.findByContactId(contactId)).thenReturn(
         listOf(
-          ContactAddressPhoneEntity(1, contactId, 1, 2),
-          ContactAddressPhoneEntity(1, contactId, 1, 4),
-          ContactAddressPhoneEntity(1, contactId, 2, 3),
+          ContactAddressPhoneEntity(1, contactId, 1, 2, createdBy = "TEST"),
+          ContactAddressPhoneEntity(1, contactId, 1, 4, createdBy = "TEST"),
+          ContactAddressPhoneEntity(1, contactId, 2, 3, createdBy = "TEST"),
         ),
       )
 

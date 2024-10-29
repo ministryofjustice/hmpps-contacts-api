@@ -247,6 +247,28 @@ CREATE INDEX idx_prisoner_contact_start_date ON prisoner_contact_restriction(sta
 CREATE INDEX idx_prisoner_contact_expiry_date ON prisoner_contact_restriction(expiry_date);
 
 ---------------------------------------------------------------------------------------
+-- Contact employments - for official contacts only
+-- This table holds the details of the employer(s) of official contacts
+-- At this stage the corporate organisations are not held locally so this is external.
+----------------------------------------------------------------------------------------
+
+CREATE TABLE contact_employment
+(
+    contact_employment_id bigserial NOT NULL CONSTRAINT contact_employment_id_pk PRIMARY KEY,
+    contact_id bigint NOT NULL REFERENCES contact(contact_id),
+    corporate_id bigint NOT NULL,
+    corporate_name varchar(100),
+    active boolean NOT NULL DEFAULT true,
+    created_by varchar(100) NOT NULL,
+    created_time timestamp NOT NULL DEFAULT current_timestamp,
+    amended_by varchar(100),
+    amended_time timestamp
+);
+
+CREATE INDEX idx_contact_employment_contact_id ON contact_employment(contact_id);
+CREATE INDEX idx_contact_employment_corporate_id ON contact_employment(corporate_id);
+
+---------------------------------------------------------------------------------------
 -- Contains coded reference values used to constrain the values of lists/validation.
 -- e.g. address types, phone types, county codes, country codes, relationship types etc..
 -- Still questions over reference data - who owns this? Other uses in NOMIS?

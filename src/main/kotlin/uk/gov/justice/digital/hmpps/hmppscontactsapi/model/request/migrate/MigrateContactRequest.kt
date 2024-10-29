@@ -14,16 +14,13 @@ data class MigrateContactRequest(
   @field:NotNull(message = "The NOMIS person ID must be present in the request")
   val personId: Long,
 
-  @Schema(description = "The title of the contact, if any", nullable = true)
-  val title: CodedValue? = null,
+  @Schema(description = "The first name of the contact", example = "John", maxLength = 35)
+  @field:Size(max = 35, message = "firstName must be <= 35 characters")
+  val firstName: String,
 
   @Schema(description = "The last name of the contact", example = "Doe", maxLength = 35)
   @field:Size(max = 35, message = "lastName must be <= 35 characters")
   val lastName: String,
-
-  @Schema(description = "The first name of the contact", example = "John", maxLength = 35)
-  @field:Size(max = 35, message = "firstName must be <= 35 characters")
-  val firstName: String,
 
   @Schema(description = "The middle name of the contact, if any", example = "William", nullable = true, maxLength = 35)
   @field:Size(max = 35, message = "middleName must be <= 35 characters")
@@ -35,6 +32,9 @@ data class MigrateContactRequest(
 
   @Schema(description = "The gender of the contact", nullable = true)
   val gender: CodedValue? = null,
+
+  @Schema(description = "The title of the contact, if any", nullable = true)
+  val title: CodedValue? = null,
 
   @Schema(description = "The main language spoken by this contact", nullable = true)
   val language: CodedValue? = null,
@@ -48,11 +48,11 @@ data class MigrateContactRequest(
   @Schema(description = "The date this persons was marked as deceased", nullable = true)
   val deceasedDate: LocalDate? = null,
 
-  @Schema(description = "This person is a remitter of funds to one or more prisoners")
-  val remitter: Boolean = false,
-
   @Schema(description = "This person is staff")
   val staff: Boolean = false,
+
+  @Schema(description = "This person is a remitter of funds to one or more prisoners")
+  val remitter: Boolean = false,
 
   @Schema(description = "Retain photo and fingerprint images for this person")
   val keepBiometrics: Boolean = false,
@@ -69,8 +69,20 @@ data class MigrateContactRequest(
   @Schema(description = "Email addresses", nullable = true)
   val emailAddresses: List<MigrateEmailAddress> = emptyList(),
 
+  @Schema(description = "Employments for official contacts only", nullable = true)
+  val employments: List<MigrateEmployment> = emptyList(),
+
   @Schema(description = "Proofs of identity", nullable = true)
   val identifiers: List<MigrateIdentifier> = emptyList(),
+
+  @Schema(
+    description = "The relationships that this person has with prisoners including specific restrictions for each",
+    nullable = true,
+  )
+  val contacts: List<MigrateRelationship> = emptyList(),
+
+  @Schema(description = "The restrictions which apply to this person only", nullable = true)
+  val restrictions: List<MigrateRestriction> = emptyList(),
 )
 
 data class CodedValue(
@@ -92,7 +104,7 @@ data class MigratePhoneNumber(
   @Schema(description = "Extension number", nullable = true, example = "100")
   val extension: String,
 
-  @Schema(description = "Phone number type", nullable = true, example = "HOME")
+  @Schema(description = "Phone number type", example = "HOME")
   val type: CodedValue,
 )
 
@@ -100,7 +112,7 @@ data class MigrateAddress(
   @Schema(description = "Unique address ID in NOMIS", example = "123")
   val addressId: Long,
 
-  @Schema(description = "Address type coded value", nullable = true, example = "HOME")
+  @Schema(description = "Address type coded value", example = "HOME")
   val type: CodedValue,
 
   @Schema(description = "Flat number or identifier", nullable = true, example = "1B")
@@ -156,7 +168,7 @@ data class MigrateEmailAddress(
   @Schema(description = "Unique email ID in NOMIS", example = "123")
   val emailAddressId: Long,
 
-  @Schema(description = "Email address", nullable = true, example = "sender@a.com")
+  @Schema(description = "Email address", example = "sender@a.com")
   val email: String,
 )
 
@@ -168,9 +180,9 @@ data class MigrateIdentifier(
   val type: CodedValue,
 
   @Schema(description = "The identifying information e.g. driving licence number", example = "KJ 45544 JFKJK")
-  val identifier: String?,
+  val identifier: String,
 
-  @Schema(description = "The issuing authority for this identifier", example = "DVLA")
+  @Schema(description = "The issuing authority for this identifier", nullable = true, example = "DVLA")
   val issuedAuthority: String?,
 )
 
@@ -213,4 +225,101 @@ data class MigrateAuditInfo(
 
   @Schema(description = "Audit additional info", nullable = true)
   val auditAdditionalInfo: String? = null,
+)
+
+data class MigrateRestriction(
+  @Schema(description = "Unique ID in NOMIS for this restriction", example = "123")
+  val id: Long,
+
+  @Schema(description = "Coded value for this restriction type", example = "NO")
+  val type: CodedValue,
+
+  @Schema(description = "Comments relating to this restriction", nullable = true, example = "A comment")
+  val comment: String? = null,
+
+  @Schema(description = "The date that this restriction is effective from", nullable = true, example = "2024-01-01")
+  val effectiveDate: LocalDate,
+
+  @Schema(description = "The date that this restriction expires and stops being enforced", nullable = true, example = "2024-03-01")
+  val expiryDate: LocalDate? = null,
+
+  @Schema(description = "Created by username", nullable = true, example = "SJ99OWM")
+  val createUsername: String? = null,
+
+  @Schema(description = "The date and time this restriction was created", nullable = true, example = "2024-03-01T0:00:00")
+  val createdDateTime: LocalDateTime? = null,
+)
+
+data class MigrateEmployment(
+  @Schema(description = "Unique sequence ID in NOMIS for this employment", example = "123")
+  val sequence: Long,
+
+  @Schema(description = "The corporate organisation this person works for")
+  val corporate: Corporate,
+
+  @Schema(description = "Comments relating to this restriction", example = "true")
+  val active: Boolean = false,
+)
+
+data class Corporate(
+  @Schema(description = "The corporate ID in NOMIS", example = "123")
+  val id: Long,
+
+  @Schema(description = "The name of the corporate organisation", example = "West Midlands Police")
+  val name: String,
+)
+
+data class MigrateRelationship(
+  @Schema(description = "The ID in NOMIS", example = "123")
+  val id: Long,
+
+  @Schema(description = "Coded value indicating either a social or official contact", examples = ["SOCIAL", "OFFICIAL"])
+  val contactType: CodedValue,
+
+  @Schema(description = "Coded value indicating the type of relationship - from reference data", example = "MOTHER")
+  val relationshipType: CodedValue,
+
+  @Schema(description = "The relationship is active", example = "true")
+  val active: Boolean = false,
+
+  @Schema(description = "The date that this relationship expired", nullable = true, example = "2024-03-01")
+  val expiryDate: LocalDate? = null,
+
+  @Schema(description = "Approved visitor", example = "true")
+  val approvedVisitor: Boolean = false,
+
+  @Schema(description = "Next of kin", example = "true")
+  val nextOfKin: Boolean = false,
+
+  @Schema(description = "Emergency contact", example = "true")
+  val emergencyContact: Boolean = false,
+
+  @Schema(description = "Comment on this relationship", nullable = true, example = "This is an optional comment")
+  val comment: String?,
+
+  @Schema(description = "The prisoner number (NOMS ID) related", example = "A1234AA")
+  val prisonerNumber: String,
+
+  @Schema(description = "The restrictions for this prisoner contact relationship")
+  val restrictions: List<MigratePrisonerContactRestriction> = emptyList(),
+)
+
+data class MigratePrisonerContactRestriction(
+  @Schema(description = "The ID in NOMIS", example = "123")
+  val id: Long,
+
+  @Schema(description = "Coded value indicating the restriction type from reference data", example = "NO_CONTACT")
+  val restrictionType: CodedValue,
+
+  @Schema(description = "Comment on this restriction", nullable = true, example = "Comment on restriction")
+  val comment: String?,
+
+  @Schema(description = "The date that this restriction took effect", example = "2024-03-01")
+  val startDate: LocalDate,
+
+  @Schema(description = "The date that this restriction expires", example = "2024-03-01")
+  val expiryDate: LocalDate? = null,
+
+  @Schema(description = "The user who created this restriction", example = "SJ989JJ")
+  val createdByUsername: String,
 )
