@@ -73,7 +73,7 @@ class MigrationService(
       request.contacts.size,
     )
 
-    // Extract, transform and save the different entities from the request, returning the NOMIS and DPS IDs for them.
+    // Extract, transform and save the different entities from the request and returning the NOMIS and DPS IDs for each
     val contactPair = extractAndSaveContact(request)
     val contactId = contactPair.second.contactId
     val phoneNumberPairs = extractAndSavePhones(request, contactId)
@@ -114,18 +114,19 @@ class MigrationService(
           deceasedDate = req.deceasedDate,
           isDeceased = req.deceasedDate != null,
           estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-          createdBy = req.audit?.createUsername ?: "MIGRATION",
-          createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+          createdBy = req.createUsername ?: "MIGRATION",
+          createdTime = req.createDateTime ?: LocalDateTime.now(),
         ).also {
           it.staffFlag = req.staff
+          // TODO: Add to ContactEntity and data model
           // it.isRemitter??
           // it.keepBiometrics??
           it.gender = req.gender?.code
           it.languageCode = req.language?.code
           it.domesticStatus = req.domesticStatus?.code
           it.interpreterRequired = req.interpreterRequired
-          it.amendedBy = req.audit?.modifyUserId
-          it.amendedTime = req.audit?.modifyDateTime
+          it.amendedBy = req.modifyUsername
+          it.amendedTime = req.modifyDateTime
         },
       ),
     )
@@ -141,10 +142,10 @@ class MigrationService(
             phoneType = requestPhone.type.code,
             phoneNumber = requestPhone.number,
             extNumber = requestPhone.extension,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
-            amendedBy = req.audit?.modifyUserId,
-            amendedTime = req.audit?.modifyDateTime,
+            createdBy = requestPhone.createUsername ?: "MIGRATION",
+            createdTime = requestPhone.createDateTime ?: LocalDateTime.now(),
+            amendedBy = requestPhone.modifyUsername,
+            amendedTime = requestPhone.modifyDateTime,
           ),
         ),
       )
@@ -174,11 +175,11 @@ class MigrationService(
             endDate = addr.endDate,
             noFixedAddress = addr.noFixedAddress,
             comments = addr.comment,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = addr.createUsername ?: "MIGRATION",
+            createdTime = addr.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = addr.modifyUsername
+            it.amendedTime = addr.modifyDateTime
           },
         ),
       )
@@ -203,10 +204,10 @@ class MigrationService(
               phoneType = phone.type.code,
               phoneNumber = phone.number,
               extNumber = phone.extension,
-              createdBy = req.audit?.createUsername ?: "MIGRATION",
-              createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
-              amendedBy = req.audit?.modifyUserId,
-              amendedTime = req.audit?.modifyDateTime,
+              createdBy = phone.createUsername ?: "MIGRATION",
+              createdTime = phone.createDateTime ?: LocalDateTime.now(),
+              amendedBy = phone.modifyUsername,
+              amendedTime = phone.modifyDateTime,
             ),
           )
 
@@ -218,8 +219,10 @@ class MigrationService(
                 contactId = contactId,
                 contactAddressId = thisContactAddress!!.second.contactAddressId,
                 contactPhoneId = contactPhone.contactPhoneId,
-                createdBy = req.audit?.createUsername ?: "MIGRATION",
-                createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+                createdBy = phone.createUsername ?: "MIGRATION",
+                createdTime = phone.createDateTime ?: LocalDateTime.now(),
+                amendedBy = phone.modifyUsername,
+                amendedTime = phone.modifyDateTime,
               ),
             ),
           )
@@ -239,11 +242,11 @@ class MigrationService(
             contactId = contactId,
             emailType = "PERSONAL",
             emailAddress = requestEmail.email,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = requestEmail.createUsername ?: "MIGRATION",
+            createdTime = requestEmail.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = requestEmail.modifyUsername
+            it.amendedTime = requestEmail.modifyDateTime
           },
         ),
       )
@@ -260,11 +263,11 @@ class MigrationService(
             identityType = requestIdentifier.type.code,
             identityValue = requestIdentifier.identifier,
             issuingAuthority = requestIdentifier.issuedAuthority,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = requestIdentifier.createUsername ?: "MIGRATION",
+            createdTime = requestIdentifier.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = requestIdentifier.modifyUsername
+            it.amendedTime = requestIdentifier.modifyDateTime
           },
         ),
       )
@@ -282,11 +285,11 @@ class MigrationService(
             startDate = restriction.effectiveDate,
             expiryDate = restriction.expiryDate,
             comments = restriction.comment,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = restriction.createUsername ?: "MIGRATION",
+            createdTime = restriction.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = restriction.modifyUsername
+            it.amendedTime = restriction.modifyDateTime
           },
         ),
       )
@@ -303,11 +306,11 @@ class MigrationService(
             corporateId = employment.corporate.id,
             corporateName = employment.corporate.name,
             active = employment.active,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = employment.createUsername ?: "MIGRATION",
+            createdTime = employment.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = employment.modifyUsername
+            it.amendedTime = employment.modifyDateTime
           },
         ),
       )
@@ -357,11 +360,11 @@ class MigrationService(
             nextOfKin = relationship.nextOfKin,
             emergencyContact = relationship.emergencyContact,
             comments = relationship.comment,
-            createdBy = req.audit?.createUsername ?: "MIGRATION",
-            createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+            createdBy = relationship.createUsername ?: "MIGRATION",
+            createdTime = relationship.createDateTime ?: LocalDateTime.now(),
           ).also {
-            it.amendedBy = req.audit?.modifyUserId
-            it.amendedTime = req.audit?.modifyDateTime
+            it.amendedBy = relationship.modifyUsername
+            it.amendedTime = relationship.modifyDateTime
           },
         ),
       )
@@ -389,11 +392,11 @@ class MigrationService(
               startDate = restriction.startDate,
               expiryDate = restriction.expiryDate,
               comments = restriction.comment,
-              createdBy = req.audit?.createUsername ?: "MIGRATION",
-              createdTime = req.audit?.createDateTime ?: LocalDateTime.now(),
+              createdBy = restriction.createUsername ?: "MIGRATION",
+              createdTime = restriction.createDateTime ?: LocalDateTime.now(),
             ).also {
-              it.amendedBy = req.audit?.modifyUserId
-              it.amendedTime = req.audit?.modifyDateTime
+              it.amendedBy = restriction.modifyUsername
+              it.amendedTime = restriction.modifyDateTime
             },
           ),
         )

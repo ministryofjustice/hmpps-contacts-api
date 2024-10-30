@@ -9,18 +9,15 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.CodedValue
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.Corporate
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateAddress
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateAuditInfo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateEmailAddress
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateEmployment
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateIdentifier
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigratePhoneNumber
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.migrate.ElementType
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressPhoneRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactEmailRepository
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactIdentityRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactPhoneRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import java.time.LocalDate
@@ -31,19 +28,10 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
   private lateinit var contactRepository: ContactRepository
 
   @Autowired
-  private lateinit var contactAddressRepository: ContactAddressRepository
-
-  @Autowired
-  private lateinit var contactAddressPhoneRepository: ContactAddressPhoneRepository
-
-  @Autowired
   private lateinit var contactPhoneRepository: ContactPhoneRepository
 
-  @Autowired
-  private lateinit var contactEmailRepository: ContactEmailRepository
-
-  @Autowired
-  private lateinit var contactIdentityRepository: ContactIdentityRepository
+  private val aUsername = "XXX"
+  private val aDateTime = LocalDateTime.of(2024, 1, 1, 13, 0)
 
   @Nested
   inner class MigrateContactTests {
@@ -184,22 +172,11 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     }
   }
 
-  private fun migrateAuditInfo() =
-    MigrateAuditInfo(
-      createUsername = "J999J",
-      createDateTime = LocalDateTime.of(2024, 1, 1, 13, 47),
-      createDisplayName = "Jay Jaysen",
-      modifyUserId = "K999K",
-      modifyDisplayName = "Kay Kaysen",
-      modifyDateTime = LocalDateTime.of(2024, 2, 2, 14, 48),
-    )
-
   private fun basicMigrationRequest(
     personId: Long = 1L,
     lastName: String = "Smith",
     firstName: String = "John",
     dateOfBirth: LocalDate = LocalDate.of(2001, 1, 1),
-    audit: MigrateAuditInfo = migrateAuditInfo(),
   ) = MigrateContactRequest(
     personId = personId,
     title = CodedValue("MR", "Mr"),
@@ -207,9 +184,12 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
     firstName = firstName,
     dateOfBirth = dateOfBirth,
     gender = CodedValue("Male", "Male"),
-    keepBiometrics = false,
-    audit = audit,
-  )
+  ).also {
+    it.createUsername = aUsername
+    it.createDateTime = aDateTime
+    it.modifyUsername = aUsername
+    it.modifyDateTime = aDateTime
+  }
 
   private fun phoneNumbers() =
     listOf(
@@ -257,11 +237,9 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       MigrateIdentifier(sequence = 602L, type = CodedValue("PASSPORT", "Passport"), identifier = "PASS1", issuedAuthority = "UKBORDER"),
     )
 
-  /*
   private fun employments() =
     listOf(
       MigrateEmployment(sequence = 501L, corporate = Corporate(id = 123L, name = "Big Blue"), active = true),
       MigrateEmployment(sequence = 502L, corporate = Corporate(id = 124L, name = "Big Yellow"), active = false),
     )
-   */
 }

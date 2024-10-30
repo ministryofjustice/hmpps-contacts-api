@@ -7,9 +7,22 @@ import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
 
+abstract class AbstractAuditable(
+  @Schema(description = "The data and time the record was created", nullable = true)
+  var createDateTime: LocalDateTime? = null,
+
+  @Schema(description = "The username who created the row", nullable = true)
+  var createUsername: String? = null,
+
+  @Schema(description = "The date and time the record was last amended", nullable = true)
+  var modifyDateTime: LocalDateTime? = null,
+
+  @Schema(description = "The username who last modified the row", nullable = true)
+  var modifyUsername: String? = null,
+)
+
 @Schema(description = "Request to migrate a contact and all of its sub-elements from NOMIS into this service")
 data class MigrateContactRequest(
-
   @Schema(description = "The person ID from NOMIS", example = "1233323")
   @field:NotNull(message = "The NOMIS person ID must be present in the request")
   val personId: Long,
@@ -51,15 +64,6 @@ data class MigrateContactRequest(
   @Schema(description = "This person is staff")
   val staff: Boolean = false,
 
-  @Schema(description = "This person is a remitter of funds to one or more prisoners")
-  val remitter: Boolean = false,
-
-  @Schema(description = "Retain photo and fingerprint images for this person")
-  val keepBiometrics: Boolean = false,
-
-  @Schema(description = "Auditing information", nullable = true)
-  val audit: MigrateAuditInfo? = null,
-
   @Schema(description = "Telephone numbers", nullable = true)
   val phoneNumbers: List<MigratePhoneNumber> = emptyList(),
 
@@ -75,15 +79,13 @@ data class MigrateContactRequest(
   @Schema(description = "Proofs of identity", nullable = true)
   val identifiers: List<MigrateIdentifier> = emptyList(),
 
-  @Schema(
-    description = "The relationships that this person has with prisoners including specific restrictions for each",
-    nullable = true,
-  )
+  @Schema(description = "The relationships with prisoners including specific restrictions for each", nullable = true)
   val contacts: List<MigrateRelationship> = emptyList(),
 
   @Schema(description = "The restrictions which apply to this person only", nullable = true)
   val restrictions: List<MigrateRestriction> = emptyList(),
-)
+
+) : AbstractAuditable()
 
 data class CodedValue(
   @Schema(description = "A code representation a NOMIS reference data item", maxLength = 12)
@@ -106,7 +108,7 @@ data class MigratePhoneNumber(
 
   @Schema(description = "Phone number type", example = "HOME")
   val type: CodedValue,
-)
+) : AbstractAuditable()
 
 data class MigrateAddress(
   @Schema(description = "Unique address ID in NOMIS", example = "123")
@@ -162,7 +164,8 @@ data class MigrateAddress(
 
   @Schema(description = "A list of phone numbers which are linked to this address")
   val phoneNumbers: List<MigratePhoneNumber> = emptyList(),
-)
+
+) : AbstractAuditable()
 
 data class MigrateEmailAddress(
   @Schema(description = "Unique email ID in NOMIS", example = "123")
@@ -170,7 +173,8 @@ data class MigrateEmailAddress(
 
   @Schema(description = "Email address", example = "sender@a.com")
   val email: String,
-)
+
+) : AbstractAuditable()
 
 data class MigrateIdentifier(
   @Schema(description = "Unique sequence ID in NOMIS", example = "123")
@@ -184,48 +188,8 @@ data class MigrateIdentifier(
 
   @Schema(description = "The issuing authority for this identifier", nullable = true, example = "DVLA")
   val issuedAuthority: String?,
-)
 
-data class MigrateAuditInfo(
-  @Schema(description = "The data and time the record was created", nullable = true)
-  val createDateTime: LocalDateTime? = null,
-
-  @Schema(description = "The username who created the row", nullable = true)
-  val createUsername: String? = null,
-
-  @Schema(description = "The display name of the user who created the row", nullable = true)
-  val createDisplayName: String? = null,
-
-  @Schema(description = "The username who last modified the row", nullable = true)
-  val modifyUserId: String? = null,
-
-  @Schema(description = "The display name of the user who last modified the row", nullable = true)
-  val modifyDisplayName: String? = null,
-
-  @Schema(description = "The date and time the record was last amended", nullable = true)
-  val modifyDateTime: LocalDateTime? = null,
-
-  @Schema(description = "The date and time of the audit record", nullable = true)
-  val auditTimestamp: LocalDateTime? = null,
-
-  @Schema(description = "The audit username", nullable = true)
-  val auditUserId: String? = null,
-
-  @Schema(description = "The audit module name", nullable = true)
-  val auditModuleName: String? = null,
-
-  @Schema(description = "The audit client id", nullable = true)
-  val auditClientUserId: String? = null,
-
-  @Schema(description = "The audit client IP address", nullable = true)
-  val auditClientIpAddress: String? = null,
-
-  @Schema(description = "The audit client workstation", nullable = true)
-  val auditClientWorkstationName: String? = null,
-
-  @Schema(description = "Audit additional info", nullable = true)
-  val auditAdditionalInfo: String? = null,
-)
+) : AbstractAuditable()
 
 data class MigrateRestriction(
   @Schema(description = "Unique ID in NOMIS for this restriction", example = "123")
@@ -243,12 +207,7 @@ data class MigrateRestriction(
   @Schema(description = "The date that this restriction expires and stops being enforced", nullable = true, example = "2024-03-01")
   val expiryDate: LocalDate? = null,
 
-  @Schema(description = "Created by username", nullable = true, example = "SJ99OWM")
-  val createUsername: String? = null,
-
-  @Schema(description = "The date and time this restriction was created", nullable = true, example = "2024-03-01T0:00:00")
-  val createdDateTime: LocalDateTime? = null,
-)
+) : AbstractAuditable()
 
 data class MigrateEmployment(
   @Schema(description = "Unique sequence ID in NOMIS for this employment", example = "123")
@@ -259,7 +218,8 @@ data class MigrateEmployment(
 
   @Schema(description = "Comments relating to this restriction", example = "true")
   val active: Boolean = false,
-)
+
+) : AbstractAuditable()
 
 data class Corporate(
   @Schema(description = "The corporate ID in NOMIS", example = "123")
@@ -278,6 +238,9 @@ data class MigrateRelationship(
 
   @Schema(description = "Coded value indicating the type of relationship - from reference data", example = "MOTHER")
   val relationshipType: CodedValue,
+
+  @Schema(description = "True if this relationship applies to the latest or current term in prison, false if a previous term", nullable = true, example = "true")
+  val currentTerm: Boolean = true,
 
   @Schema(description = "The relationship is active", example = "true")
   val active: Boolean = false,
@@ -302,7 +265,8 @@ data class MigrateRelationship(
 
   @Schema(description = "The restrictions for this prisoner contact relationship")
   val restrictions: List<MigratePrisonerContactRestriction> = emptyList(),
-)
+
+) : AbstractAuditable()
 
 data class MigratePrisonerContactRestriction(
   @Schema(description = "The ID in NOMIS", example = "123")
@@ -320,6 +284,4 @@ data class MigratePrisonerContactRestriction(
   @Schema(description = "The date that this restriction expires", example = "2024-03-01")
   val expiryDate: LocalDate? = null,
 
-  @Schema(description = "The user who created this restriction", example = "SJ989JJ")
-  val createdByUsername: String,
-)
+) : AbstractAuditable()
