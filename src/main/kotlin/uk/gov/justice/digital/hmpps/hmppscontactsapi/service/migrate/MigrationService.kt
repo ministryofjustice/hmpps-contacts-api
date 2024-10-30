@@ -89,6 +89,7 @@ class MigrationService(
     return MigrateContactResponse(
       contact = IdPair(ElementType.CONTACT, contactPair.first, contactPair.second.contactId),
       lastName = contactPair.second.lastName,
+      dateOfBirth = contactPair.second.dateOfBirth,
       phoneNumbers = phoneNumberPairs.map { IdPair(ElementType.PHONE, it.first, it.second.contactPhoneId) },
       addresses = buildAddressesAndPhonesResponse(addressPairs, addressPhonePairs),
       emailAddresses = emailPairs.map { IdPair(ElementType.EMAIL, it.first, it.second.contactEmailId) },

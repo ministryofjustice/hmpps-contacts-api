@@ -182,7 +182,7 @@ CREATE TABLE contact_restriction
     amended_time      timestamp
 );
 
-CREATE UNIQUE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
+CREATE INDEX idx_contact_restriction_contact_id ON contact_restriction(contact_id);
 CREATE INDEX idx_contact_restriction_start_date ON contact_restriction(start_date);
 CREATE INDEX idx_contact_restriction_expiry_date ON contact_restriction(expiry_date);
 
