@@ -84,7 +84,8 @@ class MigrationService(
     val restrictionPairs = extractAndSaveRestrictions(request, contactId)
     val employmentPairs = extractAndSaveEmployments(request, contactId)
     val prisonerContactPairs = extractAndSavePrisonerContacts(request, contactId)
-    val prisonerContactRestrictionPairs = extractAndSavePrisonerContactRestrictions(request, contactId, prisonerContactPairs)
+    val prisonerContactRestrictionPairs =
+      extractAndSavePrisonerContactRestrictions(request, contactId, prisonerContactPairs)
 
     return MigrateContactResponse(
       contact = IdPair(ElementType.CONTACT, contactPair.first, contactPair.second.contactId),
@@ -262,15 +263,17 @@ class MigrationService(
             issuingAuthority = requestIdentifier.issuedAuthority,
             createdBy = requestIdentifier.createUsername ?: "MIGRATION",
             createdTime = requestIdentifier.createDateTime ?: LocalDateTime.now(),
-          ).also {
-            it.amendedBy = requestIdentifier.modifyUsername
-            it.amendedTime = requestIdentifier.modifyDateTime
-          },
+            amendedBy = requestIdentifier.modifyUsername,
+            amendedTime = requestIdentifier.modifyDateTime,
+          ),
         ),
       )
     }
 
-  fun extractAndSaveRestrictions(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactRestrictionEntity>> =
+  fun extractAndSaveRestrictions(
+    req: MigrateContactRequest,
+    contactId: Long,
+  ): List<Pair<Long, ContactRestrictionEntity>> =
     req.restrictions.map { restriction ->
       Pair(
         restriction.id,
@@ -292,7 +295,10 @@ class MigrationService(
       )
     }
 
-  fun extractAndSaveEmployments(req: MigrateContactRequest, contactId: Long): List<Pair<Long, ContactEmploymentEntity>> =
+  fun extractAndSaveEmployments(
+    req: MigrateContactRequest,
+    contactId: Long,
+  ): List<Pair<Long, ContactEmploymentEntity>> =
     req.employments.map { employment ->
       Pair(
         employment.sequence,
