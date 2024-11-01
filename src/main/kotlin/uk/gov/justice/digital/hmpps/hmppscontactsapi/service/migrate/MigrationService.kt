@@ -118,9 +118,6 @@ class MigrationService(
           createdTime = req.createDateTime ?: LocalDateTime.now(),
         ).also {
           it.staffFlag = req.staff
-          // TODO: Add to ContactEntity and data model
-          // it.isRemitter??
-          // it.keepBiometrics??
           it.gender = req.gender?.code
           it.languageCode = req.language?.code
           it.domesticStatus = req.domesticStatus?.code
@@ -159,7 +156,7 @@ class MigrationService(
           ContactAddressEntity(
             contactAddressId = 0L,
             contactId = contactId,
-            addressType = addr.type.code,
+            addressType = addr.type?.code,
             primaryAddress = addr.primaryAddress,
             flat = addr.flat,
             property = addr.premise,
@@ -303,8 +300,8 @@ class MigrationService(
           ContactEmploymentEntity(
             contactEmploymentId = 0L,
             contactId = contactId,
-            corporateId = employment.corporate.id,
-            corporateName = employment.corporate.name,
+            corporateId = employment.corporate?.id,
+            corporateName = employment.corporate?.name,
             active = employment.active,
             createdBy = employment.createUsername ?: "MIGRATION",
             createdTime = employment.createDateTime ?: LocalDateTime.now(),
@@ -365,6 +362,9 @@ class MigrationService(
           ).also {
             it.amendedBy = relationship.modifyUsername
             it.amendedTime = relationship.modifyDateTime
+            it.active = relationship.active
+            it.approvedVisitor = relationship.approvedVisitor
+            it.expiryDate = relationship.expiryDate
           },
         ),
       )

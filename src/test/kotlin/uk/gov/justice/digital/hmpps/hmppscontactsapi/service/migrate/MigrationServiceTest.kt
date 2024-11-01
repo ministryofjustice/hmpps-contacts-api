@@ -231,7 +231,7 @@ class MigrationServiceTest {
         ContactAddressEntity(
           contactAddressId = 1L,
           contactId = 1L,
-          addressType = request.addresses[0].type.code,
+          addressType = request.addresses[0].type?.code,
           property = request.addresses[0].premise,
           street = request.addresses[0].street,
           postCode = request.addresses[0].postCode,
@@ -241,7 +241,7 @@ class MigrationServiceTest {
         ContactAddressEntity(
           contactAddressId = 2L,
           contactId = 1L,
-          addressType = request.addresses[1].type.code,
+          addressType = request.addresses[1].type?.code,
           property = request.addresses[1].premise,
           street = request.addresses[1].street,
           postCode = request.addresses[1].postCode,
@@ -402,8 +402,8 @@ class MigrationServiceTest {
         ContactEmploymentEntity(
           contactEmploymentId = 1L,
           contactId = 1L,
-          corporateId = request.employments[0].corporate.id,
-          corporateName = request.employments[0].corporate.name,
+          corporateId = request.employments[0].corporate?.id,
+          corporateName = request.employments[0].corporate?.name,
           active = request.employments[0].active,
           createdBy = aUsername,
           createdTime = aDateTime,
@@ -411,8 +411,8 @@ class MigrationServiceTest {
         ContactEmploymentEntity(
           contactEmploymentId = 2L,
           contactId = 1L,
-          corporateId = request.employments[1].corporate.id,
-          corporateName = request.employments[1].corporate.name,
+          corporateId = request.employments[1].corporate?.id,
+          corporateName = request.employments[1].corporate?.name,
           active = request.employments[1].active,
           createdBy = aUsername,
           createdTime = aDateTime,
