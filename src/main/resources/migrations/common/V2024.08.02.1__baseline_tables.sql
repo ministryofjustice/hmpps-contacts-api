@@ -205,9 +205,8 @@ CREATE TABLE prisoner_contact
     active boolean NOT NULL DEFAULT true,
     contact_type varchar(10), -- Reference codes - CONTACT_TYPE (SOCIAL or OFFICIAL)
     relationship_type varchar(12) NOT NULL, -- Reference codes - RELATIONSHIP
+    current_term boolean NOT NULL DEFAULT true, -- True if it applies to latest booking sequence 1
     approved_visitor boolean NOT NULL DEFAULT false,
-    aware_of_charges boolean NOT NULL DEFAULT false,
-    can_be_contacted boolean NOT NULL DEFAULT false,
     next_of_kin boolean NOT NULL DEFAULT false,
     emergency_contact boolean NOT NULL DEFAULT false,
     comments varchar(240),

@@ -246,23 +246,23 @@ data class MigrateRelationship(
   @Schema(description = "Coded value indicating the type of relationship - from reference data")
   val relationshipType: CodedValue,
 
-  @Schema(description = "True if this relationship applies to the latest or current term in prison, false if a previous term", nullable = true, example = "true")
-  val currentTerm: Boolean = true,
+  @Schema(description = "True if this relationship applies to the latest or current term in prison, false if a previous term", example = "true")
+  val currentTerm: Boolean,
 
   @Schema(description = "The relationship is active", example = "true")
-  val active: Boolean = false,
+  val active: Boolean,
 
   @Schema(description = "The date that this relationship expired", nullable = true, example = "2024-03-01")
   val expiryDate: LocalDate? = null,
 
   @Schema(description = "Approved visitor", example = "true")
-  val approvedVisitor: Boolean = false,
+  val approvedVisitor: Boolean,
 
   @Schema(description = "Next of kin", example = "true")
-  val nextOfKin: Boolean = false,
+  val nextOfKin: Boolean,
 
   @Schema(description = "Emergency contact", example = "true")
-  val emergencyContact: Boolean = false,
+  val emergencyContact: Boolean,
 
   @Schema(description = "Comment on this relationship", nullable = true, example = "This is an optional comment")
   val comment: String?,

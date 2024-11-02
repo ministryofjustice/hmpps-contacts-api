@@ -468,12 +468,13 @@ class MigrationServiceTest {
           prisonerNumber = request.contacts[0].prisonerNumber,
           emergencyContact = request.contacts[0].emergencyContact,
           nextOfKin = request.contacts[0].nextOfKin,
+          approvedVisitor = request.contacts[0].approvedVisitor,
+          currentTerm = request.contacts[0].currentTerm,
+          active = request.contacts[0].active,
           comments = request.contacts[0].comment,
           createdBy = aUsername,
           createdTime = aDateTime,
-        ).also {
-          it.approvedVisitor = request.contacts[0].approvedVisitor
-        },
+        ),
         PrisonerContactEntity(
           prisonerContactId = 2L,
           contactId = 1L,
@@ -482,12 +483,13 @@ class MigrationServiceTest {
           prisonerNumber = request.contacts[1].prisonerNumber,
           emergencyContact = request.contacts[1].emergencyContact,
           nextOfKin = request.contacts[1].nextOfKin,
+          approvedVisitor = request.contacts[1].approvedVisitor,
+          currentTerm = request.contacts[1].currentTerm,
+          active = request.contacts[1].active,
           comments = request.contacts[1].comment,
           createdBy = aUsername,
           createdTime = aDateTime,
-        ).also {
-          it.approvedVisitor = request.contacts[1].approvedVisitor
-        },
+        ),
       )
 
       whenever(prisonerContactRepository.save(any()))
@@ -545,12 +547,13 @@ class MigrationServiceTest {
         prisonerNumber = request.contacts[0].prisonerNumber,
         emergencyContact = request.contacts[0].emergencyContact,
         nextOfKin = request.contacts[0].nextOfKin,
+        approvedVisitor = request.contacts[0].approvedVisitor,
+        currentTerm = request.contacts[0].currentTerm,
+        active = request.contacts[0].active,
         comments = request.contacts[0].comment,
         createdBy = aUsername,
         createdTime = aDateTime,
-      ).also {
-        it.approvedVisitor = request.contacts[0].approvedVisitor
-      }
+      )
 
       val restrictionResponses = listOf(
         PrisonerContactRestrictionEntity(
@@ -621,6 +624,9 @@ class MigrationServiceTest {
             comments = "",
             emergencyContact = false,
             nextOfKin = true,
+            approvedVisitor = false,
+            currentTerm = true,
+            active = true,
           ),
         ),
       )

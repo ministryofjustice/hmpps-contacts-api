@@ -365,13 +365,14 @@ class MigrationService(
             nextOfKin = relationship.nextOfKin,
             emergencyContact = relationship.emergencyContact,
             comments = relationship.comment,
+            active = relationship.active,
+            approvedVisitor = relationship.approvedVisitor,
+            currentTerm = relationship.currentTerm,
             createdBy = relationship.createUsername ?: "MIGRATION",
             createdTime = relationship.createDateTime ?: LocalDateTime.now(),
           ).also {
             it.amendedBy = relationship.modifyUsername
             it.amendedTime = relationship.modifyDateTime
-            it.active = relationship.active
-            it.approvedVisitor = relationship.approvedVisitor
             it.expiryDate = relationship.expiryDate
           },
         ),
