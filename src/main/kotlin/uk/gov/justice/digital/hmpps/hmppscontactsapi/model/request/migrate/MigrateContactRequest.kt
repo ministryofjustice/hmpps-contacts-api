@@ -64,6 +64,9 @@ data class MigrateContactRequest(
   @Schema(description = "This person is staff")
   val staff: Boolean = false,
 
+  @Schema(description = "This person is a remitter")
+  val remitter: Boolean = false,
+
   @Schema(description = "Telephone numbers")
   val phoneNumbers: List<MigratePhoneNumber> = emptyList(),
 
@@ -202,11 +205,14 @@ data class MigrateRestriction(
   @Schema(description = "Comments relating to this restriction", nullable = true, example = "A comment")
   val comment: String? = null,
 
-  @Schema(description = "The date that this restriction is effective from", nullable = true, example = "2024-01-01")
-  val effectiveDate: LocalDate? = null,
+  @Schema(description = "The date that this restriction is effective from", example = "2024-01-01")
+  val effectiveDate: LocalDate,
 
   @Schema(description = "The date that this restriction expires and stops being enforced", nullable = true, example = "2024-03-01")
   val expiryDate: LocalDate? = null,
+
+  @Schema(description = "The username of the person who entered the restriction (may be different to the createdBy audit field)", example = "X998XX")
+  val staffUsername: String,
 
 ) : AbstractAuditable()
 
@@ -284,5 +290,8 @@ data class MigratePrisonerContactRestriction(
 
   @Schema(description = "The date that this restriction expires", example = "2024-03-01")
   val expiryDate: LocalDate? = null,
+
+  @Schema(description = "The username of the person who entered the restriction (may be different to the createdBy audit field)", example = "X998XX")
+  val staffUsername: String,
 
 ) : AbstractAuditable()

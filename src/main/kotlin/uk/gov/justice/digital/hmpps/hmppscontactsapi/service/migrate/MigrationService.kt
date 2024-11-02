@@ -119,6 +119,7 @@ class MigrationService(
           createdTime = req.createDateTime ?: LocalDateTime.now(),
         ).also {
           it.staffFlag = req.staff
+          it.remitterFlag = req.remitter
           it.gender = req.gender?.code
           it.languageCode = req.language?.code
           it.domesticStatus = req.domesticStatus?.code
@@ -285,6 +286,7 @@ class MigrationService(
             startDate = restriction.effectiveDate,
             expiryDate = restriction.expiryDate,
             comments = restriction.comment,
+            staffUsername = restriction.staffUsername,
             createdBy = restriction.createUsername ?: "MIGRATION",
             createdTime = restriction.createDateTime ?: LocalDateTime.now(),
           ).also {
@@ -398,6 +400,7 @@ class MigrationService(
               startDate = restriction.startDate,
               expiryDate = restriction.expiryDate,
               comments = restriction.comment,
+              staffUsername = restriction.staffUsername,
               createdBy = restriction.createUsername ?: "MIGRATION",
               createdTime = restriction.createDateTime ?: LocalDateTime.now(),
             ).also {
