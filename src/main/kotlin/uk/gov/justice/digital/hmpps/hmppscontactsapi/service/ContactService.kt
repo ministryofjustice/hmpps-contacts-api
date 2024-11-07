@@ -10,7 +10,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressPhoneE
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -67,13 +66,6 @@ class ContactService(
 
   fun searchContacts(pageable: Pageable, request: ContactSearchRequest): Page<ContactSearchResultItem> =
     contactSearchRepository.searchContacts(request, pageable).toModel()
-
-  @Transactional
-  fun addContactRelationship(contactId: Long, request: AddContactRelationshipRequest) {
-    validateRelationship(request.relationship)
-    getContact(contactId) ?: throw EntityNotFoundException("Contact ($contactId) could not be found")
-    prisonerContactRepository.saveAndFlush(request.relationship.toEntity(contactId, request.createdBy))
-  }
 
   private fun validateRelationship(relationship: ContactRelationship) {
     prisonerService.getPrisoner(relationship.prisonerNumber)

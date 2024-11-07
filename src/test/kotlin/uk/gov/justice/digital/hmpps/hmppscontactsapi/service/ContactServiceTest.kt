@@ -28,7 +28,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactEmailD
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactIdentityDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createContactPhoneDetailsEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -506,91 +505,6 @@ class ContactServiceTest {
 
       assertThrows<RuntimeException>("Bang!") {
         service.getContact(contactId)
-      }
-    }
-  }
-
-  @Nested
-  inner class AddContactRelationship {
-    private val id = 123456L
-    private val relationship = ContactRelationship(
-      prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
-      isNextOfKin = true,
-      isEmergencyContact = false,
-      comments = "Foo",
-    )
-    private val request = AddContactRelationshipRequest(relationship, "RELATIONSHIP_USER")
-    private val contact = ContactEntity(
-      contactId = id,
-      title = null,
-      lastName = "last",
-      middleNames = null,
-      firstName = "first",
-      dateOfBirth = null,
-      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
-      isDeceased = false,
-      deceasedDate = null,
-      createdBy = "user",
-      createdTime = LocalDateTime.now(),
-    )
-
-    @Test
-    fun `should save the contact relationship`() {
-      whenever(prisonerService.getPrisoner(any())).thenReturn(
-        Prisoner(
-          request.relationship.prisonerNumber,
-          prisonId = "MDI",
-        ),
-      )
-      whenever(contactRepository.findById(id)).thenReturn(Optional.of(contact))
-      whenever(prisonerContactRepository.saveAndFlush(any())).thenAnswer { i -> i.arguments[0] }
-
-      service.addContactRelationship(id, request)
-
-      val prisonerContactCaptor = argumentCaptor<PrisonerContactEntity>()
-      verify(prisonerContactRepository).saveAndFlush(prisonerContactCaptor.capture())
-      with(prisonerContactCaptor.firstValue) {
-        assertThat(prisonerNumber).isEqualTo("A1234BC")
-        assertThat(relationshipType).isEqualTo("MOT")
-        assertThat(nextOfKin).isEqualTo(true)
-        assertThat(emergencyContact).isEqualTo(false)
-        assertThat(comments).isEqualTo("Foo")
-        assertThat(createdBy).isEqualTo("RELATIONSHIP_USER")
-      }
-    }
-
-    @Test
-    fun `should blow up if prisoner not found`() {
-      whenever(prisonerService.getPrisoner(any())).thenReturn(null)
-
-      assertThrows<EntityNotFoundException>("Prisoner (A1234BC) could not be found") {
-        service.addContactRelationship(id, request)
-      }
-    }
-
-    @Test
-    fun `should blow up if contact not found`() {
-      whenever(contactRepository.findById(id)).thenReturn(Optional.empty())
-
-      assertThrows<EntityNotFoundException>("Contact ($id) could not be found") {
-        service.addContactRelationship(id, request)
-      }
-    }
-
-    @Test
-    fun `should propagate exceptions adding a relationship`() {
-      whenever(prisonerService.getPrisoner(any())).thenReturn(
-        Prisoner(
-          request.relationship.prisonerNumber,
-          prisonId = "MDI",
-        ),
-      )
-      whenever(contactRepository.findById(id)).thenReturn(Optional.of(contact))
-      whenever(prisonerContactRepository.saveAndFlush(any())).thenThrow(RuntimeException("Bang!"))
-
-      assertThrows<RuntimeException>("Bang!") {
-        service.addContactRelationship(id, request)
       }
     }
   }
