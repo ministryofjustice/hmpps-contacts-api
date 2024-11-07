@@ -80,8 +80,8 @@ values (1, 1, 'PERSONAL', 'mr.last@example.com', true, 'TIM'),
        (4, 3, 'WORK', 'work@example.com', true, 'JAMES');
 
 insert into reference_codes(group_code, code, description, display_order, is_active, created_by)
-values ('CONTACT_TYPE', 'SOCIAL', 'Social contact', 0, true, 'TIM'),
-       ('CONTACT_TYPE', 'OFFICIAL', 'Official contact', 0, true, 'TIM'),
+values ('CONTACT_TYPE', 'S', 'Social contact', 0, true, 'TIM'),
+       ('CONTACT_TYPE', 'O', 'Official contact', 0, true, 'TIM'),
        ('DOMESTIC_STS', 'S', 'Single-not married/in civil partnership', 1, true, 'JAMES'),
        ('DOMESTIC_STS', 'C', 'Co-habiting (living with partner)', 2, true, 'JAMES'),
        ('DOMESTIC_STS', 'M', 'Married or in civil partnership', 3, true, 'JAMES'),
@@ -190,40 +190,40 @@ values ('CONTACT_TYPE', 'SOCIAL', 'Social contact', 0, true, 'TIM'),
 ;
 
 insert into prisoner_contact (prisoner_contact_id, contact_id, prisoner_number, contact_type, active, relationship_type, comments, created_at_prison, created_by, created_time)
-values (1, 1, 'A1234BB', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+values (1, 1, 'A1234BB', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Jason Mitchell
-       (2,  1,  'A8185DY', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (3,  6,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (4,  7,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (5,  8,  'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (6,  10, 'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (7,  11, 'A8185DY', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (2,  1,  'A8185DY', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (3,  6,  'A8185DY', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (4,  7,  'A8185DY', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (5,  8,  'A8185DY', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (6,  10, 'A8185DY', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (7,  11, 'A8185DY', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Tim Harrison
-       (8,  1,  'G4793VF', 'SOCIAL', true,  'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (9,  2,  'G4793VF', 'SOCIAL', true,  'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (10, 3,  'G4793VF', 'OFFICIAL', true,  'SIS', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (11, 4,  'G4793VF', 'SOCIAL', true,  'BRO', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (12, 5,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (13, 6,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (14, 7,  'G4793VF', 'SOCIAL', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (15, 8,  'G4793VF', 'SOCIAL', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (16, 9,  'G4793VF', 'SOCIAL', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (17, 10, 'G4793VF', 'SOCIAL', true, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (18, 11, 'G4793VF', 'SOCIAL', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (19, 12, 'G4793VF', 'SOCIAL', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (8,  1,  'G4793VF', 'S', true,  'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (9,  2,  'G4793VF', 'S', true,  'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (10, 3,  'G4793VF', 'O', true,  'SIS', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (11, 4,  'G4793VF', 'S', true,  'BRO', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (12, 5,  'G4793VF', 'S', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (13, 6,  'G4793VF', 'S', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (14, 7,  'G4793VF', 'S', true,  'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (15, 8,  'G4793VF', 'S', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (16, 9,  'G4793VF', 'S', true,  'UN', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (17, 10, 'G4793VF', 'S', true, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (18, 11, 'G4793VF', 'S', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (19, 12, 'G4793VF', 'S', false, 'GIF', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Tim Cooks
-       (20, 1, 'A4162DZ', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (21, 2, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (22, 3, 'A4162DZ', 'OFFICIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (23, 4, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (24, 5, 'A4162DZ', 'SOCIAL', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (25, 10, 'A4162DZ', 'SOCIAL', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (20, 1, 'A4162DZ', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (21, 2, 'A4162DZ', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (22, 3, 'A4162DZ', 'O', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (23, 4, 'A4162DZ', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (24, 5, 'A4162DZ', 'S', true, 'FRI', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (25, 10, 'A4162DZ', 'S', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Justin Timberlake
-       (26, 1, 'A5166DY', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (26, 1, 'A5166DY', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
        -- Mike Toby
-       (27, 1, 'A4385DZ', 'SOCIAL', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (28, 10, 'A4385DZ', 'SOCIAL', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
-       (29, 18, 'A4385DZ', 'SOCIAL', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
+       (27, 1, 'A4385DZ', 'S', true, 'FA', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (28, 10, 'A4385DZ', 'S', true, 'MOT', 'Comment', 'MDI', 'TIM', current_timestamp),
+       (29, 18, 'A4385DZ', 'S', true, 'FRI', null, 'MDI', 'TIM', current_timestamp);
 
 insert into prisoner_contact_restriction (prisoner_contact_id, restriction_type, start_date, expiry_date, comments, authorised_by, authorised_time, created_by, created_time, amended_by, amended_time )
 values

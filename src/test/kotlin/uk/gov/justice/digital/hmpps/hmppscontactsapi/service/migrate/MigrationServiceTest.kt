@@ -641,7 +641,7 @@ class MigrationServiceTest {
           second = PrisonerContactEntity(
             prisonerContactId = 1L,
             contactId = 1L,
-            contactType = "SOCIAL",
+            contactType = "S",
             relationshipType = "BRO",
             prisonerNumber = "A1234AA",
             createdBy = "TEST",
@@ -832,7 +832,7 @@ class MigrationServiceTest {
     listOf(
       MigrateRelationship(
         id = 1L,
-        contactType = CodedValue("SOCIAL", "Social contact"),
+        contactType = CodedValue("S", "Social"),
         relationshipType = CodedValue("BRO", "Brother"),
         currentTerm = true,
         active = true,
@@ -849,7 +849,7 @@ class MigrationServiceTest {
       },
       MigrateRelationship(
         id = 2L,
-        contactType = CodedValue("OFFICIAL", "Official contact"),
+        contactType = CodedValue("O", "Official"),
         relationshipType = CodedValue("ILP", "In Loco Parentis"),
         currentTerm = true,
         active = false,
@@ -870,7 +870,7 @@ class MigrationServiceTest {
     listOf(
       MigrateRelationship(
         id = 11L,
-        contactType = CodedValue("SOCIAL", "Social contact"),
+        contactType = CodedValue("S", "Social"),
         relationshipType = CodedValue("BRO", "Brother"),
         currentTerm = true,
         active = true,
