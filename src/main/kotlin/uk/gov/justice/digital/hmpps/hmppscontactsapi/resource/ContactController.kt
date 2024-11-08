@@ -29,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -241,4 +242,46 @@ class ContactController(
     ) contactId: Long,
     @Valid @RequestBody patchContactRequest: PatchContactRequest,
   ) = contactFacade.patch(contactId, patchContactRequest)
+
+  @PatchMapping("/{contactId}/relationship/{prisonerContactId}", consumes = [MediaType.APPLICATION_JSON_VALUE])
+  @Operation(
+    summary = "Update prisoner contact relationship",
+    description = "Update the relationship between the contact and a prisoner.",
+  )
+  @ApiResponses(
+    value = [
+      ApiResponse(
+        responseCode = "204",
+        description = "Updated the relationship successfully",
+      ),
+      ApiResponse(
+        responseCode = "400",
+        description = "The request has invalid or missing fields",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+      ApiResponse(
+        responseCode = "404",
+        description = "Could not find the prisoner contact that this relationship relates to",
+        content = [Content(schema = Schema(implementation = ErrorResponse::class))],
+      ),
+    ],
+  )
+  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
+  @ResponseStatus(HttpStatus.CREATED)
+  fun patchContactRelationship(
+    @PathVariable("contactId") @Parameter(
+      name = "contactId",
+      description = "The id of the contact",
+      example = "123456",
+    ) contactId: Long,
+    @PathVariable("prisonerContactId") @Parameter(
+      name = "prisonerContactId",
+      description = "The id of the prisoner contact",
+      example = "123456",
+    ) prisonerContactId: Long,
+    @Valid @RequestBody relationshipRequest: UpdateRelationshipRequest,
+  ): ResponseEntity<Any> {
+      contactFacade.updateContactRelationship(contactId, prisonerContactId, relationshipRequest)
+    return ResponseEntity.noContent().build()
+  }
 }

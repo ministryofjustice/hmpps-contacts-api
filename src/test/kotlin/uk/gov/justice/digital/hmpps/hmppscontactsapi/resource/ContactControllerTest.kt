@@ -23,6 +23,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -276,6 +277,36 @@ class ContactControllerTest {
       createdTime = LocalDateTime.now(),
       amendedBy = "UPDATE",
       amendedTime = LocalDateTime.now(),
+    )
+  }
+
+  @Nested
+  inner class PatchContactRelationship {
+    private val id = 123456L
+    private val prisonerContactId = 2L
+    private val request = patchContactRelationshipRequest()
+
+    @Test
+    fun `should update a contact relationship successfully`() {
+      doNothing().whenever(contactService).updateContactRelationship(id, prisonerContactId, request)
+
+      controller.patchContactRelationship(id, prisonerContactId, request)
+
+      verify(contactService).updateContactRelationship(id, prisonerContactId, request)
+    }
+
+    @Test
+    fun `should propagate exceptions patching a contact relationship`() {
+      whenever(contactService.updateContactRelationship(id, prisonerContactId, request)).thenThrow(RuntimeException("Bang!"))
+
+      assertThrows<RuntimeException>("Bang!") {
+        controller.patchContactRelationship(id, prisonerContactId, request)
+      }
+    }
+
+    private fun patchContactRelationshipRequest() = UpdateRelationshipRequest(
+      relationshipCode = JsonNullable.of("ENG"),
+      updatedBy = "system",
     )
   }
 
