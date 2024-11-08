@@ -707,7 +707,7 @@ class MigrationServiceTest {
       title = CodedValue("MR", "Mr"),
       lastName = "Smith",
       firstName = "John",
-      gender = CodedValue("Male", "Male"),
+      gender = CodedValue("M", "Male"),
     ).also {
       it.createDateTime = aDateTime
       it.createUsername = aUsername

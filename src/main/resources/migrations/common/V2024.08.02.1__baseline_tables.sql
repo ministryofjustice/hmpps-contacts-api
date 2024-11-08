@@ -24,7 +24,7 @@ CREATE TABLE contact
     deceased_flag boolean NOT NULL DEFAULT false,
     deceased_date date,
     coroner_number varchar(32),
-    gender varchar(20),
+    gender varchar(12),
     domestic_status varchar(12), -- Reference codes - DOMESTIC_STS - nullable
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
     nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
