@@ -26,7 +26,7 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.bind.annotation.RestController
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactPatchFacade
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.facade.ContactFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -35,7 +35,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.patch.PatchContactResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItemPage
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.patch.ContactFacade
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.net.URI
@@ -282,7 +281,7 @@ class ContactController(
     ) prisonerContactId: Long,
     @Valid @RequestBody relationshipRequest: UpdateRelationshipRequest,
   ): ResponseEntity<Any> {
-      contactFacade.updateContactRelationship(contactId, prisonerContactId, relationshipRequest)
+    contactFacade.patchRelationship(contactId, prisonerContactId, relationshipRequest)
     return ResponseEntity.noContent().build()
   }
 }
