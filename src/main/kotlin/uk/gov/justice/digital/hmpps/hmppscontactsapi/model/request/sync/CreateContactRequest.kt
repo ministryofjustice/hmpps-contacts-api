@@ -40,9 +40,6 @@ data class CreateContactRequest(
   @Schema(description = "A description of the relationship if the contact should be linked to a prisoner", nullable = true, exampleClasses = [ContactRelationship::class])
   val relationship: ContactRelationship? = null,
 
-  @Schema(description = "Whether the contact is active", example = "true", nullable = true)
-  var active: Boolean? = false,
-
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
   var isStaff: Boolean = false,
 

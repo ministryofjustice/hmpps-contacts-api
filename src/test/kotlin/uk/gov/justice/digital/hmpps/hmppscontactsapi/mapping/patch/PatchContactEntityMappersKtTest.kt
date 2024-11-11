@@ -24,7 +24,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.estimatedIsOverEighteen).isEqualTo(contactEntity.estimatedIsOverEighteen)
     assertThat(response.createdBy).isEqualTo(contactEntity.createdBy)
     assertThat(response.createdTime).isEqualTo(contactEntity.createdTime)
-    assertThat(response.active).isEqualTo(contactEntity.active)
     assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
     assertThat(response.deceasedFlag).isEqualTo(contactEntity.isDeceased)
     assertThat(response.deceasedDate).isEqualTo(contactEntity.deceasedDate)
@@ -37,8 +36,8 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.amendedTime).isEqualTo(contactEntity.amendedTime)
   }
 
-  private fun contactEntity(languageCode: String?): ContactEntity {
-    val contactEntity = ContactEntity(
+  private fun contactEntity(languageCode: String?) =
+    ContactEntity(
       contactId = 1L,
       title = "MR",
       firstName = "John",
@@ -50,7 +49,6 @@ class PatchContactEntityMappersKtTest {
       isDeceased = false,
       deceasedDate = null,
       createdTime = LocalDateTime.now(),
-      active = true,
       staffFlag = false,
       gender = "M",
       domesticStatus = "S",
@@ -61,6 +59,4 @@ class PatchContactEntityMappersKtTest {
       amendedBy = "admin",
       amendedTime = LocalDateTime.now(),
     )
-    return contactEntity
-  }
 }

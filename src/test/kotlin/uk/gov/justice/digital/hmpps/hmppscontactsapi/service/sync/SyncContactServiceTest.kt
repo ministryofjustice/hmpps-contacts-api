@@ -43,7 +43,6 @@ class SyncContactServiceTest {
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
-        assertThat(active).isTrue()
         assertThat(isStaff).isFalse()
         assertThat(deceasedFlag).isFalse()
         assertThat(interpreterRequired).isFalse()
@@ -74,7 +73,6 @@ class SyncContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
 
@@ -83,7 +81,6 @@ class SyncContactServiceTest {
         assertThat(id).isEqualTo(0L)
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(createdBy).isEqualTo(request.createdBy)
       }
     }
@@ -121,7 +118,6 @@ class SyncContactServiceTest {
       with(contactCaptor.firstValue) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -130,7 +126,6 @@ class SyncContactServiceTest {
       with(updated) {
         assertThat(title).isEqualTo(request.title)
         assertThat(lastName).isEqualTo(request.lastName)
-        assertThat(active).isEqualTo(request.active)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
         assertThat(amendedTime).isEqualTo(request.updatedTime)
       }
@@ -155,7 +150,6 @@ class SyncContactServiceTest {
       middleName = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-      active = true,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
@@ -178,7 +172,6 @@ class SyncContactServiceTest {
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       createdBy = "JD000001",
       createdTime = LocalDateTime.of(2024, 1, 1, 0, 0, 0),
-      active = true,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
@@ -202,7 +195,6 @@ class SyncContactServiceTest {
       deceasedDate = null,
       createdBy = "TEST",
       createdTime = LocalDateTime.now(),
-      active = true,
       staffFlag = false,
       gender = "M",
       domesticStatus = "S",
@@ -226,7 +218,6 @@ class SyncContactServiceTest {
       isDeceased = false,
       deceasedDate = null,
       createdBy = "Admin",
-      active = this.active,
       staffFlag = this.isStaff,
       gender = this.gender,
       domesticStatus = this.domesticStatus,

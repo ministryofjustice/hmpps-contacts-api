@@ -114,7 +114,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("Middle")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 26))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-        assertThat(active).isFalse()
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
@@ -154,7 +153,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-        assertThat(active).isTrue
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
@@ -189,7 +187,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(firstName).isEqualTo("John")
         assertThat(lastName).isEqualTo("Doe")
         assertThat(middleName).isEqualTo("William")
-        assertThat(active).isTrue()
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
@@ -217,7 +214,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(createdBy).isEqualTo("JD000001")
-        assertThat(active).isTrue
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
@@ -271,7 +267,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-        active = true,
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
@@ -293,7 +288,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         createdBy = "JD000001",
-        active = true,
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,

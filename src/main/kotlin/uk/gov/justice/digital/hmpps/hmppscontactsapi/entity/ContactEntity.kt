@@ -46,8 +46,6 @@ data class ContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 
-  val active: Boolean? = false,
-
   val staffFlag: Boolean = false,
 
   val remitterFlag: Boolean = false,
