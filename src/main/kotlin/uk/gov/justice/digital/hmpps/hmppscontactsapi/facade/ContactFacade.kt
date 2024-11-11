@@ -57,11 +57,11 @@ class ContactFacade(
     return contactService.searchContacts(pageable, request)
   }
 
-  fun patchRelationship(id: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
-    return contactService.updateContactRelationship(id, prisonerContactId, request)
+  fun patchRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
+    return contactService.updateContactRelationship(contactId, prisonerContactId, request)
       .also {
-        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, id)
-        outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, id)
+        logger.info("Send patch relationship domain event to {} {} ", OutboundEvent.CONTACT_AMENDED, contactId)
+        outboundEventsService.send(OutboundEvent.PRISONER_CONTACT_AMENDED, contactId)
       }
   }
 }

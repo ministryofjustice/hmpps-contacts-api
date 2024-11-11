@@ -238,10 +238,10 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val numbers = ('0'..'9')
 
     val firstLetter = letters.random()
-    val lastLetter = letters.random()
     val numberPart = (1..4).map { numbers.random() }.joinToString("")
+    val lastTwoLetters = (1..2).map { letters.random() }.joinToString("")
 
-    return "$firstLetter$numberPart$lastLetter"
+    return "$firstLetter$numberPart$lastTwoLetters"
   }
 
   private fun cretePrisonerContact(prisonerNumber: String = "A1234AB"): PrisonerContactSummary {

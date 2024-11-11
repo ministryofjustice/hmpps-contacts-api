@@ -141,13 +141,13 @@ class ContactService(
 
   @Transactional
   fun updateContactRelationship(contactId: Long, prisonerContactId: Long, request: UpdateRelationshipRequest) {
-    val contact = getPrisonerContactEntity(prisonerContactId)
+    val prisonerContactEntity = getPrisonerContactEntity(prisonerContactId)
 
     validateRequest(request)
-    validateRelationshipIsValid(contact, contactId, prisonerContactId)
+    validateRelationshipIsValid(prisonerContactEntity, contactId, prisonerContactId)
     validateRelationshipTypeCode(request)
 
-    val changedPrisonerContact = contact.applyUpdate(request)
+    val changedPrisonerContact = prisonerContactEntity.applyUpdate(request)
 
     prisonerContactRepository.saveAndFlush(changedPrisonerContact)
   }
