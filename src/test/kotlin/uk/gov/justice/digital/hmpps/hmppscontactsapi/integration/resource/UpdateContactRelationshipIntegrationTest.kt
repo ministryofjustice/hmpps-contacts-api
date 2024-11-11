@@ -155,7 +155,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
-    // assertThat(updatedPrisonerContacts[0].isRelationshipActive).isTrue field no preset on PrisonerContactSummary atm
+    assertThat(updatedPrisonerContacts[0].isRelationshipActive).isTrue
   }
 
   @Test
