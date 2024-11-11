@@ -41,9 +41,6 @@ data class Contact(
   @Schema(description = "Whether the contact is active", example = "true", nullable = true)
   var active: Boolean? = false,
 
-  @Schema(description = "Whether the contact is suspended", example = "false", nullable = true)
-  var suspended: Boolean? = false,
-
   @Schema(description = "Whether the contact is a staff member", example = "false", nullable = false)
   var isStaff: Boolean = false,
 

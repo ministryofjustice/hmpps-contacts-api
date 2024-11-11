@@ -48,8 +48,6 @@ data class ContactEntity(
 
   val active: Boolean? = false,
 
-  val suspended: Boolean? = false,
-
   val staffFlag: Boolean = false,
 
   val remitterFlag: Boolean = false,

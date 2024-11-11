@@ -25,7 +25,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.createdBy).isEqualTo(contactEntity.createdBy)
     assertThat(response.createdTime).isEqualTo(contactEntity.createdTime)
     assertThat(response.active).isEqualTo(contactEntity.active)
-    assertThat(response.suspended).isEqualTo(contactEntity.suspended)
     assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
     assertThat(response.deceasedFlag).isEqualTo(contactEntity.isDeceased)
     assertThat(response.deceasedDate).isEqualTo(contactEntity.deceasedDate)
@@ -52,7 +51,6 @@ class PatchContactEntityMappersKtTest {
       deceasedDate = null,
       createdTime = LocalDateTime.now(),
       active = true,
-      suspended = false,
       staffFlag = false,
       gender = "M",
       domesticStatus = "S",

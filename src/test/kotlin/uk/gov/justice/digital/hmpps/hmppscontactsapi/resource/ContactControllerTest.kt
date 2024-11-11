@@ -261,7 +261,6 @@ class ContactControllerTest {
       dateOfBirth = LocalDate.of(1980, 1, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
       active = true,
-      suspended = false,
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,

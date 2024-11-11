@@ -90,7 +90,6 @@ private fun newContact(
     createdBy = createdBy,
     createdTime = LocalDateTime.now(),
     active = false,
-    suspended = false,
     staffFlag = false,
     remitterFlag = false,
     gender = null,

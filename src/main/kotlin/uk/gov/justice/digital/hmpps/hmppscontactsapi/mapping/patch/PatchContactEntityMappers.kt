@@ -15,7 +15,6 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     active = this.active,
-    suspended = this.suspended,
     isStaff = this.staffFlag,
     deceasedFlag = this.isDeceased,
     deceasedDate = this.deceasedDate,

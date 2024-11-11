@@ -17,7 +17,6 @@ CREATE TABLE contact
     date_of_birth date,
     estimated_is_over_eighteen varchar(11),
     active boolean NOT NULL default true,
-    suspended boolean NOT NULL DEFAULT false,
     staff_flag boolean NOT NULL DEFAULT false,
     remitter_flag boolean NOT NULL default false,
     deceased_flag boolean NOT NULL DEFAULT false,
