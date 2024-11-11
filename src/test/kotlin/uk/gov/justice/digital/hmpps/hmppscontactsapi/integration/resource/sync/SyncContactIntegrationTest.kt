@@ -120,7 +120,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isEqualTo("2024-01-26")
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("F")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("ENG")
@@ -163,7 +162,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
@@ -229,7 +227,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(isStaff).isFalse
         assertThat(deceasedFlag).isFalse
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
@@ -286,7 +283,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
-        coronerNumber = null,
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",
@@ -311,7 +307,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         isStaff = false,
         deceasedFlag = false,
         deceasedDate = null,
-        coronerNumber = null,
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",

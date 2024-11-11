@@ -20,7 +20,6 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     isStaff = this.staffFlag,
     deceasedFlag = this.isDeceased,
     deceasedDate = this.deceasedDate,
-    coronerNumber = this.coronerNumber,
     gender = this.gender,
     domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,

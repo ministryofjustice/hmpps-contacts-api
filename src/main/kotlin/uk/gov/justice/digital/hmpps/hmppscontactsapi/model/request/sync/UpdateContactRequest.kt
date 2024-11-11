@@ -59,9 +59,6 @@ data class UpdateContactRequest(
   @Schema(description = "The date the contact was deceased, if applicable", example = "2023-05-01", nullable = true)
   var deceasedDate: LocalDate? = null,
 
-  @Schema(description = "The coroner's number, if applicable", example = "CRN12345", nullable = true)
-  var coronerNumber: String? = null,
-
   @Schema(
     description =
     """

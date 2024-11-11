@@ -56,8 +56,6 @@ data class ContactEntity(
 
   val remitterFlag: Boolean = false,
 
-  val coronerNumber: String? = null,
-
   val gender: String? = null,
 
   val domesticStatus: String? = null,

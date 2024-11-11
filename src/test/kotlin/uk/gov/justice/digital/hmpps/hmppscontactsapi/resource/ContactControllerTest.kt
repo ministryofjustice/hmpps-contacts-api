@@ -266,7 +266,6 @@ class ContactControllerTest {
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
-      coronerNumber = null,
       gender = "Male",
       domesticStatus = "Single",
       languageCode = "EN",

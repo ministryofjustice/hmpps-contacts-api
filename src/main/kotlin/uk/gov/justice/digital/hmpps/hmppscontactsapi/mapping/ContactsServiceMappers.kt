@@ -94,7 +94,6 @@ private fun newContact(
     suspended = false,
     staffFlag = false,
     remitterFlag = false,
-    coronerNumber = null,
     gender = null,
     domesticStatus = null,
     languageCode = null,

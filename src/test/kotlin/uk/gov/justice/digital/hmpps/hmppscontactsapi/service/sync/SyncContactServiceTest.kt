@@ -44,7 +44,6 @@ class SyncContactServiceTest {
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
-        assertThat(coronerNumber).isNull()
         assertThat(active).isTrue()
         assertThat(suspended).isFalse()
         assertThat(isStaff).isFalse()
@@ -164,7 +163,6 @@ class SyncContactServiceTest {
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
@@ -190,7 +188,6 @@ class SyncContactServiceTest {
       isStaff = false,
       deceasedFlag = false,
       deceasedDate = null,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
@@ -215,7 +212,6 @@ class SyncContactServiceTest {
       active = true,
       suspended = false,
       staffFlag = false,
-      coronerNumber = null,
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
@@ -242,7 +238,6 @@ class SyncContactServiceTest {
       active = this.active,
       suspended = this.suspended,
       staffFlag = this.isStaff,
-      coronerNumber = this.coronerNumber,
       gender = this.gender,
       domesticStatus = this.domesticStatus,
       languageCode = this.languageCode,

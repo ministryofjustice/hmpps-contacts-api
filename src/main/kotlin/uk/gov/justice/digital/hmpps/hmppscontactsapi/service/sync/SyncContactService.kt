@@ -50,7 +50,6 @@ class SyncContactService(
       active = request.active,
       suspended = request.suspended,
       staffFlag = request.isStaff,
-      coronerNumber = request.coronerNumber,
       gender = request.gender,
       domesticStatus = request.domesticStatus,
       languageCode = request.languageCode,

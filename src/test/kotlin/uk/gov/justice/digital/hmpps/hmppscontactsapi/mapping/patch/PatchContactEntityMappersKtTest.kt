@@ -30,7 +30,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
     assertThat(response.deceasedFlag).isEqualTo(contactEntity.isDeceased)
     assertThat(response.deceasedDate).isEqualTo(contactEntity.deceasedDate)
-    assertThat(response.coronerNumber).isEqualTo(contactEntity.coronerNumber)
     assertThat(response.gender).isEqualTo(contactEntity.gender)
     assertThat(response.domesticStatus).isEqualTo(contactEntity.domesticStatus)
     assertThat(response.languageCode).isEqualTo(contactEntity.languageCode)
@@ -57,7 +56,6 @@ class PatchContactEntityMappersKtTest {
       active = true,
       suspended = false,
       staffFlag = false,
-      coronerNumber = "1234",
       gender = "M",
       domesticStatus = "S",
       languageCode = languageCode,

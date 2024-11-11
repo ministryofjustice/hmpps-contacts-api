@@ -644,7 +644,6 @@ class ContactPatchServiceTest {
     active = true,
     suspended = false,
     staffFlag = false,
-    coronerNumber = null,
     gender = "M",
     domesticStatus = domesticStatus,
     languageCode = languageCode,
@@ -664,7 +663,6 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.active).isEqualTo(originalContact.active)
     assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
     assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
-    assertThat(updatedContact.coronerNumber).isEqualTo(originalContact.coronerNumber)
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
     assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
