@@ -644,7 +644,6 @@ class ContactPatchServiceTest {
     gender = "M",
     domesticStatus = domesticStatus,
     languageCode = languageCode,
-    nationalityCode = "GB",
     interpreterRequired = false,
     amendedBy = "admin",
     amendedTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
@@ -658,7 +657,6 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
     assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)
     assertThat(updatedContact.gender).isEqualTo(originalContact.gender)
-    assertThat(updatedContact.nationalityCode).isEqualTo(originalContact.nationalityCode)
     assertThat(updatedContact.interpreterRequired).isEqualTo(originalContact.interpreterRequired)
     assertThat(updatedContact.domesticStatus).isEqualTo(originalContact.domesticStatus)
     assertThat(updatedContact.amendedTime).isAfter(originalContact.amendedTime)

@@ -266,7 +266,6 @@ class ContactControllerTest {
       gender = "Male",
       domesticStatus = "Single",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
       createdBy = "JD000001",
       createdTime = LocalDateTime.now(),

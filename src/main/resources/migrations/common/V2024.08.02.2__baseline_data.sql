@@ -69,7 +69,6 @@ values (1, 1, 'MOB', '07878 111111', null, 'TIM', '2024-10-01 12:00:00'),
        (11, 10, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00'),
        (12, 11, 'MOB', '07878 222222', null, 'TIM', '2024-10-01 12:00:00');
 
-
 insert into contact_address_phone(contact_address_phone_id, contact_id, contact_address_id, contact_phone_id, created_by)
 values (1, 1, 1, 2, 'JAMES');
 

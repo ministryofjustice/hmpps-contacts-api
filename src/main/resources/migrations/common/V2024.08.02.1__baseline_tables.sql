@@ -23,7 +23,6 @@ CREATE TABLE contact
     gender varchar(12),
     domestic_status varchar(12), -- Reference codes - DOMESTIC_STS - nullable
     language_code varchar(12), -- Reference codes - LANGUAGE - nullable
-    nationality_code varchar(12), -- Reference data - NATIONALITY - nullable
     interpreter_required boolean NOT NULL DEFAULT false,
     created_by varchar(100) NOT NULL,
     created_time timestamp NOT NULL DEFAULT current_timestamp,
@@ -34,6 +33,7 @@ CREATE TABLE contact
 CREATE INDEX idx_contact_last_name ON contact(last_name);
 CREATE INDEX idx_contact_first_name ON contact(first_name);
 CREATE INDEX idx_contact_date_of_birth ON contact(date_of_birth);
+CREATE INDEX idx_contact_created_time ON contact(created_time);
 
 ---------------------------------------------------------------------------------------
 -- Contacts need to provide one or more forms of ID.

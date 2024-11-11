@@ -30,7 +30,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.gender).isEqualTo(contactEntity.gender)
     assertThat(response.domesticStatus).isEqualTo(contactEntity.domesticStatus)
     assertThat(response.languageCode).isEqualTo(contactEntity.languageCode)
-    assertThat(response.nationalityCode).isEqualTo(contactEntity.nationalityCode)
     assertThat(response.interpreterRequired).isEqualTo(contactEntity.interpreterRequired)
     assertThat(response.amendedBy).isEqualTo(contactEntity.amendedBy)
     assertThat(response.amendedTime).isEqualTo(contactEntity.amendedTime)
@@ -53,7 +52,6 @@ class PatchContactEntityMappersKtTest {
       gender = "M",
       domesticStatus = "S",
       languageCode = languageCode,
-      nationalityCode = "GB",
       interpreterRequired = false,
       remitterFlag = false,
       amendedBy = "admin",

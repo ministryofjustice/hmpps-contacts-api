@@ -120,7 +120,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(gender).isEqualTo("F")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("ENG")
-        assertThat(nationalityCode).isNull()
         assertThat(interpreterRequired).isFalse
         assertThat(createdBy).isEqualTo("TIM")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -159,7 +158,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isFalse
         assertThat(createdBy).isEqualTo("JD000001")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -220,7 +218,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(interpreterRequired).isTrue()
         assertThat(amendedBy).isEqualTo("UPDATE")
         assertThat(amendedTime).isAfter(LocalDateTime.now().minusMinutes(5))
@@ -273,7 +270,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",
-        nationalityCode = "GB",
         interpreterRequired = true,
         updatedBy = "UPDATE",
         updatedTime = LocalDateTime.now(),
@@ -294,7 +290,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         gender = "M",
         domesticStatus = "S",
         languageCode = "EN",
-        nationalityCode = "GB",
         interpreterRequired = false,
       )
   }

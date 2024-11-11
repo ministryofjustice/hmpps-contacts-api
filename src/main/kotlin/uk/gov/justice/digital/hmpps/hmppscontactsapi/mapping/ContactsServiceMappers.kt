@@ -94,7 +94,6 @@ private fun newContact(
     gender = null,
     domesticStatus = null,
     languageCode = null,
-    nationalityCode = null,
     interpreterRequired = false,
     amendedBy = null,
     amendedTime = null,

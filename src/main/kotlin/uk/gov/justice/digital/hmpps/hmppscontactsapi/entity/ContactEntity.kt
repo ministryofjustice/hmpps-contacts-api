@@ -56,8 +56,6 @@ data class ContactEntity(
 
   val languageCode: String? = null,
 
-  val nationalityCode: String? = null,
-
   val interpreterRequired: Boolean = false,
 
   val amendedBy: String? = null,

@@ -70,9 +70,6 @@ data class CreateContactRequest(
   @Schema(description = "The language code of the contact", example = "EN", nullable = true)
   var languageCode: String? = null,
 
-  @Schema(description = "The nationality code of the contact", example = "GB", nullable = true)
-  var nationalityCode: String? = null,
-
   @Schema(description = "Whether an interpreter is required", example = "false", nullable = true)
   var interpreterRequired: Boolean? = false,
 

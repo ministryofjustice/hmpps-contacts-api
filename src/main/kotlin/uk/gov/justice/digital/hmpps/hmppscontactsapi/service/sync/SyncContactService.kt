@@ -50,7 +50,6 @@ class SyncContactService(
       gender = request.gender,
       domesticStatus = request.domesticStatus,
       languageCode = request.languageCode,
-      nationalityCode = request.nationalityCode,
       interpreterRequired = request.interpreterRequired ?: false,
       amendedBy = request.updatedBy,
       amendedTime = request.updatedTime,

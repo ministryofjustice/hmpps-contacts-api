@@ -20,7 +20,6 @@ fun ContactEntity.mapToResponse(): PatchContactResponse {
     gender = this.gender,
     domesticStatus = this.domesticStatus,
     languageCode = this.languageCode,
-    nationalityCode = this.nationalityCode,
     interpreterRequired = this.interpreterRequired,
     amendedBy = this.amendedBy,
     amendedTime = this.amendedTime,

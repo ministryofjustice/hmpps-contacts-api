@@ -39,7 +39,6 @@ class SyncContactServiceTest {
         assertThat(gender).isEqualTo("M")
         assertThat(domesticStatus).isEqualTo("S")
         assertThat(languageCode).isEqualTo("EN")
-        assertThat(nationalityCode).isEqualTo("GB")
         assertThat(dateOfBirth).isNull()
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.NO)
         assertThat(deceasedDate).isNull()
@@ -156,7 +155,6 @@ class SyncContactServiceTest {
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
       updatedBy = "Admin",
       updatedTime = LocalDateTime.now(),
@@ -178,7 +176,6 @@ class SyncContactServiceTest {
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
     )
 
@@ -199,7 +196,6 @@ class SyncContactServiceTest {
       gender = "M",
       domesticStatus = "S",
       languageCode = "EN",
-      nationalityCode = "GB",
       interpreterRequired = false,
     )
 
@@ -222,7 +218,6 @@ class SyncContactServiceTest {
       gender = this.gender,
       domesticStatus = this.domesticStatus,
       languageCode = this.languageCode,
-      nationalityCode = this.nationalityCode,
       interpreterRequired = this.interpreterRequired ?: false,
       amendedBy = updatedBy,
       amendedTime = updatedTime,
