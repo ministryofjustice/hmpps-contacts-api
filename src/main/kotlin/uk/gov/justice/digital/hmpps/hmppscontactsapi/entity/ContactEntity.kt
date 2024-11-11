@@ -46,8 +46,6 @@ data class ContactEntity(
   @CreationTimestamp
   val createdTime: LocalDateTime = now(),
 
-  val placeOfBirth: String? = null,
-
   val active: Boolean? = false,
 
   val suspended: Boolean? = false,

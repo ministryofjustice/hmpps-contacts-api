@@ -16,7 +16,6 @@ CREATE TABLE contact
     middle_names varchar(35),
     date_of_birth date,
     estimated_is_over_eighteen varchar(11),
-    place_of_birth varchar(25),
     active boolean NOT NULL default true,
     suspended boolean NOT NULL DEFAULT false,
     staff_flag boolean NOT NULL DEFAULT false,

@@ -89,7 +89,6 @@ private fun newContact(
     deceasedDate = null,
     createdBy = createdBy,
     createdTime = LocalDateTime.now(),
-    placeOfBirth = null,
     active = false,
     suspended = false,
     staffFlag = false,

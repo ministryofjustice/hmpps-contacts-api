@@ -260,7 +260,6 @@ class ContactControllerTest {
       middleNames = "William",
       dateOfBirth = LocalDate.of(1980, 1, 1),
       estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-      placeOfBirth = "London",
       active = true,
       suspended = false,
       isStaff = false,

@@ -114,7 +114,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("Middle")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(2000, 11, 26))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
-        assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isFalse()
         assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
@@ -156,7 +155,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(middleName).isEqualTo("William")
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
-        assertThat(placeOfBirth).isEqualTo("London")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
@@ -221,7 +219,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         assertThat(dateOfBirth).isEqualTo(LocalDate.of(1980, 1, 1))
         assertThat(estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
         assertThat(createdBy).isEqualTo("JD000001")
-        assertThat(placeOfBirth).isEqualTo("Birmingham")
         assertThat(active).isTrue
         assertThat(suspended).isFalse
         assertThat(isStaff).isFalse
@@ -277,7 +274,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         middleName = "William",
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
-        placeOfBirth = "Birmingham",
         active = true,
         suspended = false,
         isStaff = false,
@@ -301,7 +297,6 @@ class SyncContactIntegrationTest : H2IntegrationTestBase() {
         dateOfBirth = LocalDate.of(1980, 1, 1),
         estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
         createdBy = "JD000001",
-        placeOfBirth = "London",
         active = true,
         suspended = false,
         isStaff = false,

@@ -38,9 +38,6 @@ data class UpdateContactRequest(
   )
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
-  @Schema(description = "The place of birth of the contact", example = "London", nullable = true)
-  var placeOfBirth: String? = null,
-
   @Schema(description = "Whether the contact is active", example = "true", nullable = true)
   var active: Boolean? = false,
 

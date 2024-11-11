@@ -24,7 +24,6 @@ class PatchContactEntityMappersKtTest {
     assertThat(response.estimatedIsOverEighteen).isEqualTo(contactEntity.estimatedIsOverEighteen)
     assertThat(response.createdBy).isEqualTo(contactEntity.createdBy)
     assertThat(response.createdTime).isEqualTo(contactEntity.createdTime)
-    assertThat(response.placeOfBirth).isEqualTo(contactEntity.placeOfBirth)
     assertThat(response.active).isEqualTo(contactEntity.active)
     assertThat(response.suspended).isEqualTo(contactEntity.suspended)
     assertThat(response.isStaff).isEqualTo(contactEntity.staffFlag)
@@ -52,7 +51,6 @@ class PatchContactEntityMappersKtTest {
       isDeceased = false,
       deceasedDate = null,
       createdTime = LocalDateTime.now(),
-      placeOfBirth = "London",
       active = true,
       suspended = false,
       staffFlag = false,

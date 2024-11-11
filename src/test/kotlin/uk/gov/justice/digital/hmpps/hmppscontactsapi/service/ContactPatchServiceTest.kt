@@ -640,7 +640,6 @@ class ContactPatchServiceTest {
     estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
     createdBy = "Admin",
     createdTime = LocalDateTime.of(2024, 1, 22, 0, 0, 0),
-    placeOfBirth = "London",
     active = true,
     suspended = false,
     staffFlag = false,
@@ -659,7 +658,6 @@ class ContactPatchServiceTest {
     assertThat(updatedContact.lastName).isEqualTo(originalContact.lastName)
     assertThat(updatedContact.middleNames).isEqualTo(originalContact.middleNames)
     assertThat(updatedContact.dateOfBirth).isEqualTo(originalContact.dateOfBirth)
-    assertThat(updatedContact.placeOfBirth).isEqualTo(originalContact.placeOfBirth)
     assertThat(updatedContact.active).isEqualTo(originalContact.active)
     assertThat(updatedContact.suspended).isEqualTo(originalContact.suspended)
     assertThat(updatedContact.isStaff).isEqualTo(originalContact.staffFlag)

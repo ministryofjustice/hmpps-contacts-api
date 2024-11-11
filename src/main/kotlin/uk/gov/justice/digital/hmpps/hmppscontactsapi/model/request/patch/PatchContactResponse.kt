@@ -38,9 +38,6 @@ data class PatchContactResponse(
   @Schema(description = "Whether the contact is over 18, based on their date of birth if it is known", example = "YES")
   val estimatedIsOverEighteen: EstimatedIsOverEighteen?,
 
-  @Schema(description = "The place of birth of the contact", example = "London", nullable = true)
-  var placeOfBirth: String? = null,
-
   @Schema(description = "Whether the contact is active", example = "true", nullable = true)
   var active: Boolean? = false,
 
