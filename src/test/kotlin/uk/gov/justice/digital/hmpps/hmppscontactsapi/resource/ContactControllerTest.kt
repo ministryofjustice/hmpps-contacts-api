@@ -207,7 +207,7 @@ class ContactControllerTest {
       assertThat(result.totalElements).isEqualTo(1)
       assertThat(result.content[0].lastName).isEqualTo("last")
       assertThat(result.content[0].firstName).isEqualTo("first")
-      assertThat(result.content[0].mailFlag).isEqualTo(true)
+      assertThat(result.content[0].mailAddress).isEqualTo(true)
       assertThat(result.content[0].noFixedAddress).isEqualTo(true)
     }
   }
@@ -286,7 +286,7 @@ class ContactControllerTest {
     street = "user",
     area = "user",
     postCode = "user",
-    mailFlag = true,
+    mailAddress = true,
     noFixedAddress = true,
     comments = "Some comments",
   )
