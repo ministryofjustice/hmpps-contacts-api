@@ -18,4 +18,9 @@ class PrisonerContactService(
       ?: throw EntityNotFoundException("Prisoner number $prisonerNumber - not found")
     return prisonerContactSummaryRepository.findByPrisonerNumberAndActive(prisonerNumber, active, pageable).map { it.toModel() }
   }
+
+  fun getById(prisonerContactId: Long): PrisonerContactSummary {
+    return prisonerContactSummaryRepository.findById(prisonerContactId)
+      .orElseThrow { EntityNotFoundException("prisoner contact relationship with id $prisonerContactId not found") }.toModel()
+  }
 }

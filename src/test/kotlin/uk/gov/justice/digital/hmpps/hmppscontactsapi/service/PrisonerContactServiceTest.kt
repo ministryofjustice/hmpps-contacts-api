@@ -19,8 +19,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.hasSize
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.helper.isEqualTo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.mapping.toModel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.EstimatedIsOverEighteen
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.PrisonerContactSummaryRepository
 import java.time.LocalDate
+import java.util.Optional
 
 @ExtendWith(MockitoExtension::class)
 class PrisonerContactServiceTest {
@@ -48,13 +50,33 @@ class PrisonerContactServiceTest {
   @Test
   fun `should fetch all contacts for a prisoner`() {
     val dateOfBirth = LocalDate.of(1980, 5, 10)
-    val c1 = makePrisonerContact(id = 1L, contactId = 2L, dateOfBirth, firstName = "John", lastName = "Doe", EstimatedIsOverEighteen.DO_NOT_KNOW)
-    val c2 = makePrisonerContact(id = 2L, contactId = 2L, dateOfBirth, firstName = "David", lastName = "Doe", EstimatedIsOverEighteen.YES)
+    val c1 = makePrisonerContact(
+      prisonerContactId = 1L,
+      contactId = 2L,
+      dateOfBirth,
+      firstName = "John",
+      lastName = "Doe",
+      EstimatedIsOverEighteen.DO_NOT_KNOW,
+    )
+    val c2 = makePrisonerContact(
+      prisonerContactId = 2L,
+      contactId = 2L,
+      dateOfBirth,
+      firstName = "David",
+      lastName = "Doe",
+      EstimatedIsOverEighteen.YES,
+    )
     val contacts = listOf(c1, c2)
     val page = PageImpl(contacts, pageable, contacts.size.toLong())
 
     whenever(prisonerService.getPrisoner(prisonerNumber)).thenReturn(prisoner)
-    whenever(prisonerContactSummaryRepository.findByPrisonerNumberAndActive(prisonerNumber, true, pageable)).thenReturn(page)
+    whenever(
+      prisonerContactSummaryRepository.findByPrisonerNumberAndActive(
+        prisonerNumber,
+        true,
+        pageable,
+      ),
+    ).thenReturn(page)
 
     val result = prisonerContactService.getAllContacts(prisonerNumber, true, pageable)
 
@@ -73,8 +95,77 @@ class PrisonerContactServiceTest {
     exception.message isEqualTo "Prisoner number $prisonerNumber - not found"
   }
 
+  @Test
+  fun `should return when prisoner contact relationship exists`() {
+    val prisonerContactId = 1L
+    val expectedPrisonerContactSummary = PrisonerContactSummary(
+      prisonerContactId,
+      contactId = 2L,
+      prisonerNumber = "A1234BC",
+      lastName = "Doe",
+      firstName = "Jack",
+      middleNames = "Any",
+      dateOfBirth = LocalDate.of(2000, 11, 21),
+      estimatedIsOverEighteen = EstimatedIsOverEighteen.DO_NOT_KNOW,
+      relationshipCode = "FRIEND",
+      relationshipDescription = "Friend",
+      flat = "2B",
+      property = "123",
+      street = "Baker Street",
+      area = "Westminster",
+      cityCode = "SHEF",
+      cityDescription = "Sheffield",
+      countyCode = "SYORKS",
+      countyDescription = "South Yorkshire",
+      postCode = "NW1 6XE",
+      countryCode = "UK",
+      countryDescription = "United Kingdom",
+      phoneType = "Mobile",
+      phoneTypeDescription = "Mobile Phone",
+      phoneNumber = "07123456789",
+      extNumber = "0123",
+      approvedVisitor = true,
+      nextOfKin = false,
+      emergencyContact = false,
+      isRelationshipActive = true,
+      currentTerm = true,
+      mailAddress = false,
+      primaryAddress = false,
+      comments = "No comments",
+    )
+
+    val prisonerContactRelationship = makePrisonerContact(
+      prisonerContactId = 1L,
+      contactId = 2L,
+      dateOfBirth = LocalDate.of(2000, 11, 21),
+      firstName = "Jack",
+      lastName = "Doe",
+      EstimatedIsOverEighteen.DO_NOT_KNOW,
+    )
+
+    whenever(prisonerContactSummaryRepository.findById(prisonerContactId)).thenReturn(Optional.of(prisonerContactRelationship))
+
+    val actualPrisonerContactSummary = prisonerContactService.getById(prisonerContactId)
+
+    assertThat(actualPrisonerContactSummary).isEqualTo(expectedPrisonerContactSummary)
+    verify(prisonerContactSummaryRepository).findById(prisonerContactId)
+  }
+
+  @Test
+  fun `should throw EntityNotFoundException when prisoner contact relationship does not exist`() {
+    val prisonerContactId = 1L
+    whenever(prisonerContactSummaryRepository.findById(prisonerContactId)).thenReturn(Optional.empty())
+
+    val exception = assertThrows<EntityNotFoundException> {
+      prisonerContactService.getById(prisonerContactId)
+    }
+
+    assertThat(exception.message).isEqualTo("prisoner contact relationship with id $prisonerContactId not found")
+    verify(prisonerContactSummaryRepository).findById(prisonerContactId)
+  }
+
   private fun makePrisonerContact(
-    id: Long,
+    prisonerContactId: Long,
     contactId: Long,
     dateOfBirth: LocalDate?,
     firstName: String,
@@ -83,7 +174,7 @@ class PrisonerContactServiceTest {
     active: Boolean = true,
   ): PrisonerContactSummaryEntity =
     PrisonerContactSummaryEntity(
-      prisonerContactId = id,
+      prisonerContactId,
       contactId = contactId,
       title = "Mr.",
       firstName = firstName,
