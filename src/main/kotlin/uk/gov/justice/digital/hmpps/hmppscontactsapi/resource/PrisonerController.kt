@@ -91,39 +91,4 @@ class PrisonerController(
     @Parameter(description = "Pageable configurations", required = false)
     pageable: Pageable,
   ): Page<PrisonerContactSummary> = prisonerContactService.getAllContacts(prisonerNumber, active, pageable)
-
-  @Operation(summary = "Endpoint to get a prisoner contact relationship for a specific prisoner by relationship id")
-  @ApiResponses(
-    value = [
-      ApiResponse(
-        responseCode = "200",
-        description = "Prisoner Contact relationship for the prisoner",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = PrisonerContactSummaryPage::class),
-          ),
-        ],
-      ),
-      ApiResponse(
-        responseCode = "404",
-        description = "The Prisoner contact relationship was not found.",
-        content = [
-          Content(
-            mediaType = "application/json",
-            schema = Schema(implementation = ErrorResponse::class),
-          ),
-        ],
-      ),
-    ],
-  )
-  @GetMapping(value = ["/relationship/{prisonContactId}"], produces = [MediaType.APPLICATION_JSON_VALUE])
-  @PreAuthorize("hasAnyRole('ROLE_CONTACTS_ADMIN')")
-  fun getPrisonerContactById(
-    @PathVariable("prisonContactId") @Parameter(
-      name = "prisonContactId",
-      description = "The id of the prisoner contact relationship who's prisoner contact relationship will be returned",
-      example = "1L",
-    ) prisonContactId: Long,
-  ): PrisonerContactSummary = prisonerContactService.getById(prisonContactId)
 }
