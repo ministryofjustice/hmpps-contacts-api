@@ -25,7 +25,6 @@ class PrisonerContactRelationshipServiceTest {
   @Mock
   private lateinit var prisonerContactSummaryRepository: PrisonerContactSummaryRepository
 
-
   @InjectMocks
   private lateinit var prisonerContactRelationshipService: PrisonerContactRelationshipService
 

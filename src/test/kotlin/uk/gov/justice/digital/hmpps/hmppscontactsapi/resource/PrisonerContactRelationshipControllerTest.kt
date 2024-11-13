@@ -15,7 +15,7 @@ class PrisonerContactRelationshipControllerTest {
 
   private val prisonerContactRelationshipService: PrisonerContactRelationshipService = mock()
 
-  private val prisonerContactRelationshipController = PrisonerContactRelationshipController( prisonerContactRelationshipService)
+  private val prisonerContactRelationshipController = PrisonerContactRelationshipController(prisonerContactRelationshipService)
 
   @Test
   fun `should return prisoner contact relationship when found`() {
