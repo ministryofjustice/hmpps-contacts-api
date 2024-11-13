@@ -5,7 +5,6 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationship
-import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 
 class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
   companion object {
@@ -71,7 +70,7 @@ class GetPrisonerContactsRelationshipIntegrationTest : H2IntegrationTestBase() {
       .expectStatus()
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
-      .expectBody(PrisonerContactSummary::class.java)
+      .expectBody(PrisonerContactRelationship::class.java)
       .returnResult().responseBody!!
 
     assertThat(actualPrisonerContactSummary).isEqualTo(expectedPrisonerContactRelationship)
