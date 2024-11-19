@@ -18,7 +18,9 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateCo
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIdentityService
@@ -71,19 +73,34 @@ class SyncFacade(
   fun createContact(request: SyncCreateContactRequest) =
     syncContactService.createContact(request)
       .also {
-        logger.info("Create contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_CREATED,
+          identifier = it.id,
+          contactId = it.id,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContact(contactId: Long, request: UpdateContactRequest) =
     syncContactService.updateContact(contactId, request)
       .also {
-        logger.info("Update contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_AMENDED,
+          identifier = it.id,
+          contactId = it.id,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContact(contactId: Long) =
     syncContactService.deleteContact(contactId)
       .also {
-        logger.info("Delete contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_DELETED,
+          identifier = contactId,
+          contactId = contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
@@ -96,19 +113,19 @@ class SyncFacade(
   fun createContactPhone(request: SyncCreateContactPhoneRequest) =
     syncContactPhoneService.createContactPhone(request)
       .also {
-        logger.info("Create contact phone domain event")
+        logger.info("TODO - Create contact phone domain event")
       }
 
   fun updateContactPhone(contactPhoneId: Long, request: SyncUpdateContactPhoneRequest) =
     syncContactPhoneService.updateContactPhone(contactPhoneId, request)
       .also {
-        logger.info("Update contact phone domain event")
+        logger.info("TODO - Update contact phone domain event")
       }
 
   fun deleteContactPhone(contactPhoneId: Long) =
     syncContactPhoneService.deleteContactPhone(contactPhoneId)
       .also {
-        logger.info("Delete contact phone domain event")
+        logger.info("TODO - Delete contact phone domain event")
       }
 
   // ================================================================
@@ -121,19 +138,19 @@ class SyncFacade(
   fun createContactEmail(request: SyncCreateContactEmailRequest) =
     syncContactEmailService.createContactEmail(request)
       .also {
-        logger.info("Create contact email domain event")
+        logger.info("TODO - Create contact email domain event")
       }
 
   fun updateContactEmail(contactEmailId: Long, request: SyncUpdateContactEmailRequest) =
     syncContactEmailService.updateContactEmail(contactEmailId, request)
       .also {
-        logger.info("Update contact email domain event")
+        logger.info("TODO - Update contact email domain event")
       }
 
   fun deleteContactEmail(contactEmailId: Long) =
     syncContactEmailService.deleteContactEmail(contactEmailId)
       .also {
-        logger.info("Delete email contact domain event")
+        logger.info("TODO - Delete email contact domain event")
       }
 
   // ================================================================
@@ -146,19 +163,19 @@ class SyncFacade(
   fun createContactIdentity(request: CreateContactIdentityRequest) =
     syncContactIdentityService.createContactIdentity(request)
       .also {
-        logger.info("Create contact identity domain event")
+        logger.info("TODO - Create contact identity domain event")
       }
 
   fun updateContactIdentity(contactIdentityId: Long, request: UpdateContactIdentityRequest) =
     syncContactIdentityService.updateContactIdentity(contactIdentityId, request)
       .also {
-        logger.info("Update contact identity domain event")
+        logger.info("TODO - Update contact identity domain event")
       }
 
   fun deleteContactIdentity(contactIdentityId: Long) =
     syncContactIdentityService.deleteContactIdentity(contactIdentityId)
       .also {
-        logger.info("Delete contact identity domain event")
+        logger.info("TODO - Delete contact identity domain event")
       }
 
   // ================================================================
@@ -171,19 +188,19 @@ class SyncFacade(
   fun createContactRestriction(request: CreateContactRestrictionRequest) =
     syncContactRestrictionService.createContactRestriction(request)
       .also {
-        logger.info("Create contact restriction domain event")
+        logger.info("TODO - Create contact restriction domain event")
       }
 
   fun updateContactRestriction(contactRestrictionId: Long, request: UpdateContactRestrictionRequest) =
     syncContactRestrictionService.updateContactRestriction(contactRestrictionId, request)
       .also {
-        logger.info("Update contact restriction domain event")
+        logger.info("TODO - Update contact restriction domain event")
       }
 
   fun deleteContactRestriction(contactRestrictionId: Long) =
     syncContactRestrictionService.deleteContactRestriction(contactRestrictionId)
       .also {
-        logger.info("Delete contact restriction domain event")
+        logger.info("TODO - Delete contact restriction domain event")
       }
 
   // ================================================================
@@ -196,19 +213,19 @@ class SyncFacade(
   fun createContactAddress(request: CreateContactAddressRequest) =
     syncContactAddressService.createContactAddress(request)
       .also {
-        logger.info("Create contact address domain event")
+        logger.info("TODO - Create contact address domain event")
       }
 
   fun updateContactAddress(contactAddressId: Long, request: UpdateContactAddressRequest) =
     syncContactAddressService.updateContactAddress(contactAddressId, request)
       .also {
-        logger.info("Update contact address domain event")
+        logger.info("TODO - Update contact address domain event")
       }
 
   fun deleteContactAddress(contactAddressId: Long) =
     syncContactAddressService.deleteContactAddress(contactAddressId)
       .also {
-        logger.info("Delete contact address domain event")
+        logger.info("TODO - Delete contact address domain event")
       }
 
   // ================================================================
@@ -221,19 +238,19 @@ class SyncFacade(
   fun createPrisonerContact(request: CreatePrisonerContactRequest) =
     syncPrisonerContactService.createPrisonerContact(request)
       .also {
-        logger.info("Create prisoner contact domain event")
+        logger.info("TODO - Create prisoner contact domain event")
       }
 
   fun updatePrisonerContact(prisonerContactId: Long, request: UpdatePrisonerContactRequest) =
     syncPrisonerContactService.updatePrisonerContact(prisonerContactId, request)
       .also {
-        logger.info("Update prisoner contact domain event")
+        logger.info("TODO - Update prisoner contact domain event")
       }
 
   fun deletePrisonerContact(prisonerContactId: Long) =
     syncPrisonerContactService.deletePrisonerContact(prisonerContactId)
       .also {
-        logger.info("Delete prisoner contact domain event")
+        logger.info("TODO - Delete prisoner contact domain event")
       }
 
   // ================================================================
@@ -246,18 +263,18 @@ class SyncFacade(
   fun createPrisonerContactRestriction(request: CreatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.createPrisonerContactRestriction(request)
       .also {
-        logger.info("Create prisoner contact restriction domain event")
+        logger.info("TODO - Create prisoner contact restriction domain event")
       }
 
   fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: UpdatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(prisonerContactRestrictionId, request)
       .also {
-        logger.info("Update prisoner contact restriction domain event")
+        logger.info("TODO - Update prisoner contact restriction domain event")
       }
 
   fun deletePrisonerContactRestriction(prisonerContactRestrictionId: Long) =
     syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(prisonerContactRestrictionId)
       .also {
-        logger.info("Delete prisoner contact restriction domain event")
+        logger.info("TODO - Delete prisoner contact restriction domain event")
       }
 }

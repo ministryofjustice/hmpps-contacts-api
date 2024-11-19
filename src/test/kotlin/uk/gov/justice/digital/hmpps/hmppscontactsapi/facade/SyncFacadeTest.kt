@@ -12,7 +12,9 @@ import org.mockito.kotlin.whenever
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.UpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.Contact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactAddressService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactEmailService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncContactIdentityService
@@ -55,20 +57,19 @@ class SyncFacadeTest {
       val response = contactResponse(1L)
 
       whenever(syncContactService.createContact(any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       val result = facade.createContact(request)
 
       assertThat(result.id).isEqualTo(request.personId)
 
       verify(syncContactService).createContact(request)
-      /*
       verify(outboundEventsService).send(
         outboundEvent = OutboundEvent.CONTACT_CREATED,
         identifier = result.id,
         contactId = result.id,
+        source = Source.NOMIS,
       )
-       */
     }
 
     @Test
@@ -77,7 +78,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.createContact(any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.createContact(request)
@@ -86,7 +87,7 @@ class SyncFacadeTest {
       assertThat(exception.message).isEqualTo(expectedException.message)
 
       verify(syncContactService).createContact(request)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
     }
 
     @Test
@@ -95,7 +96,7 @@ class SyncFacadeTest {
       val response = contactResponse(3L)
 
       whenever(syncContactService.updateContact(any(), any())).thenReturn(response)
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       val result = facade.updateContact(3L, request)
 
@@ -103,13 +104,12 @@ class SyncFacadeTest {
 
       verify(syncContactService).updateContact(3L, request)
 
-      /*
       verify(outboundEventsService).send(
         outboundEvent = OutboundEvent.CONTACT_AMENDED,
         identifier = result.id,
         contactId = result.id,
+        source = Source.NOMIS,
       )
-       */
     }
 
     @Test
@@ -118,7 +118,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.updateContact(any(), any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.updateContact(4L, request)
@@ -127,24 +127,24 @@ class SyncFacadeTest {
       assertThat(exception.message).isEqualTo(expectedException.message)
 
       verify(syncContactService).updateContact(4L, request)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
     }
 
     @Test
     fun `should send domain event on contact delete success`() {
       whenever(syncContactService.deleteContact(any())).then {}
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       facade.deleteContact(1L)
 
       verify(syncContactService).deleteContact(1L)
-      /*
+
       verify(outboundEventsService).send(
         outboundEvent = OutboundEvent.CONTACT_DELETED,
         identifier = 1L,
         contactId = 1L,
+        source = Source.NOMIS,
       )
-       */
     }
 
     @Test
@@ -152,7 +152,7 @@ class SyncFacadeTest {
       val expectedException = RuntimeException("Bang!")
 
       whenever(syncContactService.deleteContact(any())).thenThrow(expectedException)
-      whenever(outboundEventsService.send(any(), any(), any(), any())).then {}
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
 
       val exception = assertThrows<RuntimeException> {
         facade.deleteContact(1L)
@@ -160,7 +160,7 @@ class SyncFacadeTest {
 
       assertThat(exception.message).isEqualTo(expectedException.message)
       verify(syncContactService).deleteContact(1L)
-      verify(outboundEventsService, never()).send(any(), any(), any(), any())
+      verify(outboundEventsService, never()).send(any(), any(), any(), any(), any())
     }
 
     private fun createSyncContactRequest(personId: Long) =
