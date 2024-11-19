@@ -39,8 +39,10 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.sync.SyncPrisonerCo
  *
  * All events generated as a result of a sync operation should generate domain events with the
  * additionalInformation.source = "NOMIS", which indicates that the actual source of the change
- * was in NOMIS. This is important, as the Syscon sync service will ignore domain events with
- * a source of NOMIS, but will action those with a source of DPS (changes originating within
+ * was in NOMIS.
+ *
+ * This is important as the Syscon sync service will ignore domain events with
+ * a source of NOMIS but will action those with a source of DPS (changes originating within
  * this service).
  */
 @Service
