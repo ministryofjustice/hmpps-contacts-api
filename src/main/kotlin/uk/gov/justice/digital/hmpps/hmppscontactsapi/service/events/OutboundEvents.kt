@@ -307,4 +307,12 @@ class PersonReference(personIdentifiers: List<PersonIdentifier>) {
 
   fun nomsNumber(): String? = identifiers.find { it.type == Identifier.NOMS }?.value
   fun dpsContactId(): String? = identifiers.find { it.type == Identifier.DPS_CONTACT_ID }?.value
+  override fun equals(other: Any?): Boolean {
+    if (this === other) return true
+    if (javaClass != other?.javaClass) return false
+
+    other as PersonReference
+
+    return identifiers == other.identifiers
+  }
 }
