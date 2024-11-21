@@ -135,7 +135,6 @@ class SyncFacade(
   fun deleteContactPhone(contactPhoneId: Long) =
     syncContactPhoneService.deleteContactPhone(contactPhoneId)
       .also {
-        logger.info("TODO - Delete contact phone domain event")
         outboundEventsService.send(
           outboundEvent = OutboundEvent.CONTACT_PHONE_DELETED,
           identifier = contactPhoneId,
@@ -154,19 +153,34 @@ class SyncFacade(
   fun createContactEmail(request: SyncCreateContactEmailRequest) =
     syncContactEmailService.createContactEmail(request)
       .also {
-        logger.info("TODO - Create contact email domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_EMAIL_CREATED,
+          identifier = it.contactEmailId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactEmail(contactEmailId: Long, request: SyncUpdateContactEmailRequest) =
     syncContactEmailService.updateContactEmail(contactEmailId, request)
       .also {
-        logger.info("TODO - Update contact email domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_EMAIL_UPDATED,
+          identifier = it.contactEmailId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactEmail(contactEmailId: Long) =
     syncContactEmailService.deleteContactEmail(contactEmailId)
       .also {
-        logger.info("TODO - Delete email contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_EMAIL_DELETED,
+          identifier = it.contactEmailId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
@@ -179,19 +193,34 @@ class SyncFacade(
   fun createContactIdentity(request: SyncCreateContactIdentityRequest) =
     syncContactIdentityService.createContactIdentity(request)
       .also {
-        logger.info("TODO - Create contact identity domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_IDENTITY_CREATED,
+          identifier = it.contactIdentityId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactIdentity(contactIdentityId: Long, request: SyncUpdateContactIdentityRequest) =
     syncContactIdentityService.updateContactIdentity(contactIdentityId, request)
       .also {
-        logger.info("TODO - Update contact identity domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_IDENTITY_UPDATED,
+          identifier = it.contactIdentityId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactIdentity(contactIdentityId: Long) =
     syncContactIdentityService.deleteContactIdentity(contactIdentityId)
       .also {
-        logger.info("TODO - Delete contact identity domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_IDENTITY_DELETED,
+          identifier = it.contactIdentityId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
