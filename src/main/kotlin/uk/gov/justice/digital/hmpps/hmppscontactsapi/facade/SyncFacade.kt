@@ -113,19 +113,35 @@ class SyncFacade(
   fun createContactPhone(request: SyncCreateContactPhoneRequest) =
     syncContactPhoneService.createContactPhone(request)
       .also {
-        logger.info("TODO - Create contact phone domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_PHONE_CREATED,
+          identifier = it.contactPhoneId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactPhone(contactPhoneId: Long, request: SyncUpdateContactPhoneRequest) =
     syncContactPhoneService.updateContactPhone(contactPhoneId, request)
       .also {
-        logger.info("TODO - Update contact phone domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_PHONE_UPDATED,
+          identifier = it.contactPhoneId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactPhone(contactPhoneId: Long) =
     syncContactPhoneService.deleteContactPhone(contactPhoneId)
       .also {
         logger.info("TODO - Delete contact phone domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_PHONE_DELETED,
+          identifier = contactPhoneId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
