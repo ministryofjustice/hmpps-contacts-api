@@ -16,6 +16,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
@@ -23,6 +24,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpda
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
@@ -30,6 +32,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncCon
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -790,6 +793,124 @@ class SyncFacadeTest {
         updatedBy = null,
         updatedTime = null,
         approvedTime = null,
+      )
+  }
+
+  @Nested
+  inner class PrisonerContactRestrictionSyncFacadeEvents {
+    @Test
+    fun `should send domain event on prisoner contact restriction create success`() {
+      val request = createPrisonerContactRestrictionRequest(prisonerContactId = 2L)
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.createPrisonerContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createPrisonerContactRestriction(request)
+
+      verify(syncPrisonerContactRestrictionService).createPrisonerContactRestriction(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact restriction update success`() {
+      val request = updatePrisonerContactRestrictionRequest()
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updatePrisonerContactRestriction(3L, request)
+
+      verify(syncPrisonerContactRestrictionService).updatePrisonerContactRestriction(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact restriction delete success`() {
+      val response = prisonerContactRestrictionResponse(
+        prisonerContactRestrictionId = 3L,
+        prisonerContactId = 2L,
+        contactId = 1L,
+      )
+
+      whenever(syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deletePrisonerContactRestriction(3L)
+
+      verify(syncPrisonerContactRestrictionService).deletePrisonerContactRestriction(3L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
+        identifier = result.prisonerContactRestrictionId,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createPrisonerContactRestrictionRequest(prisonerContactId: Long) =
+      SyncCreatePrisonerContactRestrictionRequest(
+        prisonerContactId = prisonerContactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updatePrisonerContactRestrictionRequest() =
+      SyncUpdatePrisonerContactRestrictionRequest(
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun prisonerContactRestrictionResponse(
+      prisonerContactRestrictionId: Long,
+      prisonerContactId: Long,
+      contactId: Long,
+    ) =
+      SyncPrisonerContactRestriction(
+        prisonerContactRestrictionId = prisonerContactRestrictionId,
+        prisonerContactId = prisonerContactId,
+        contactId = contactId,
+        prisonerNumber = "A1234AA",
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Not allowed to visit. Ever.",
+        staffUsername = "FRED",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
       )
   }
 }

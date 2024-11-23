@@ -356,18 +356,36 @@ class SyncFacade(
   fun createPrisonerContactRestriction(request: SyncCreatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.createPrisonerContactRestriction(request)
       .also {
-        logger.info("TODO - Create prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_CREATED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun updatePrisonerContactRestriction(prisonerContactRestrictionId: Long, request: SyncUpdatePrisonerContactRestrictionRequest) =
     syncPrisonerContactRestrictionService.updatePrisonerContactRestriction(prisonerContactRestrictionId, request)
       .also {
-        logger.info("TODO - Update prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_UPDATED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun deletePrisonerContactRestriction(prisonerContactRestrictionId: Long) =
     syncPrisonerContactRestrictionService.deletePrisonerContactRestriction(prisonerContactRestrictionId)
       .also {
-        logger.info("TODO - Delete prisoner contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_RESTRICTION_DELETED,
+          identifier = it.prisonerContactRestrictionId,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 }
