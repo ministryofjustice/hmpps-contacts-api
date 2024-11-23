@@ -273,19 +273,34 @@ class SyncFacade(
   fun createContactAddress(request: SyncCreateContactAddressRequest) =
     syncContactAddressService.createContactAddress(request)
       .also {
-        logger.info("TODO - Create contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_CREATED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactAddress(contactAddressId: Long, request: SyncUpdateContactAddressRequest) =
     syncContactAddressService.updateContactAddress(contactAddressId, request)
       .also {
-        logger.info("TODO - Update contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactAddress(contactAddressId: Long) =
     syncContactAddressService.deleteContactAddress(contactAddressId)
       .also {
-        logger.info("TODO - Delete contact address domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_ADDRESS_DELETED,
+          identifier = it.contactAddressId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================
