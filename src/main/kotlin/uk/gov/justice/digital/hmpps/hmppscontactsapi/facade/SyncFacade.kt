@@ -233,19 +233,34 @@ class SyncFacade(
   fun createContactRestriction(request: SyncCreateContactRestrictionRequest) =
     syncContactRestrictionService.createContactRestriction(request)
       .also {
-        logger.info("TODO - Create contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun updateContactRestriction(contactRestrictionId: Long, request: SyncUpdateContactRestrictionRequest) =
     syncContactRestrictionService.updateContactRestriction(contactRestrictionId, request)
       .also {
-        logger.info("TODO - Update contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   fun deleteContactRestriction(contactRestrictionId: Long) =
     syncContactRestrictionService.deleteContactRestriction(contactRestrictionId)
       .also {
-        logger.info("TODO - Delete contact restriction domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.CONTACT_RESTRICTION_DELETED,
+          identifier = it.contactRestrictionId,
+          contactId = it.contactId,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================

@@ -13,14 +13,17 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -464,6 +467,104 @@ class SyncFacadeTest {
         identityType = "PASS",
         identityValue = "PW12345678",
         issuingAuthority = "Passport Office",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        updatedBy = null,
+        updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class ContactRestrictionSyncFacadeEvents {
+    @Test
+    fun `should send domain event on contact restriction create success`() {
+      val request = createContactRestrictionRequest(contactId = 1L)
+      val response = contactRestrictionResponse(contactId = 1L, contactRestrictionId = 1L)
+
+      whenever(syncContactRestrictionService.createContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createContactRestriction(request)
+
+      verify(syncContactRestrictionService).createContactRestriction(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_CREATED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact restriction update success`() {
+      val request = updateContactRestrictionRequest(contactId = 2L)
+      val response = contactRestrictionResponse(contactId = 2L, contactRestrictionId = 3L)
+
+      whenever(syncContactRestrictionService.updateContactRestriction(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updateContactRestriction(3L, request)
+
+      verify(syncContactRestrictionService).updateContactRestriction(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_UPDATED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on contact restriction delete success`() {
+      val response = contactRestrictionResponse(contactId = 3L, contactRestrictionId = 4L)
+
+      whenever(syncContactRestrictionService.deleteContactRestriction(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deleteContactRestriction(4L)
+
+      verify(syncContactRestrictionService).deleteContactRestriction(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.CONTACT_RESTRICTION_DELETED,
+        identifier = result.contactRestrictionId,
+        contactId = result.contactId,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createContactRestrictionRequest(contactId: Long) =
+      SyncCreateContactRestrictionRequest(
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updateContactRestrictionRequest(contactId: Long) =
+      SyncUpdateContactRestrictionRequest(
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun contactRestrictionResponse(contactId: Long, contactRestrictionId: Long) =
+      SyncContactRestriction(
+        contactRestrictionId = contactRestrictionId,
+        contactId = contactId,
+        restrictionType = "BAN",
+        startDate = LocalDate.now().minusDays(10),
+        expiryDate = LocalDate.now().plusDays(10),
+        comments = "Comment",
+        staffUsername = "STAFF-USER",
         createdBy = "CREATOR",
         createdTime = LocalDateTime.now(),
         updatedBy = null,
