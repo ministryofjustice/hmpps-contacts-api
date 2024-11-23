@@ -313,19 +313,37 @@ class SyncFacade(
   fun createPrisonerContact(request: SyncCreatePrisonerContactRequest) =
     syncPrisonerContactService.createPrisonerContact(request)
       .also {
-        logger.info("TODO - Create prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun updatePrisonerContact(prisonerContactId: Long, request: SyncUpdatePrisonerContactRequest) =
     syncPrisonerContactService.updatePrisonerContact(prisonerContactId, request)
       .also {
-        logger.info("TODO - Update prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   fun deletePrisonerContact(prisonerContactId: Long) =
     syncPrisonerContactService.deletePrisonerContact(prisonerContactId)
       .also {
-        logger.info("TODO - Delete prisoner contact domain event")
+        outboundEventsService.send(
+          outboundEvent = OutboundEvent.PRISONER_CONTACT_DELETED,
+          identifier = it.id,
+          contactId = it.contactId,
+          noms = it.prisonerNumber,
+          source = Source.NOMIS,
+        )
       }
 
   // ================================================================

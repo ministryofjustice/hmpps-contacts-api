@@ -15,18 +15,21 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCrea
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncCreatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactEmailRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdateContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.sync.SyncUpdatePrisonerContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactAddress
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactEmail
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactIdentity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactPhone
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncContactRestriction
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.sync.SyncPrisonerContact
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEventsService
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
@@ -672,6 +675,121 @@ class SyncFacadeTest {
         createdTime = LocalDateTime.now(),
         updatedBy = null,
         updatedTime = null,
+      )
+  }
+
+  @Nested
+  inner class PrisonerContactSyncFacadeEvents {
+    @Test
+    fun `should send domain event on prisoner contact create success`() {
+      val request = createPrisonerContactRequest(contactId = 1L)
+      val response = prisonerContactResponse(contactId = 1L, prisonerContactId = 1L)
+
+      whenever(syncPrisonerContactService.createPrisonerContact(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.createPrisonerContact(request)
+
+      verify(syncPrisonerContactService).createPrisonerContact(request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_CREATED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact update success`() {
+      val request = updatePrisonerContactRequest(contactId = 2L)
+      val response = prisonerContactResponse(contactId = 2L, prisonerContactId = 3L)
+
+      whenever(syncPrisonerContactService.updatePrisonerContact(any(), any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.updatePrisonerContact(3L, request)
+
+      verify(syncPrisonerContactService).updatePrisonerContact(3L, request)
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_UPDATED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    @Test
+    fun `should send domain event on prisoner contact delete success`() {
+      val response = prisonerContactResponse(contactId = 3L, prisonerContactId = 4L)
+
+      whenever(syncPrisonerContactService.deletePrisonerContact(any())).thenReturn(response)
+      whenever(outboundEventsService.send(any(), any(), any(), any(), any())).then {}
+
+      val result = facade.deletePrisonerContact(4L)
+
+      verify(syncPrisonerContactService).deletePrisonerContact(4L)
+
+      verify(outboundEventsService).send(
+        outboundEvent = OutboundEvent.PRISONER_CONTACT_DELETED,
+        identifier = result.id,
+        contactId = result.contactId,
+        noms = result.prisonerNumber,
+        source = Source.NOMIS,
+      )
+    }
+
+    private fun createPrisonerContactRequest(contactId: Long) =
+      SyncCreatePrisonerContactRequest(
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        active = true,
+        currentTerm = true,
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+      )
+
+    private fun updatePrisonerContactRequest(contactId: Long) =
+      SyncUpdatePrisonerContactRequest(
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        active = true,
+        currentTerm = true,
+        approvedTime = null,
+        updatedBy = "UPDATER",
+        updatedTime = LocalDateTime.now(),
+      )
+    private fun prisonerContactResponse(contactId: Long, prisonerContactId: Long) =
+      SyncPrisonerContact(
+        id = prisonerContactId,
+        contactId = contactId,
+        contactType = "S",
+        relationshipType = "MOT",
+        prisonerNumber = "A1234AA",
+        approvedVisitor = false,
+        nextOfKin = false,
+        emergencyContact = false,
+        comments = "Comment",
+        createdBy = "CREATOR",
+        createdTime = LocalDateTime.now(),
+        active = true,
+        currentTerm = true,
+        updatedBy = null,
+        updatedTime = null,
+        approvedTime = null,
       )
   }
 }
