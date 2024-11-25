@@ -13,8 +13,6 @@ fun SyncCreatePrisonerContactRestrictionRequest.toEntity(): PrisonerContactRestr
     expiryDate = this.expiryDate,
     comments = this.comments,
     staffUsername = this.staffUsername,
-    authorisedBy = this.authorisedBy,
-    authorisedTime = this.authorisedTime,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
   )
@@ -34,8 +32,6 @@ fun PrisonerContactRestrictionEntity.toResponse(
     expiryDate = this.expiryDate,
     comments = this.comments,
     staffUsername = this.staffUsername,
-    authorisedBy = this.authorisedBy,
-    authorisedTime = this.authorisedTime,
     createdBy = this.createdBy,
     createdTime = this.createdTime,
     updatedBy = this.amendedBy,

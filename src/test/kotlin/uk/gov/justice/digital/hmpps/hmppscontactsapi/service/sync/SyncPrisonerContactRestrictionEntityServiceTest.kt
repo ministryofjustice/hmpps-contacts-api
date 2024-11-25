@@ -52,8 +52,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isEqualTo("editor")
@@ -102,8 +100,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(amendedBy).isNull()
@@ -119,8 +115,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isNull()
@@ -186,8 +180,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(amendedBy).isEqualTo("editor")
@@ -203,8 +195,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
         assertThat(startDate).isEqualTo(LocalDate.of(2024, 1, 1))
         assertThat(expiryDate).isEqualTo(LocalDate.of(2024, 12, 31))
         assertThat(comments).isEqualTo("Restriction due to ongoing investigation")
-        assertThat(authorisedBy).isEqualTo("John Doe")
-        assertThat(authorisedTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(createdBy).isEqualTo("admin")
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
         assertThat(updatedBy).isEqualTo("editor")
@@ -237,8 +227,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
       staffUsername = "editor",
-      authorisedBy = "John Doe",
-      authorisedTime = LocalDateTime.now(),
       updatedBy = "editor",
       updatedTime = LocalDateTime.now(),
     )
@@ -251,8 +239,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
       staffUsername = "admin",
-      authorisedBy = "John Doe",
-      authorisedTime = LocalDateTime.now(),
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     )
@@ -269,8 +255,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
       staffUsername = "admin",
-      authorisedBy = "John Doe",
-      authorisedTime = LocalDateTime.now(),
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     ).also {
@@ -307,8 +291,6 @@ class SyncPrisonerContactRestrictionEntityServiceTest {
       expiryDate = LocalDate.of(2024, 12, 31),
       comments = "Restriction due to ongoing investigation",
       staffUsername = "admin",
-      authorisedBy = "John Doe",
-      authorisedTime = LocalDateTime.now(),
       createdBy = "admin",
       createdTime = LocalDateTime.now(),
     ).also {
