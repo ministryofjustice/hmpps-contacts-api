@@ -14,9 +14,9 @@ data class SyncUpdateContactAddressPhoneRequest(
   @Schema(description = "Extension number", example = "123")
   val extNumber: String? = null,
 
-  @Schema(description = "The id of the user who updated the contact phone", example = "JD000001")
+  @Schema(description = "The username of the person who made the update", example = "JD000001")
   val updatedBy: String,
 
-  @Schema(description = "The timestamp of when the contact phone was changed", example = "2024-01-01T00:00:00Z")
+  @Schema(description = "The time when the update was made", example = "2024-01-01T00:00:00Z")
   val updatedTime: LocalDateTime,
 )
