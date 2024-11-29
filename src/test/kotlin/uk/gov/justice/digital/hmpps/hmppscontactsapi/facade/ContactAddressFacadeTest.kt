@@ -18,7 +18,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEven
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
 
 class ContactAddressFacadeTest {
-
   private val addressService: ContactAddressService = mock()
   private val eventsService: OutboundEventsService = mock()
 
@@ -29,16 +28,16 @@ class ContactAddressFacadeTest {
 
   @Test
   fun `should send event if create success`() {
-    val request = createContactAddressRequest(contactId)
+    val request = createContactAddressRequest()
     val response = contactAddressResponse(contactAddressId, contactId)
 
-    whenever(addressService.create(any())).thenReturn(response)
+    whenever(addressService.create(any(), any())).thenReturn(response)
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val result = facade.create(contactId, request)
 
     assertThat(result).isEqualTo(response)
-    verify(addressService).create(request)
+    verify(addressService).create(contactId, request)
     verify(eventsService).send(
       outboundEvent = OutboundEvent.CONTACT_ADDRESS_CREATED,
       identifier = contactAddressId,
@@ -50,9 +49,9 @@ class ContactAddressFacadeTest {
   @Test
   fun `should not send event if create throws exception and propagate the exception`() {
     val expectedException = RuntimeException("Bang!")
-    val request = createContactAddressRequest(contactId)
+    val request = createContactAddressRequest()
 
-    whenever(addressService.create(any())).thenThrow(expectedException)
+    whenever(addressService.create(any(), any())).thenThrow(expectedException)
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val exception = assertThrows<RuntimeException> {
@@ -61,16 +60,16 @@ class ContactAddressFacadeTest {
 
     assertThat(exception.message).isEqualTo(expectedException.message)
 
-    verify(addressService).create(request)
+    verify(addressService).create(contactId, request)
     verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 
   @Test
   fun `should send event if update success`() {
     val response = contactAddressResponse(contactAddressId, contactId)
-    val request = updateContactAddressRequest(contactId)
+    val request = updateContactAddressRequest()
 
-    whenever(addressService.update(any(), any())).thenReturn(response)
+    whenever(addressService.update(any(), any(), any())).thenReturn(response)
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val result = facade.update(
@@ -80,7 +79,7 @@ class ContactAddressFacadeTest {
     )
 
     assertThat(result).isEqualTo(response)
-    verify(addressService).update(contactAddressId, request)
+    verify(addressService).update(contactId, contactAddressId, request)
     verify(eventsService).send(
       outboundEvent = OutboundEvent.CONTACT_ADDRESS_UPDATED,
       identifier = contactAddressId,
@@ -92,9 +91,9 @@ class ContactAddressFacadeTest {
   @Test
   fun `should not send event if update address throws exception`() {
     val expectedException = RuntimeException("Bang!")
-    val request = updateContactAddressRequest(contactId)
+    val request = updateContactAddressRequest()
 
-    whenever(addressService.update(any(), any())).thenThrow(expectedException)
+    whenever(addressService.update(any(), any(), any())).thenThrow(expectedException)
     whenever(eventsService.send(any(), any(), any(), any(), any())).then {}
 
     val exception = assertThrows<RuntimeException> {
@@ -102,7 +101,7 @@ class ContactAddressFacadeTest {
     }
 
     assertThat(exception).isEqualTo(exception)
-    verify(addressService).update(contactAddressId, request)
+    verify(addressService).update(contactId, contactAddressId, request)
     verify(eventsService, never()).send(any(), any(), any(), any(), any())
   }
 

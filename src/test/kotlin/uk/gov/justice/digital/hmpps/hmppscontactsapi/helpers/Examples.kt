@@ -408,7 +408,6 @@ fun createPrisonerContactRestrictionDetails(
 )
 
 fun createContactAddressRequest(
-  contactId: Long,
   addressType: String = "HOME",
   flat: String = "1B",
   property: String = "35",
@@ -418,7 +417,6 @@ fun createContactAddressRequest(
   createdBy: String = "CREATE_USER",
   createdTime: LocalDateTime = LocalDateTime.now(),
 ) = CreateContactAddressRequest(
-  contactId = contactId,
   addressType = addressType,
   flat = flat,
   property = property,
@@ -430,7 +428,6 @@ fun createContactAddressRequest(
 )
 
 fun updateContactAddressRequest(
-  contactId: Long,
   primaryAddress: Boolean = true,
   addressType: String = "HOME",
   flat: String = "1B",
@@ -441,7 +438,6 @@ fun updateContactAddressRequest(
   updatedBy: String = "AMEND_USER",
   updatedTime: LocalDateTime = LocalDateTime.now(),
 ) = UpdateContactAddressRequest(
-  contactId = contactId,
   primaryAddress = primaryAddress,
   addressType = addressType,
   flat = flat,

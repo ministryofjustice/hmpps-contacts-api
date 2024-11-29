@@ -26,17 +26,24 @@ class ContactAddressService(
 
   @Transactional(readOnly = true)
   fun get(contactId: Long, contactAddressId: Long): ContactAddressResponse {
+    val contact = validateContactExists(contactId)
+    val existing = validateExistingAddress(contactAddressId)
+
+    if (contact.contactId != existing.contactId) {
+      logger.error("Contact address specified for a contact not linked to this address")
+      throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${existing.contactAddressId}")
+    }
+
+    return existing.toModel()
+  }
+
+  fun create(contactId: Long, request: CreateContactAddressRequest): ContactAddressResponse {
     validateContactExists(contactId)
-    return validateExistingAddress(contactAddressId).toModel()
+    return contactAddressRepository.saveAndFlush(request.toEntity(contactId)).toModel()
   }
 
-  fun create(request: CreateContactAddressRequest): ContactAddressResponse {
-    validateContactExists(request.contactId)
-    return contactAddressRepository.saveAndFlush(request.toEntity()).toModel()
-  }
-
-  fun update(contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddressResponse {
-    val contact = validateContactExists(request.contactId)
+  fun update(contactId: Long, contactAddressId: Long, request: UpdateContactAddressRequest): ContactAddressResponse {
+    val contact = validateContactExists(contactId)
     val existing = validateExistingAddress(contactAddressId)
 
     if (contact.contactId != existing.contactId) {
@@ -74,9 +81,16 @@ class ContactAddressService(
   }
 
   fun delete(contactId: Long, contactAddressId: Long): ContactAddressResponse {
-    validateContactExists(contactId)
+    val contact = validateContactExists(contactId)
     val rowToDelete = validateExistingAddress(contactAddressId)
+
+    if (contact.contactId != rowToDelete.contactId) {
+      logger.error("Contact address delete specified for a contact not linked to this address")
+      throw ValidationException("Contact ID ${contact.contactId} is not linked to the address ${rowToDelete.contactAddressId}")
+    }
+
     contactAddressRepository.deleteById(contactAddressId)
+
     return rowToDelete.toModel()
   }
 

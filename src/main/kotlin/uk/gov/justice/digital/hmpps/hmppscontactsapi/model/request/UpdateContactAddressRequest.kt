@@ -1,13 +1,11 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Size
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to update a contact address")
 data class UpdateContactAddressRequest(
-  @Schema(description = "The ID of the contact linked to this address", example = "123456")
-  val contactId: Long,
-
   @Schema(
     description =
     """
@@ -17,6 +15,7 @@ data class UpdateContactAddressRequest(
     """,
     example = "HOME",
   )
+  @field:Size(max = 12, message = "addressType must be <= 12 characters")
   val addressType: String,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
@@ -35,15 +34,18 @@ data class UpdateContactAddressRequest(
   val area: String? = null,
 
   @Schema(description = "City code - from NOMIS reference data", example = "BIRM", nullable = true)
+  @field:Size(max = 12, message = "cityCode must be <= 12 characters")
   val cityCode: String? = null,
 
   @Schema(description = "County code - from NOMIS reference data", example = "WMIDS", nullable = true)
+  @field:Size(max = 12, message = "countyCode must be <= 12 characters")
   val countyCode: String? = null,
 
   @Schema(description = "Postcode", example = "S13 4FH", nullable = true)
   val postcode: String? = null,
 
   @Schema(description = "Country code - from NOMIS reference data", example = "UK", nullable = true)
+  @field:Size(max = 12, message = "countryCode must be <= 12 characters")
   val countryCode: String? = null,
 
   @Schema(description = "Whether the address has been verified by postcode lookup", example = "false")
@@ -65,6 +67,7 @@ data class UpdateContactAddressRequest(
   val comments: String? = null,
 
   @Schema(description = "The id of the user who updated the address", example = "JD000001")
+  @field:Size(max = 100, message = "updatedBy must be <= 100 characters")
   val updatedBy: String,
 
   @Schema(description = "The timestamp of when the address was changed", example = "2024-01-01T00:00:00Z")

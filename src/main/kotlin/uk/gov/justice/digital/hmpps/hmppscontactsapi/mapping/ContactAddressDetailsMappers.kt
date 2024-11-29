@@ -41,10 +41,10 @@ fun ContactAddressDetailsEntity.toModel(phoneNumbers: List<ContactPhoneDetails>)
   )
 }
 
-fun CreateContactAddressRequest.toEntity(): ContactAddressEntity {
+fun CreateContactAddressRequest.toEntity(contactId: Long): ContactAddressEntity {
   return ContactAddressEntity(
     contactAddressId = 0L,
-    contactId = this.contactId,
+    contactId = contactId,
     addressType = this.addressType,
     primaryAddress = this.primaryAddress,
     flat = this.flat,

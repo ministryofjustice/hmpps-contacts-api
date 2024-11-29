@@ -1,14 +1,12 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 
 import io.swagger.v3.oas.annotations.media.Schema
+import jakarta.validation.constraints.Size
 import java.time.LocalDate
 import java.time.LocalDateTime
 
 @Schema(description = "Request to create a new contact address")
 data class CreateContactAddressRequest(
-  @Schema(description = "The ID of the contact this address is linked with", example = "123456")
-  val contactId: Long,
-
   @Schema(
     description =
     """
@@ -18,6 +16,7 @@ data class CreateContactAddressRequest(
     """,
     example = "HOME",
   )
+  @field:Size(max = 12, message = "addressType must be <= 12 characters")
   val addressType: String,
 
   @Schema(description = "True if this is the primary address otherwise false", example = "true")
@@ -36,15 +35,18 @@ data class CreateContactAddressRequest(
   val area: String? = null,
 
   @Schema(description = "City code - from NOMIS", example = "13232", nullable = true)
+  @field:Size(max = 12, message = "cityCode must be <= 12 characters")
   val cityCode: String? = null,
 
   @Schema(description = "County code - from NOMIS", example = "WMIDS", nullable = true)
+  @field:Size(max = 12, message = "countyCode must be <= 12 characters")
   val countyCode: String? = null,
 
   @Schema(description = "Postcode", example = "S13 4FH", nullable = true)
   val postcode: String? = null,
 
   @Schema(description = "Country code - from NOMIS", example = "UK", nullable = true)
+  @field:Size(max = 12, message = "countryCode must be <= 12 characters")
   val countryCode: String? = null,
 
   @Schema(description = "Whether the address has been verified by postcode lookup", example = "false")
@@ -66,6 +68,7 @@ data class CreateContactAddressRequest(
   val comments: String? = null,
 
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
+  @field:Size(max = 100, message = "createdBy must be <= 100 characters")
   val createdBy: String,
 
   @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
