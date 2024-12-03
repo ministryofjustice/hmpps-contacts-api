@@ -428,7 +428,6 @@ fun createContactAddressRequest(
   area = area,
   postcode = postcode,
   createdBy = createdBy,
-  createdTime = createdTime,
 )
 
 fun updateContactAddressRequest(
@@ -450,7 +449,6 @@ fun updateContactAddressRequest(
   area = area,
   postcode = postcode,
   updatedBy = updatedBy,
-  updatedTime = updatedTime,
 )
 
 fun contactAddressResponse(

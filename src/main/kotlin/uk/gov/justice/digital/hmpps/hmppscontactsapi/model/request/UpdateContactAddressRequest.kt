@@ -2,7 +2,6 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Schema(description = "Request to update a contact address")
 data class UpdateContactAddressRequest(
@@ -69,7 +68,4 @@ data class UpdateContactAddressRequest(
   @Schema(description = "The id of the user who updated the address", example = "JD000001")
   @field:Size(max = 100, message = "updatedBy must be <= 100 characters")
   val updatedBy: String,
-
-  @Schema(description = "The timestamp of when the address was changed", example = "2024-01-01T00:00:00Z")
-  val updatedTime: LocalDateTime,
 )

@@ -17,7 +17,6 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactAddre
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.Source
-import java.time.LocalDateTime
 
 class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
   private var savedContactId = 0L
@@ -202,7 +201,6 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
       area = "Hoggs Bottom",
       postcode = "HB10 1DJ",
       updatedBy = "amended",
-      updatedTime = LocalDateTime.now(),
     )
 
     val updated = testAPIClient.updateAContactAddress(savedContactId, savedContactAddressId, request)
@@ -258,7 +256,6 @@ class UpdateContactAddressIntegrationTest : H2IntegrationTestBase() {
       property = "27",
       street = "Hello Road",
       updatedBy = "amended",
-      updatedTime = LocalDateTime.now(),
     )
   }
 }

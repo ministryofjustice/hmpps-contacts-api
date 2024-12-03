@@ -70,7 +70,7 @@ class ContactAddressService(
       comments = request.comments,
     ).also {
       it.amendedBy = request.updatedBy
-      it.amendedTime = request.updatedTime
+      it.amendedTime = LocalDateTime.now()
       if (!existing.verified && request.verified) {
         it.verifiedBy = request.updatedBy
         it.verifiedTime = LocalDateTime.now()

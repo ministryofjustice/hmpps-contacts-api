@@ -3,7 +3,6 @@ package uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request
 import io.swagger.v3.oas.annotations.media.Schema
 import jakarta.validation.constraints.Size
 import java.time.LocalDate
-import java.time.LocalDateTime
 
 @Schema(description = "Request to create a new contact address")
 data class CreateContactAddressRequest(
@@ -70,7 +69,4 @@ data class CreateContactAddressRequest(
   @Schema(description = "The id of the user who created the contact", example = "JD000001")
   @field:Size(max = 100, message = "createdBy must be <= 100 characters")
   val createdBy: String,
-
-  @Schema(description = "The timestamp of when the contact was created", example = "2024-01-01T00:00:00Z")
-  val createdTime: LocalDateTime = LocalDateTime.now(),
 )

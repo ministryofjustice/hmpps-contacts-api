@@ -62,7 +62,6 @@ fun CreateContactAddressRequest.toEntity(contactId: Long): ContactAddressEntity 
     noFixedAddress = this.noFixedAddress ?: false,
     comments = this.comments,
     createdBy = this.createdBy,
-    createdTime = this.createdTime,
   )
 }
 

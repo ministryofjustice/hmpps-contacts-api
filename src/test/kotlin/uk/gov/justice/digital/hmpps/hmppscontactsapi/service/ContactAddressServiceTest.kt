@@ -120,7 +120,7 @@ class ContactAddressServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(postcode).isEqualTo(request.postcode)
         assertThat(createdBy).isEqualTo(request.createdBy)
-        assertThat(createdTime).isAfterOrEqualTo(request.createdTime)
+        assertThat(createdTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
       }
 
       verify(contactRepository).findById(contactId)
@@ -212,7 +212,7 @@ class ContactAddressServiceTest {
         assertThat(countryCode).isEqualTo(request.countryCode)
         assertThat(postCode).isEqualTo(request.postcode)
         assertThat(amendedBy).isEqualTo(request.updatedBy)
-        assertThat(amendedTime).isEqualTo(request.updatedTime)
+        assertThat(amendedTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
       }
 
       // Checks the model returned
@@ -227,7 +227,7 @@ class ContactAddressServiceTest {
         assertThat(countyCode).isEqualTo(request.countyCode)
         assertThat(postcode).isEqualTo(request.postcode)
         assertThat(updatedBy).isEqualTo(request.updatedBy)
-        assertThat(updatedTime).isEqualTo(request.updatedTime)
+        assertThat(updatedTime).isAfterOrEqualTo(LocalDateTime.now().minusMinutes(1))
       }
     }
 
@@ -273,7 +273,6 @@ class ContactAddressServiceTest {
       postcode = "CV4 9NJ",
       countryCode = "UK",
       updatedBy = "TEST",
-      updatedTime = LocalDateTime.now(),
     )
 
   private fun createContactAddressRequest() =
@@ -302,7 +301,6 @@ class ContactAddressServiceTest {
       isDeceased = false,
       deceasedDate = null,
       createdBy = "TEST",
-      createdTime = LocalDateTime.now(),
     )
 
   private fun contactAddressEntity() =
@@ -341,7 +339,6 @@ class ContactAddressServiceTest {
 
   private fun UpdateContactAddressRequest.toEntity(contactId: Long, contactAddressId: Long = 1L): ContactAddressEntity {
     val updatedBy = this.updatedBy
-    val updatedTime = this.updatedTime
 
     return ContactAddressEntity(
       contactAddressId = contactAddressId,
@@ -359,7 +356,7 @@ class ContactAddressServiceTest {
       createdBy = "TEST",
     ).also {
       it.amendedBy = updatedBy
-      it.amendedTime = updatedTime
+      it.amendedTime = LocalDateTime.now()
     }
   }
 }
