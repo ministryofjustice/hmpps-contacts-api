@@ -4,6 +4,7 @@ import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.reactive.server.WebTestClient
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRestrictionRequest
@@ -19,6 +20,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePhoneRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.migrate.MigrateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressResponse
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -202,6 +204,21 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ContactPhoneDetails::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun createAContactAddressPhone(contactId: Long, contactAddressId: Long, request: CreateContactAddressPhoneRequest): ContactAddressPhoneResponse {
+    return webTestClient.post()
+      .uri("/contact/$contactId/address/$contactAddressId/phone")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactAddressPhoneResponse::class.java)
       .returnResult().responseBody!!
   }
 
