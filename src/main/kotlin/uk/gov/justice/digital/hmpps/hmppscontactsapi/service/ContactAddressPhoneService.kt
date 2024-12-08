@@ -100,7 +100,7 @@ class ContactAddressPhoneService(
   fun delete(contactId: Long, contactAddressPhoneId: Long): ContactAddressPhoneResponse {
     validateContactExists(contactId)
     val existingContactAddressPhone = validateContactAddressPhoneExists(contactAddressPhoneId)
-    val existingPhone = validatePhoneExists(contactAddressPhoneId)
+    val existingPhone = validatePhoneExists(existingContactAddressPhone.contactPhoneId)
     val phoneTypeRef = validatePhoneType(existingPhone.phoneType)
 
     contactAddressPhoneRepository.deleteById(contactAddressPhoneId)
