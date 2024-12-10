@@ -12,6 +12,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateEmailRe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateIdentityRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressPhoneRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactAddressRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateEmailRequest
@@ -217,6 +218,26 @@ class TestAPIClient(private val webTestClient: WebTestClient, private val jwtAut
       .exchange()
       .expectStatus()
       .isCreated
+      .expectHeader().contentType(MediaType.APPLICATION_JSON)
+      .expectBody(ContactAddressPhoneResponse::class.java)
+      .returnResult().responseBody!!
+  }
+
+  fun updateAContactAddressPhone(
+    contactId: Long,
+    contactAddressId: Long,
+    contactAddressPhoneId: Long,
+    request: UpdateContactAddressPhoneRequest,
+  ): ContactAddressPhoneResponse {
+    return webTestClient.put()
+      .uri("/contact/$contactId/address/$contactAddressId/phone/$contactAddressPhoneId")
+      .accept(MediaType.APPLICATION_JSON)
+      .contentType(MediaType.APPLICATION_JSON)
+      .headers(authorised())
+      .bodyValue(request)
+      .exchange()
+      .expectStatus()
+      .isOk
       .expectHeader().contentType(MediaType.APPLICATION_JSON)
       .expectBody(ContactAddressPhoneResponse::class.java)
       .returnResult().responseBody!!
