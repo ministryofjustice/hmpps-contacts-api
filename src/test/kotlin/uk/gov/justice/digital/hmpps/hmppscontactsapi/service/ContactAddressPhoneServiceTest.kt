@@ -450,8 +450,8 @@ class ContactAddressPhoneServiceTest {
     contactId = contactId,
     createdBy = "USER1",
     createdTime = now(),
-    amendedBy = null,
-    amendedTime = null,
+    updatedBy = null,
+    updatedTime = null,
   )
 
   private val phoneEntity = ContactPhoneEntity(

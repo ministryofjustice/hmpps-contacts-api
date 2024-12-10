@@ -81,15 +81,15 @@ class ContactAddressPhoneService(
       phoneType = request.phoneType,
       phoneNumber = request.phoneNumber,
       extNumber = request.extNumber,
-      amendedBy = request.updatedBy,
-      amendedTime = LocalDateTime.now(),
+      updatedBy = request.updatedBy,
+      updatedTime = LocalDateTime.now(),
     )
 
     val updatedPhone = contactPhoneRepository.saveAndFlush(updatingPhone)
 
     val updatingContactAddressPhone = existing.copy(
-      amendedBy = request.updatedBy,
-      amendedTime = LocalDateTime.now(),
+      updatedBy = request.updatedBy,
+      updatedTime = LocalDateTime.now(),
     )
 
     val updatedContactAddressPhone = contactAddressPhoneRepository.saveAndFlush(updatingContactAddressPhone)
@@ -146,7 +146,7 @@ class ContactAddressPhoneService(
       extNumber = phone.extNumber,
       createdBy = this.createdBy,
       createdTime = this.createdTime,
-      updatedBy = this.amendedBy,
-      updatedTime = this.amendedTime,
+      updatedBy = this.updatedBy,
+      updatedTime = this.updatedTime,
     )
 }
