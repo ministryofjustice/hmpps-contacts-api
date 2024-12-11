@@ -767,8 +767,8 @@ class ContactServiceTest {
         with(prisonerContactCaptor.firstValue) {
           // assert changed
           assertThat(approvedVisitor).isFalse()
-          assertThat(amendedBy).isEqualTo("Admin")
-          assertThat(amendedTime).isInThePast()
+          assertThat(updatedBy).isEqualTo("Admin")
+          assertThat(updatedTime).isInThePast()
         }
       }
 
