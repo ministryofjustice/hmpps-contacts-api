@@ -52,7 +52,7 @@ class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
       .build()
       .toUri()
 
-    val body = testAPIClient.getSearchContactResults(url, "ROLE_CONTACTS_ADMIN")
+    val body = testAPIClient.getSearchContactResults(url)
 
     with(body!!) {
       assertThat(content).isEmpty()
@@ -106,7 +106,7 @@ class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
 
   @Test
   fun `should get the contact with when search by first, middle, last and date of birth`() {
-    val body = testAPIClient.getSearchContactResults(CONTACT_SEARCH_URL, "ROLE_CONTACTS_ADMIN")
+    val body = testAPIClient.getSearchContactResults(CONTACT_SEARCH_URL)
 
     with(body!!) {
       assertThat(content).isNotEmpty()
@@ -155,7 +155,7 @@ class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
       .build()
       .toUri()
 
-    val body = testAPIClient.getSearchContactResults(uri, "ROLE_CONTACTS_ADMIN")
+    val body = testAPIClient.getSearchContactResults(uri)
 
     with(body!!) {
       assertThat(content).isNotEmpty()
@@ -196,7 +196,7 @@ class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
       .build()
       .toUri()
 
-    val body = testAPIClient.getSearchContactResults(uri, "ROLE_CONTACTS_ADMIN")
+    val body = testAPIClient.getSearchContactResults(uri)
 
     with(body!!) {
       assertThat(content).isNotEmpty()
@@ -223,7 +223,7 @@ class SearchContactsIntegrationTest : PostgresIntegrationTestBase() {
       .build()
       .toUri()
 
-    val body = testAPIClient.getSearchContactResults(uri, "ROLE_CONTACTS_ADMIN")
+    val body = testAPIClient.getSearchContactResults(uri)
 
     with(body!!) {
       assertThat(content).isNotEmpty()

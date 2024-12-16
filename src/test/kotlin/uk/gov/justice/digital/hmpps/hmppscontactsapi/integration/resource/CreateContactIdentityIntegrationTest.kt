@@ -30,7 +30,6 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
   }
 
@@ -192,7 +191,7 @@ class CreateContactIdentityIntegrationTest : H2IntegrationTestBase() {
   fun `should create the identity with minimal fields`() {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createAContactIdentity(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactIdentity(savedContactId, request)
 
     assertEqualsExcludingTimestamps(created, request)
 

@@ -58,7 +58,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get the contact with all fields`() {
-    val contact = testAPIClient.getContact(1, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -78,7 +78,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get the contact with addresses`() {
-    val contact = testAPIClient.getContact(1, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -127,7 +127,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get the contact with phone numbers`() {
-    val contact = testAPIClient.getContact(1, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -160,7 +160,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get the contact with emails`() {
-    val contact = testAPIClient.getContact(3, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(3)
 
     with(contact) {
       assertThat(id).isEqualTo(3)
@@ -182,7 +182,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get the contact with identities`() {
-    val contact = testAPIClient.getContact(1, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -202,7 +202,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get deceased contacts`() {
-    val contact = testAPIClient.getContact(19, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(19)
 
     with(contact) {
       assertThat(id).isEqualTo(19)
@@ -221,7 +221,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get contacts with language details`() {
-    val contact = testAPIClient.getContact(20, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(20)
 
     with(contact) {
       assertThat(id).isEqualTo(20)
@@ -233,7 +233,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get contacts with gender details`() {
-    val contact = testAPIClient.getContact(16, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(16)
 
     with(contact) {
       assertThat(id).isEqualTo(16)
@@ -244,7 +244,7 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get contacts with domestic status`() {
-    val contact = testAPIClient.getContact(1, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(1)
 
     with(contact) {
       assertThat(id).isEqualTo(1)
@@ -275,9 +275,9 @@ class GetContactByIdIntegrationTest : H2IntegrationTestBase() {
         estimatedIsOverEighteen = estimatedIsOverEighteen,
         createdBy = "USER1",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
-    val contact = testAPIClient.getContact(createdContactId, "ROLE_CONTACTS_ADMIN")
+    val contact = testAPIClient.getContact(createdContactId)
     assertThat(contact.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
   }
 }

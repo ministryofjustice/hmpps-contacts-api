@@ -42,7 +42,6 @@ class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
         ),
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     )
     savedPrisonerContactId = created.createdRelationship!!.prisonerContactId
     savedContactId = created.createdContact.id
@@ -185,7 +184,7 @@ class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       createdBy = "created",
     )
 
-    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createPrisonerContactRestriction(savedPrisonerContactId, request)
 
     with(created) {
       assertThat(prisonerContactRestrictionId).isGreaterThan(0)

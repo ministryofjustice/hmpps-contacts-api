@@ -44,7 +44,7 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
         ),
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     )
     savedPrisonerContactId = created.createdRelationship!!.prisonerContactId
     savedContactId = created.createdContact.id
@@ -57,7 +57,7 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
         comments = "Some comments",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).prisonerContactRestrictionId
   }
 
@@ -222,7 +222,7 @@ class UpdatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
       savedPrisonerContactId,
       savedPrisonerContactRestrictionId,
       request,
-      "ROLE_CONTACTS_ADMIN",
+
     )
 
     with(updated) {

@@ -68,13 +68,12 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         .isForbidden
     }
 
-    @ParameterizedTest
-    @ValueSource(strings = ["ROLE_CONTACTS_MIGRATION"])
-    fun `should migrate a basic contact`(authRole: String) {
+    @Test
+    fun `should migrate a basic contact`() {
       val request = basicMigrationRequest(personId = 500L)
       val countContactsBefore = contactRepository.count()
 
-      val result = testAPIClient.migrateAContact(request, authRole)
+      val result = testAPIClient.migrateAContact(request)
 
       with(result) {
         with(contact) {
@@ -96,7 +95,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       val countContactsBefore = contactRepository.count()
 
       // Initial request - success
-      val result1 = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
+      val result1 = testAPIClient.migrateAContact(request)
       with(result1) {
         assertThat(this.contact.nomisId).isEqualTo(request.personId)
         assertThat(this.contact.dpsId).isEqualTo(request.personId)
@@ -105,7 +104,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
 
       // Duplicate request - should delete the original and replace it
-      val result2 = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
+      val result2 = testAPIClient.migrateAContact(request)
       with(result2) {
         assertThat(this.contact.nomisId).isEqualTo(request.personId)
         assertThat(this.contact.dpsId).isEqualTo(request.personId)
@@ -125,7 +124,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         restrictions = restrictions(),
       )
 
-      val result = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
+      val result = testAPIClient.migrateAContact(request)
 
       with(result) {
         assertThat(contact.elementType).isEqualTo(ElementType.CONTACT)
@@ -167,7 +166,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         addresses = addressesWithPhones(),
       )
 
-      val result = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
+      val result = testAPIClient.migrateAContact(request)
 
       with(result) {
         assertThat(phoneNumbers).hasSize(0)

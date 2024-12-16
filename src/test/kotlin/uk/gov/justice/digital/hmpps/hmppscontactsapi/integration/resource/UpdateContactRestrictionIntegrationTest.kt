@@ -33,7 +33,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         firstName = "first",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
     savedContactRestrictionId = testAPIClient.createContactGlobalRestriction(
       savedContactId,
@@ -44,7 +44,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         comments = "Some comments",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactRestrictionId
     stubGetUserByUsername(User("created", "Created User"))
     stubGetUserByUsername(User("updated", "Updated User"))
@@ -210,7 +210,7 @@ class UpdateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
       savedContactId,
       savedContactRestrictionId,
       request,
-      "ROLE_CONTACTS_ADMIN",
+
     )
 
     with(updated) {

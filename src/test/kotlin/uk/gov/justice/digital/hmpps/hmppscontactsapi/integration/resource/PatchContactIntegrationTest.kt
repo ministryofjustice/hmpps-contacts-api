@@ -130,7 +130,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo(null)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -151,7 +151,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("FRE-FRA")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -169,7 +169,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.languageCode).isEqualTo("ENG")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -190,7 +190,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -210,7 +210,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(true)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -247,7 +247,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
       val res =
-        testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+        testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.interpreterRequired).isEqualTo(resetValue)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -267,7 +267,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -287,7 +287,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         domesticStatus = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo(null)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -308,7 +308,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("M")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -326,7 +326,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.domesticStatus).isEqualTo("P")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -347,7 +347,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -367,7 +367,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(true)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -404,7 +404,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactId", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactId")
 
       assertThat(res.isStaff).isEqualTo(resetValue)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -425,7 +425,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           dateOfBirth = LocalDate.of(1982, 6, 15),
           createdBy = "created",
         ),
-        "ROLE_CONTACTS_ADMIN",
+
       ).id
     }
 
@@ -435,7 +435,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(1982, 6, 15))
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -454,7 +454,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isNull()
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -473,7 +473,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         updatedBy = updatedByUser,
       )
 
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasDOB")
 
       assertThat(res.dateOfBirth).isEqualTo(LocalDate.of(2000, 12, 25))
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -500,7 +500,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           estimatedIsOverEighteen = EstimatedIsOverEighteen.YES,
           createdBy = "created",
         ),
-        "ROLE_CONTACTS_ADMIN",
+
       ).id
     }
 
@@ -509,7 +509,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.YES)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -527,7 +527,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         estimatedIsOverEighteen = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(null)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -545,7 +545,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         estimatedIsOverEighteen = JsonNullable.of(EstimatedIsOverEighteen.DO_NOT_KNOW),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactIdThatHasEstimatedDOB")
 
       assertThat(res.estimatedIsOverEighteen).isEqualTo(EstimatedIsOverEighteen.DO_NOT_KNOW)
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -572,7 +572,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           title = "MR",
           createdBy = "created",
         ),
-        "ROLE_CONTACTS_ADMIN",
+
       ).id
     }
 
@@ -581,7 +581,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
 
       assertThat(res.firstName).isEqualTo("First")
       assertThat(res.lastName).isEqualTo("Last")
@@ -635,7 +635,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         middleNames = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
 
       assertThat(res.firstName).isEqualTo("First")
       assertThat(res.lastName).isEqualTo("Last")
@@ -657,7 +657,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         middleNames = JsonNullable.of("Updated Middle"),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactThatHasAllNameFields")
 
       assertThat(res.firstName).isEqualTo("First")
       assertThat(res.lastName).isEqualTo("Last")
@@ -723,7 +723,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
           firstName = "First",
           createdBy = "created",
         ),
-        "ROLE_CONTACTS_ADMIN",
+
       ).id
       val entity = contactRepository.findById(contactWithAGender).get()
       contactRepository.saveAndFlush(entity.copy(gender = "NS"))
@@ -734,7 +734,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
       val req = PatchContactRequest(
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isEqualTo("NS")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -752,7 +752,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         gender = JsonNullable.of(null),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isNull()
       assertThat(res.updatedBy).isEqualTo(updatedByUser)
@@ -770,7 +770,7 @@ class PatchContactIntegrationTest : H2IntegrationTestBase() {
         gender = JsonNullable.of("M"),
         updatedBy = updatedByUser,
       )
-      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender", "ROLE_CONTACTS_ADMIN")
+      val res = testAPIClient.patchAContact(req, "/contact/$contactWithAGender")
 
       assertThat(res.gender).isEqualTo("M")
       assertThat(res.updatedBy).isEqualTo(updatedByUser)

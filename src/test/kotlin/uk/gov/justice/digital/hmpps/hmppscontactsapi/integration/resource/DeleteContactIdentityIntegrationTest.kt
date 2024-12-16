@@ -27,7 +27,7 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
@@ -36,7 +36,7 @@ class DeleteContactIdentityIntegrationTest : H2IntegrationTestBase() {
         identityValue = "DL123456789",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactIdentityId
   }
 

@@ -26,7 +26,7 @@ class SyncContactAddressIntegrationTest : H2IntegrationTestBase() {
 
     @BeforeEach
     fun initialiseData() {
-      contactId = testAPIClient.createAContact(aMinimalCreateContactRequest(), "ROLE_CONTACTS_ADMIN").id
+      contactId = testAPIClient.createAContact(aMinimalCreateContactRequest()).id
     }
 
     @Test

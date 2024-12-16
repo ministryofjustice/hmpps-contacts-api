@@ -60,7 +60,7 @@ class GetContactIdentityIntegrationTest : H2IntegrationTestBase() {
 
   @Test
   fun `should get identity details where the type is inactive`() {
-    val identity = testAPIClient.getContactIdentity(4, 4, "ROLE_CONTACTS_ADMIN")
+    val identity = testAPIClient.getContactIdentity(4, 4)
 
     with(identity) {
       assertThat(contactIdentityId).isEqualTo(4)

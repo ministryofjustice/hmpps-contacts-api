@@ -27,7 +27,6 @@ class DeleteContactAddressIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
 
     savedContactAddressId = testAPIClient.createAContactAddress(
@@ -42,7 +41,6 @@ class DeleteContactAddressIntegrationTest : H2IntegrationTestBase() {
         postcode = "HB10 2NB",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).contactAddressId
   }
 

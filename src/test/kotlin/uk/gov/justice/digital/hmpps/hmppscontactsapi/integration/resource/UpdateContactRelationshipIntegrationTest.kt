@@ -64,7 +64,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -84,7 +84,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -104,7 +104,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -124,7 +124,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -144,7 +144,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -164,7 +164,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -183,7 +183,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
     val prisonerContactId = prisonerContact.prisonerContactId
 
-    testAPIClient.updateRelationship(prisonerContactId, updateRequest, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.updateRelationship(prisonerContactId, updateRequest)
 
     val updatedPrisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(updatedPrisonerContacts).hasSize(1)
@@ -252,7 +252,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       relationship = requestedRelationship,
     )
 
-    testAPIClient.createAContact(request, "ROLE_CONTACTS_ADMIN")
+    testAPIClient.createAContact(request)
 
     val prisonerContacts = testAPIClient.getPrisonerContacts(prisonerNumber).content
     assertThat(prisonerContacts).hasSize(1)

@@ -137,11 +137,11 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
           comments = null,
         ),
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     )
     val restrictions = testAPIClient.getPrisonerContactRestrictions(
       created.createdRelationship!!.prisonerContactId,
-      "ROLE_CONTACTS_ADMIN",
+
     )
     assertThat(restrictions.prisonerContactRestrictions).isEmpty()
     assertThat(restrictions.contactGlobalRestrictions).isEmpty()

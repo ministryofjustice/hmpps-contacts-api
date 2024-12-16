@@ -145,7 +145,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       relationship = requestedRelationship,
     )
 
-    val created = testAPIClient.createAContactWithARelationship(request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactWithARelationship(request)
 
     assertThat(created.createdContact.lastName).isEqualTo(request.lastName)
     asserPrisonerContactEquals(created.createdRelationship!!, requestedRelationship)

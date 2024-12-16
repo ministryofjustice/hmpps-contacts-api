@@ -31,7 +31,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
     savedContactIdentityId = testAPIClient.createAContactIdentity(
       savedContactId,
@@ -41,7 +41,7 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
         issuingAuthority = "DVLA",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactIdentityId
   }
 
@@ -237,7 +237,6 @@ class UpdateContactIdentityIntegrationTest : H2IntegrationTestBase() {
       savedContactId,
       savedContactIdentityId,
       request,
-      "ROLE_CONTACTS_ADMIN",
     )
 
     with(updated) {

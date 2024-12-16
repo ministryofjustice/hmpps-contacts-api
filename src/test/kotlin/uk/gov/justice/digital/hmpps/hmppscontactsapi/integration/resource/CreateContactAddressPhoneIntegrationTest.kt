@@ -32,7 +32,6 @@ class CreateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
 
     savedAddressId = testAPIClient.createAContactAddress(
@@ -44,7 +43,6 @@ class CreateContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         street = "Hello Road",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).contactAddressId
   }
 

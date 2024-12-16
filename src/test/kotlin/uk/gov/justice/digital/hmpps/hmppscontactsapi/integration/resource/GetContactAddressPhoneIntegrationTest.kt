@@ -27,7 +27,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
 
     savedAddressId = testAPIClient.createAContactAddress(
@@ -39,7 +39,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         street = "Hello Road",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactAddressId
 
     savedAddressPhoneId = testAPIClient.createAContactAddressPhone(
@@ -52,7 +52,7 @@ class GetContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         extNumber = "2",
         createdBy = "CREATED",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactAddressPhoneId
   }
 

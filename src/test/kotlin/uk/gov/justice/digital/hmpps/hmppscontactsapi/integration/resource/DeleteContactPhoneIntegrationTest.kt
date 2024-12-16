@@ -38,7 +38,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
     savedContactPhoneId = testAPIClient.createAContactPhone(
       savedContactId,
@@ -48,7 +48,7 @@ class DeleteContactPhoneIntegrationTest : H2IntegrationTestBase() {
         extNumber = "123456",
         createdBy = "USER1",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactPhoneId
   }
 

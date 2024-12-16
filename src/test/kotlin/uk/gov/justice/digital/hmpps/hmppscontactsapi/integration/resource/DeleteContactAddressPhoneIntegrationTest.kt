@@ -29,7 +29,6 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
 
     savedAddressId = testAPIClient.createAContactAddress(
@@ -41,7 +40,6 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         street = "Hello Road",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).contactAddressId
 
     savedAddressPhoneId = testAPIClient.createAContactAddressPhone(
@@ -54,7 +52,6 @@ class DeleteContactAddressPhoneIntegrationTest : PostgresIntegrationTestBase() {
         extNumber = "2",
         createdBy = "CREATED",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).contactAddressPhoneId
   }
 

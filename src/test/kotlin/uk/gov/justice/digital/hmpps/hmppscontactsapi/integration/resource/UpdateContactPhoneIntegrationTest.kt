@@ -30,7 +30,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).id
     savedContactPhoneId = testAPIClient.createAContactPhone(
       savedContactId,
@@ -40,7 +40,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         extNumber = "123456",
         createdBy = "USER1",
       ),
-      "ROLE_CONTACTS_ADMIN",
+
     ).contactPhoneId
   }
 
@@ -237,7 +237,7 @@ class UpdateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       updatedBy = "updated",
     )
 
-    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request, "ROLE_CONTACTS_ADMIN")
+    val updated = testAPIClient.updateAContactPhone(savedContactId, savedContactPhoneId, request)
 
     with(updated) {
       assertThat(phoneType).isEqualTo(request.phoneType)

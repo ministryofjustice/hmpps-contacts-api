@@ -31,7 +31,6 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
         firstName = "first",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
     stubGetUserByUsername(User("created", "Created User"))
   }
@@ -166,7 +165,7 @@ class CreateContactRestrictionIntegrationTest : H2IntegrationTestBase() {
   fun `should create the restriction with minimal fields`() {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createContactGlobalRestriction(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createContactGlobalRestriction(savedContactId, request)
 
     with(created) {
       assertThat(contactRestrictionId).isGreaterThan(0)

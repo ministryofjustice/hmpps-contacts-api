@@ -28,7 +28,6 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
   }
 
@@ -135,10 +134,10 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   fun `should be able to create the contact address with no address type`() {
     val request = aMinimalAddressRequest().copy(addressType = null)
 
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
     assertThat(created.addressType).isNull()
 
-    assertThat(testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses.find { it.contactAddressId == created.contactAddressId }).isNotNull
+    assertThat(testAPIClient.getContact(savedContactId).addresses.find { it.contactAddressId == created.contactAddressId }).isNotNull
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_ADDRESS_CREATED,
@@ -150,12 +149,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should remove primary flag from current primary addresses if setting primary`() {
     val requestToCreatePrimary = aMinimalAddressRequest().copy(primaryAddress = true)
-    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary, "ROLE_CONTACTS_ADMIN")
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
 
     val request = aMinimalAddressRequest().copy(primaryAddress = true)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.primaryAddress).isTrue()
 
@@ -174,12 +173,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should not remove primary flag from current primary addresses if not setting primary`() {
     val requestToCreatePrimary = aMinimalAddressRequest().copy(primaryAddress = true)
-    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary, "ROLE_CONTACTS_ADMIN")
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
 
     val request = aMinimalAddressRequest().copy(primaryAddress = false)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isTrue()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.primaryAddress).isFalse()
 
@@ -194,12 +193,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should remove mail flag from current mail addresses if setting mail`() {
     val requestToCreateMail = aMinimalAddressRequest().copy(mailFlag = true)
-    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail, "ROLE_CONTACTS_ADMIN")
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
 
     val request = aMinimalAddressRequest().copy(mailFlag = true)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isFalse()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.mailFlag).isTrue()
 
@@ -218,12 +217,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should not remove mail flag from current mail addresses if not setting mail`() {
     val requestToCreateMail = aMinimalAddressRequest().copy(mailFlag = true, primaryAddress = false)
-    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail, "ROLE_CONTACTS_ADMIN")
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
 
     val request = aMinimalAddressRequest().copy(mailFlag = false)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isTrue()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.mailFlag).isFalse()
 
@@ -238,18 +237,18 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
   @Test
   fun `should remove primary and mail flag from current primary and mail addresses if setting primary and mail`() {
     val requestToCreatePrimary = aMinimalAddressRequest().copy(primaryAddress = true, mailFlag = false)
-    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary, "ROLE_CONTACTS_ADMIN")
+    val primary = testAPIClient.createAContactAddress(savedContactId, requestToCreatePrimary)
 
     val requestToCreateMail = aMinimalAddressRequest().copy(primaryAddress = false, mailFlag = true)
-    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail, "ROLE_CONTACTS_ADMIN")
+    val mail = testAPIClient.createAContactAddress(savedContactId, requestToCreateMail)
 
     val requestToCreateOtherAddress = aMinimalAddressRequest().copy(primaryAddress = false, mailFlag = false)
-    val other = testAPIClient.createAContactAddress(savedContactId, requestToCreateOtherAddress, "ROLE_CONTACTS_ADMIN")
+    val other = testAPIClient.createAContactAddress(savedContactId, requestToCreateOtherAddress)
 
     val request = aMinimalAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primary.contactAddressId }!!.primaryAddress).isFalse()
     assertThat(addresses.find { it.contactAddressId == mail.contactAddressId }!!.mailFlag).isFalse()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.primaryAddress).isTrue()
@@ -282,13 +281,12 @@ class CreateContactAddressIntegrationTest : PostgresIntegrationTestBase() {
     val primaryAndMail = testAPIClient.createAContactAddress(
       savedContactId,
       requestToCreatePrimaryAndMail,
-      "ROLE_CONTACTS_ADMIN",
     )
 
     val request = aMinimalAddressRequest().copy(primaryAddress = true, mailFlag = true)
-    val created = testAPIClient.createAContactAddress(savedContactId, request, "ROLE_CONTACTS_ADMIN")
+    val created = testAPIClient.createAContactAddress(savedContactId, request)
 
-    val addresses = testAPIClient.getContact(savedContactId, "ROLE_CONTACTS_ADMIN").addresses
+    val addresses = testAPIClient.getContact(savedContactId).addresses
     assertThat(addresses.find { it.contactAddressId == primaryAndMail.contactAddressId }!!.primaryAddress).isFalse()
     assertThat(addresses.find { it.contactAddressId == primaryAndMail.contactAddressId }!!.mailFlag).isFalse()
     assertThat(addresses.find { it.contactAddressId == created.contactAddressId }!!.primaryAddress).isTrue()

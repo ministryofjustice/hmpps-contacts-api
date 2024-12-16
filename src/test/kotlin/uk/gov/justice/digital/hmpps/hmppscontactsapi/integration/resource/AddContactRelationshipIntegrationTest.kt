@@ -31,7 +31,6 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
         lastName = RandomStringUtils.secure().nextAlphabetic(10),
         createdBy = "USER",
       ),
-      "ROLE_CONTACTS_ADMIN",
     )
   }
 
@@ -191,7 +190,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    val createdRelationship = testAPIClient.addAContactRelationship(request, "ROLE_CONTACTS_ADMIN")
+    val createdRelationship = testAPIClient.addAContactRelationship(request)
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isFalse()

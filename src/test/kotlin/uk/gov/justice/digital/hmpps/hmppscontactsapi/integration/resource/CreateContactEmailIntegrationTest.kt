@@ -30,7 +30,6 @@ class CreateContactEmailIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
   }
 

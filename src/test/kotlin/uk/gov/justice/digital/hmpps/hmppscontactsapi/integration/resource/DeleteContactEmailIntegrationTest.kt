@@ -27,7 +27,6 @@ class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).id
     savedContactEmailId = testAPIClient.createAContactEmail(
       savedContactId,
@@ -35,7 +34,6 @@ class DeleteContactEmailIntegrationTest : H2IntegrationTestBase() {
         emailAddress = "test@example.com",
         createdBy = "created",
       ),
-      "ROLE_CONTACTS_ADMIN",
     ).contactEmailId
   }
 

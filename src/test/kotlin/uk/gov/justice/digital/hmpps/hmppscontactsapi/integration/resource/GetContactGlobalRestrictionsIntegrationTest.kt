@@ -84,9 +84,9 @@ class GetContactGlobalRestrictionsIntegrationTest : H2IntegrationTestBase() {
   fun `should return empty list if no restrictions for a contact`() {
     val createdContact = testAPIClient.createAContact(
       CreateContactRequest(firstName = "First", lastName = "Last", createdBy = "USER1"),
-      "ROLE_CONTACTS_ADMIN",
+
     )
-    val restrictions = testAPIClient.getContactGlobalRestrictions(createdContact.id, "ROLE_CONTACTS_ADMIN")
+    val restrictions = testAPIClient.getContactGlobalRestrictions(createdContact.id)
     assertThat(restrictions).isEmpty()
   }
 }

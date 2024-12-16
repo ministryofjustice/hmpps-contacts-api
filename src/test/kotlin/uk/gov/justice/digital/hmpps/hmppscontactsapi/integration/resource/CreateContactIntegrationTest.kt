@@ -139,13 +139,12 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
   fun `should create the contact with minimal fields`() {
     val request = aMinimalCreateContactRequest()
 
-    val contactReturnedOnCreate = testAPIClient.createAContact(request, "ROLE_CONTACTS_ADMIN")
+    val contactReturnedOnCreate = testAPIClient.createAContact(request)
 
     assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
     assertThat(contactReturnedOnCreate).isEqualTo(
       testAPIClient.getContact(
         contactReturnedOnCreate.id,
-        "ROLE_CONTACTS_ADMIN",
       ),
     )
 
@@ -193,13 +192,12 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val contactReturnedOnCreate = testAPIClient.createAContact(request, "ROLE_CONTACTS_ADMIN")
+    val contactReturnedOnCreate = testAPIClient.createAContact(request)
 
     assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
     assertThat(contactReturnedOnCreate).isEqualTo(
       testAPIClient.getContact(
         contactReturnedOnCreate.id,
-        "ROLE_CONTACTS_ADMIN",
       ),
     )
 
