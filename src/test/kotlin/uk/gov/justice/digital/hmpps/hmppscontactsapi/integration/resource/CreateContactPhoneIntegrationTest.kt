@@ -7,6 +7,7 @@ import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -29,6 +30,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
         firstName = "has",
         createdBy = "created",
       ),
+      "ROLE_CONTACTS_ADMIN",
     ).id
   }
 
@@ -194,7 +196,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
   fun `should create the phone with minimal fields`() {
     val request = aMinimalRequest()
 
-    val created = testAPIClient.createAContactPhone(savedContactId, request)
+    val created = testAPIClient.createAContactPhone(savedContactId, request, "ROLE_CONTACTS_ADMIN")
 
     assertEqualsExcludingTimestamps(created, request)
 
@@ -205,8 +207,9 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should create the phone with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the phone with all fields`(role: String) {
     val request = CreatePhoneRequest(
       phoneType = "MOB",
       phoneNumber = "+44777777777 (0123)",
@@ -214,7 +217,7 @@ class CreateContactPhoneIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val created = testAPIClient.createAContactPhone(savedContactId, request)
+    val created = testAPIClient.createAContactPhone(savedContactId, request, role)
 
     assertEqualsExcludingTimestamps(created, request)
 

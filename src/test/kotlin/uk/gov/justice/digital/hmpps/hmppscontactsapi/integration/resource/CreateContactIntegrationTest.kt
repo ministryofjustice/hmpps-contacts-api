@@ -7,6 +7,7 @@ import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.CsvSource
 import org.junit.jupiter.params.provider.EnumSource
 import org.junit.jupiter.params.provider.MethodSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
@@ -138,10 +139,15 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
   fun `should create the contact with minimal fields`() {
     val request = aMinimalCreateContactRequest()
 
-    val contactReturnedOnCreate = testAPIClient.createAContact(request)
+    val contactReturnedOnCreate = testAPIClient.createAContact(request, "ROLE_CONTACTS_ADMIN")
 
     assertContactsAreEqualExcludingTimestamps(contactReturnedOnCreate, request)
-    assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+    assertThat(contactReturnedOnCreate).isEqualTo(
+      testAPIClient.getContact(
+        contactReturnedOnCreate.id,
+        "ROLE_CONTACTS_ADMIN",
+      ),
+    )
 
     // Verify that a contact created locally has an ID in the appropriate range - above 20,000,000
     assertThat(contactReturnedOnCreate.id).isGreaterThanOrEqualTo(LOCAL_CONTACT_ID_SEQUENCE_MIN)
@@ -153,8 +159,9 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
     )
   }
 
-  @Test
-  fun `should create the contact with all fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the contact with all fields`(role: String) {
     val request = CreateContactRequest(
       title = "MR",
       lastName = "last",
@@ -164,7 +171,7 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val contact = testAPIClient.createAContact(request)
+    val contact = testAPIClient.createAContact(request, role)
 
     assertContactsAreEqualExcludingTimestamps(contact, request)
 
@@ -186,10 +193,15 @@ class CreateContactIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
     )
 
-    val contactReturnedOnCreate = testAPIClient.createAContact(request)
+    val contactReturnedOnCreate = testAPIClient.createAContact(request, "ROLE_CONTACTS_ADMIN")
 
     assertThat(contactReturnedOnCreate.estimatedIsOverEighteen).isEqualTo(estimatedIsOverEighteen)
-    assertThat(contactReturnedOnCreate).isEqualTo(testAPIClient.getContact(contactReturnedOnCreate.id))
+    assertThat(contactReturnedOnCreate).isEqualTo(
+      testAPIClient.getContact(
+        contactReturnedOnCreate.id,
+        "ROLE_CONTACTS_ADMIN",
+      ),
+    )
 
     stubEvents.assertHasEvent(
       event = OutboundEvent.CONTACT_CREATED,

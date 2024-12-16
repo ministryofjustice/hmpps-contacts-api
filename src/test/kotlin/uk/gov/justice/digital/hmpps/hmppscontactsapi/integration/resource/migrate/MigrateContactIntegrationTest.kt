@@ -5,6 +5,8 @@ import org.assertj.core.groups.Tuple
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
@@ -52,25 +54,27 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         .isUnauthorized
     }
 
-    @Test
-    fun `should return forbidden without an authorised role on the token`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__R", "ROLE_CONTACTS__RW"])
+    fun `should return forbidden without an authorised role on the token`(authRole: String) {
       webTestClient.post()
         .uri("/migrate/contact")
         .accept(MediaType.APPLICATION_JSON)
         .contentType(MediaType.APPLICATION_JSON)
         .bodyValue(basicMigrationRequest(personId = 500L))
-        .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+        .headers(setAuthorisation(roles = listOf(authRole)))
         .exchange()
         .expectStatus()
         .isForbidden
     }
 
-    @Test
-    fun `should migrate a basic contact`() {
+    @ParameterizedTest
+    @ValueSource(strings = ["ROLE_CONTACTS_MIGRATION"])
+    fun `should migrate a basic contact`(authRole: String) {
       val request = basicMigrationRequest(personId = 500L)
       val countContactsBefore = contactRepository.count()
 
-      val result = testAPIClient.migrateAContact(request)
+      val result = testAPIClient.migrateAContact(request, authRole)
 
       with(result) {
         with(contact) {
@@ -92,7 +96,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       val countContactsBefore = contactRepository.count()
 
       // Initial request - success
-      val result1 = testAPIClient.migrateAContact(request)
+      val result1 = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
       with(result1) {
         assertThat(this.contact.nomisId).isEqualTo(request.personId)
         assertThat(this.contact.dpsId).isEqualTo(request.personId)
@@ -101,7 +105,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
       assertThat(contactRepository.count()).isEqualTo(countContactsBefore + 1)
 
       // Duplicate request - should delete the original and replace it
-      val result2 = testAPIClient.migrateAContact(request)
+      val result2 = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
       with(result2) {
         assertThat(this.contact.nomisId).isEqualTo(request.personId)
         assertThat(this.contact.dpsId).isEqualTo(request.personId)
@@ -121,7 +125,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         restrictions = restrictions(),
       )
 
-      val result = testAPIClient.migrateAContact(request)
+      val result = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
 
       with(result) {
         assertThat(contact.elementType).isEqualTo(ElementType.CONTACT)
@@ -163,7 +167,7 @@ class MigrateContactIntegrationTest : H2IntegrationTestBase() {
         addresses = addressesWithPhones(),
       )
 
-      val result = testAPIClient.migrateAContact(request)
+      val result = testAPIClient.migrateAContact(request, "ROLE_CONTACTS_MIGRATION")
 
       with(result) {
         assertThat(phoneNumbers).hasSize(0)

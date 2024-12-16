@@ -6,6 +6,7 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import org.junit.jupiter.params.provider.ValueSource
 import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
@@ -30,6 +31,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
         lastName = RandomStringUtils.secure().nextAlphabetic(10),
         createdBy = "USER",
       ),
+      "ROLE_CONTACTS_ADMIN",
     )
   }
 
@@ -65,7 +67,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       .accept(MediaType.APPLICATION_JSON)
       .contentType(MediaType.APPLICATION_JSON)
       .bodyValue(aMinimalRequest())
-      .headers(setAuthorisation(roles = listOf("ROLE_WRONG")))
+      .headers(setAuthorisation(roles = listOf("ROLE_CONTACTS__R")))
       .exchange()
       .expectStatus()
       .isForbidden
@@ -142,8 +144,9 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     assertThat(errors.userMessage).isEqualTo("Entity not found : Contact (123456789) could not be found")
   }
 
-  @Test
-  fun `should create the contact relationship with minimal fields`() {
+  @ParameterizedTest
+  @ValueSource(strings = ["ROLE_CONTACTS_ADMIN", "ROLE_CONTACTS__RW"])
+  fun `should create the contact relationship with minimal fields`(role: String) {
     stubPrisonSearchWithResponse("A1234BC")
 
     val request = AddContactRelationshipRequest(
@@ -157,7 +160,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    val createdRelationship = testAPIClient.addAContactRelationship(request)
+    val createdRelationship = testAPIClient.addAContactRelationship(request, role)
 
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
@@ -188,7 +191,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "USER",
     )
 
-    val createdRelationship = testAPIClient.addAContactRelationship(request)
+    val createdRelationship = testAPIClient.addAContactRelationship(request, "ROLE_CONTACTS_ADMIN")
     assertThat(createdRelationship.relationshipCode).isEqualTo("MOT")
     assertThat(createdRelationship.relationshipDescription).isEqualTo("Mother")
     assertThat(createdRelationship.nextOfKin).isFalse()

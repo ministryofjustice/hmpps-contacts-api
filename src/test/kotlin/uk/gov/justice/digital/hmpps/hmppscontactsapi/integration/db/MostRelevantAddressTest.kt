@@ -41,6 +41,7 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
         ),
         createdBy = "created",
       ),
+      "ROLE_CONTACTS_ADMIN",
     ).id
   }
 
@@ -64,7 +65,7 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
       .build()
       .toUri()
 
-    val contacts = testAPIClient.getSearchContactResults(searchUrl)!!
+    val contacts = testAPIClient.getSearchContactResults(searchUrl, "ROLE_CONTACTS_ADMIN")!!
     assertThat(contacts.content).hasSize(1)
     assertThat(contacts.content[0].flat).isEqualTo(case.expectedAddressIndex?.toString())
   }
