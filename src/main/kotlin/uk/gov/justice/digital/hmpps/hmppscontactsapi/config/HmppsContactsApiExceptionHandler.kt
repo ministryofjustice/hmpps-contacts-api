@@ -1,7 +1,6 @@
 package uk.gov.justice.digital.hmpps.hmppscontactsapi.config
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import jakarta.persistence.EntityNotFoundException
 import jakarta.validation.ValidationException
 import org.slf4j.LoggerFactory
@@ -18,6 +17,7 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
+import software.amazon.awssdk.services.sqs.model.InvalidIdFormatException
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.format.DateTimeParseException
@@ -131,7 +131,6 @@ class HmppsContactsApiExceptionHandler {
       ),
     ).also { log.info("Validation exception: {}", e.message) }
 
-  @Suppress("DEPRECATION")
   private fun sanitiseMismatchInputException(cause: MismatchedInputException): String {
     val name = cause.path.fold("") { jsonPath, ref ->
       val suffix = when {
@@ -140,10 +139,10 @@ class HmppsContactsApiExceptionHandler {
       }
       (jsonPath + suffix).removePrefix(".")
     }
-    val problem = when {
-      cause.cause is DateTimeParseException -> "could not be parsed as a date"
-      cause is MissingKotlinParameterException -> "must not be null"
-      else -> "is invalid"
+    val problem = when (cause.cause) {
+      is DateTimeParseException -> "could not be parsed as a date"
+      is InvalidIdFormatException -> "is invalid"
+      else -> "must not be null"
     }
     return "$name $problem"
   }
