@@ -17,7 +17,6 @@ import org.springframework.web.bind.MissingServletRequestParameterException
 import org.springframework.web.bind.annotation.ExceptionHandler
 import org.springframework.web.bind.annotation.RestControllerAdvice
 import org.springframework.web.servlet.resource.NoResourceFoundException
-import software.amazon.awssdk.services.sqs.model.InvalidIdFormatException
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.migrate.DuplicatePersonException
 import uk.gov.justice.hmpps.kotlin.common.ErrorResponse
 import java.time.format.DateTimeParseException
@@ -141,7 +140,6 @@ class HmppsContactsApiExceptionHandler {
     }
     val problem = when (cause.cause) {
       is DateTimeParseException -> "could not be parsed as a date"
-      is InvalidIdFormatException -> "is invalid"
       else -> "must not be null"
     }
     return "$name $problem"
