@@ -17,6 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactAddressPhoneDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
@@ -91,7 +92,7 @@ class ContactService(
   private fun validateNewRelationship(relationship: ContactRelationship) {
     prisonerService.getPrisoner(relationship.prisonerNumber)
       ?: throw EntityNotFoundException("Prisoner (${relationship.prisonerNumber}) could not be found")
-    referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, relationship.relationshipCode, allowInactive = false)
+    referenceCodeService.validateReferenceCode(relationship.relationshipDetails.type.getGroupCode(), relationship.relationshipDetails.code, allowInactive = false)
   }
 
   private fun enrichContact(contactEntity: ContactEntity): ContactDetails {
@@ -201,35 +202,39 @@ class ContactService(
 
   private fun PrisonerContactEntity.applyUpdate(
     request: UpdateRelationshipRequest,
-  ) = this.copy(
-    contactId = this.contactId,
-    prisonerNumber = this.prisonerNumber,
-    contactType = this.contactType,
-    approvedVisitor = request.isApprovedVisitor.orElse(this.approvedVisitor),
-    currentTerm = this.currentTerm,
-    nextOfKin = request.isNextOfKin.orElse(this.nextOfKin),
-    emergencyContact = request.isEmergencyContact.orElse(this.emergencyContact),
-    active = request.isRelationshipActive.orElse(this.active),
-    relationshipType = request.relationshipCode.orElse(this.relationshipType),
-    comments = request.comments.orElse(this.comments),
-  ).also {
-    it.approvedBy = this.approvedBy
-    it.approvedTime = this.approvedTime
-    it.expiryDate = this.expiryDate
-    it.createdAtPrison = this.createdAtPrison
-    it.updatedBy = request.updatedBy
-    it.updatedTime = LocalDateTime.now()
+  ): PrisonerContactEntity {
+    val relationshipType: String = if (request.relationshipDetails.isPresent) request.relationshipDetails.get().code else this.relationshipType
+
+    return this.copy(
+      contactId = this.contactId,
+      prisonerNumber = this.prisonerNumber,
+      contactType = this.contactType,
+      approvedVisitor = request.isApprovedVisitor.orElse(this.approvedVisitor),
+      currentTerm = this.currentTerm,
+      nextOfKin = request.isNextOfKin.orElse(this.nextOfKin),
+      emergencyContact = request.isEmergencyContact.orElse(this.emergencyContact),
+      active = request.isRelationshipActive.orElse(this.active),
+      relationshipType = relationshipType,
+      comments = request.comments.orElse(this.comments),
+    ).also {
+      it.approvedBy = this.approvedBy
+      it.approvedTime = this.approvedTime
+      it.expiryDate = this.expiryDate
+      it.createdAtPrison = this.createdAtPrison
+      it.updatedBy = request.updatedBy
+      it.updatedTime = LocalDateTime.now()
+    }
   }
 
   private fun validateRelationshipTypeCode(request: UpdateRelationshipRequest) {
-    if (request.relationshipCode.isPresent && request.relationshipCode.get() != null) {
-      val code = request.relationshipCode.get()!!
-      referenceCodeService.validateReferenceCode(ReferenceCodeGroup.RELATIONSHIP, code, allowInactive = true)
+    if (request.relationshipDetails.isPresent && request.relationshipDetails.get() != null) {
+      val relationship = request.relationshipDetails.get()!!
+      referenceCodeService.validateReferenceCode(relationship.type.getGroupCode(), relationship.code, allowInactive = true)
     }
   }
 
   private fun unsupportedRelationshipType(request: UpdateRelationshipRequest) {
-    if (request.relationshipCode.isPresent && request.relationshipCode.get() == null) {
+    if (request.relationshipDetails.isPresent && request.relationshipDetails.get() == null) {
       throw ValidationException("Unsupported relationship type null.")
     }
   }
@@ -259,12 +264,13 @@ class ContactService(
   }
 
   private fun enrichRelationship(relationship: PrisonerContactEntity): PrisonerContactRelationshipDetails {
+    val groupCode = RelationshipType.fromContactType(relationship.contactType).getGroupCode()
     return PrisonerContactRelationshipDetails(
       prisonerContactId = relationship.prisonerContactId,
       contactId = relationship.contactId,
       prisonerNumber = relationship.prisonerNumber,
       relationshipCode = relationship.relationshipType,
-      relationshipDescription = referenceCodeService.getReferenceDataByGroupAndCode(ReferenceCodeGroup.RELATIONSHIP, relationship.relationshipType)?.description ?: relationship.relationshipType,
+      relationshipDescription = referenceCodeService.getReferenceDataByGroupAndCode(groupCode, relationship.relationshipType)?.description ?: relationship.relationshipType,
       emergencyContact = relationship.emergencyContact,
       nextOfKin = relationship.nextOfKin,
       isRelationshipActive = relationship.active,

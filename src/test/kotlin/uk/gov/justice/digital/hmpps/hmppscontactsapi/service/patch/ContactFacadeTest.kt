@@ -20,6 +20,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelati
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.PatchContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactCreationResult
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
@@ -78,7 +80,7 @@ class ContactFacadeTest {
       firstName = "first",
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
         isNextOfKin = false,
         isEmergencyContact = false,
         comments = null,
@@ -103,7 +105,7 @@ class ContactFacadeTest {
       99,
       ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
         isNextOfKin = false,
         isEmergencyContact = false,
         comments = null,

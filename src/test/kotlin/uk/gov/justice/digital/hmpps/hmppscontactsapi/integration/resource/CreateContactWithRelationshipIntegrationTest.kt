@@ -11,6 +11,8 @@ import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactRepository
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.ContactInfo
@@ -28,10 +30,10 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "relationship.prisonerNumber must not be null;{ \"relationshipCode\": \"FRI\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
-      "relationship.relationshipCode must not be null;{ \"prisonerNumber\": \"A1234BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
-      "relationship.isNextOfKin must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isEmergencyContact\": false }",
-      "relationship.isEmergencyContact must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipCode\": \"FRI\", \"isNextOfKin\": false }",
+      "relationship.prisonerNumber must not be null;{ \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"FRI\" }, \"isNextOfKin\": false, \"isEmergencyContact\": false }",
+      "relationship.relationshipDetails must not be null;{ \"prisonerNumber\": \"A1234BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false }",
+      "relationship.isNextOfKin must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"FRI\" }, \"isEmergencyContact\": false }",
+      "relationship.isEmergencyContact must not be null;{ \"prisonerNumber\": \"A1234BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"FRI\" }, \"isNextOfKin\": false }",
     ],
     delimiter = ';',
   )
@@ -66,7 +68,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
       createdBy = "created",
       relationship = ContactRelationship(
         prisonerNumber = prisonerNumber,
-        relationshipCode = "FRI",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
         isNextOfKin = false,
         isEmergencyContact = false,
         comments = null,
@@ -97,7 +99,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FOO",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "FOO"),
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -137,7 +139,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FRI",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -174,7 +176,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     stubPrisonSearchWithResponse(prisonerNumber)
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "FRI",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
       isNextOfKin = true,
       isEmergencyContact = true,
       comments = "Some comments",
@@ -209,7 +211,7 @@ class CreateContactWithRelationshipIntegrationTest : H2IntegrationTestBase() {
     relationship: ContactRelationship,
   ) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode)
+      assertThat(relationshipCode).isEqualTo(relationship.relationshipDetails.code)
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin)
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact)
       assertThat(comments).isEqualTo(relationship.comments)

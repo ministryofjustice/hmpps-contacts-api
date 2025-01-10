@@ -14,6 +14,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PrisonerContactRestrictionInfo
@@ -35,7 +37,7 @@ class CreatePrisonerContactRestrictionIntegrationTest : H2IntegrationTestBase() 
         firstName = "first",
         relationship = ContactRelationship(
           prisonerNumber = prisonerNumberCreatedAgainst,
-          relationshipCode = "FRI",
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "Some comments",

@@ -12,6 +12,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.PersonReference
@@ -77,14 +79,14 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     value = [
       "relationship must not be null;{\"relationship\": null, \"createdBy\": \"USER\"}",
       "relationship must not be null;{\"createdBy\": \"USER\"}",
-      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": null}",
-      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}}",
-      "relationship.prisonerNumber must not be null;{\"relationship\": {\"prisonerNumber\": null, \"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.prisonerNumber must not be null;{\"relationship\": {\"relationshipCode\": \"MOT\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": null, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.relationshipCode must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isNextOfKin must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
-      "relationship.isEmergencyContact must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipCode\": \"MOT\", \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
+      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": null}",
+      "createdBy must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isNextOfKin\": false, \"isEmergencyContact\": false}}",
+      "relationship.prisonerNumber must not be null;{\"relationship\": {\"prisonerNumber\": null, \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.prisonerNumber must not be null;{\"relationship\": {\"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipDetails must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipDetails\": null, \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.relationshipDetails must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"isNextOfKin\": false, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isNextOfKin must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isEmergencyContact\": false}, \"createdBy\": \"USER\"}",
+      "relationship.isEmergencyContact must not be null;{\"relationship\": {\"prisonerNumber\": \"A1324BC\", \"relationshipDetails\": { \"type\": \"SOCIAL\", \"code\": \"MOT\" }, \"isNextOfKin\": false}, \"createdBy\": \"USER\"}",
     ],
     delimiter = ';',
   )
@@ -152,7 +154,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "MOT",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "MOT"),
         isNextOfKin = true,
         isEmergencyContact = false,
       ),
@@ -182,7 +184,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
       contactId = contact.id,
       relationship = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "MOT",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "MOT"),
         isNextOfKin = false,
         isEmergencyContact = true,
         comments = "Some comments",
@@ -208,7 +210,7 @@ class AddContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     contactId = contact.id,
     relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "MOT"),
       isNextOfKin = true,
       isEmergencyContact = false,
     ),

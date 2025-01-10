@@ -8,8 +8,8 @@ data class ContactRelationship(
   @Schema(description = "Prisoner number (NOMS ID)", example = "A1234BC")
   val prisonerNumber: String,
 
-  @Schema(description = "The relationship code between the prisoner and the contact", example = "FRI")
-  val relationshipCode: String,
+  @Schema(description = "The relationship code between the prisoner and the contact", exampleClasses = [Relationship::class])
+  val relationshipDetails: Relationship,
 
   @Schema(description = "Whether they are the next of kin for the prisoner", example = "true", required = true)
   @JsonProperty(required = true)

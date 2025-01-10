@@ -76,7 +76,7 @@ AS
   left join reference_codes rc1 ON rc1.group_code = 'TITLE' and rc1.code = c.title
   left join reference_codes rc2 ON rc2.group_code = 'PHONE_TYPE' and rc2.code = cp.phone_type
   left join reference_codes rc3 ON rc3.group_code = 'RELATIONSHIP' and rc3.code = pc.relationship_type
-  left join reference_codes rc4 ON rc4.group_code = 'OFF_RELATION' and rc4.code = pc.relationship_type
+  left join reference_codes rc4 ON rc4.group_code = 'OFFICIAL_RELATIONSHIP' and rc4.code = pc.relationship_type
   left join reference_codes rc5 ON rc5.group_code = 'CONTACT_TYPE' and rc5.code = pc.contact_type
   left join city_reference city_ref on city_ref.nomis_code = ca.city_code
   left join county_reference county_ref on county_ref.nomis_code = ca.county_code

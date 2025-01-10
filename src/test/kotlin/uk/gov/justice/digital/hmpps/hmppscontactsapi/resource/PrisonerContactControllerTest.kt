@@ -19,6 +19,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.helpers.createPrisonerConta
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreatePrisonerContactRestrictionRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdatePrisonerContactRestrictionRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
@@ -98,7 +100,7 @@ class PrisonerContactControllerTest {
     }
 
     private fun patchContactRelationshipRequest() = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("ENG"),
+      relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, "ENG")),
       updatedBy = "system",
     )
   }
@@ -108,7 +110,7 @@ class PrisonerContactControllerTest {
     private val contactId = 123456L
     private val relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "MOT"),
       isNextOfKin = true,
       isEmergencyContact = false,
       comments = "Foo",

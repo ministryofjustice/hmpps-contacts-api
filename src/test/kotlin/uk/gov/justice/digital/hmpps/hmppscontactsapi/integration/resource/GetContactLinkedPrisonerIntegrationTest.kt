@@ -10,6 +10,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTe
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.LinkedPrisonerDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.LinkedPrisonerRelationshipDetails
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactRelationshipDetails
@@ -167,7 +169,7 @@ class GetContactLinkedPrisonerIntegrationTest : H2IntegrationTestBase() {
         contactId = savedContactId,
         ContactRelationship(
           prisonerNumber = prisoner.prisonerNumber,
-          relationshipCode = relationshipCode,
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, relationshipCode),
           isNextOfKin = true,
           isEmergencyContact = true,
         ),

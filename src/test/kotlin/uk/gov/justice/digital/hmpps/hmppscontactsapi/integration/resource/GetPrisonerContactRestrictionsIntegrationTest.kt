@@ -8,6 +8,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.client.manage.users.User
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import java.time.LocalDate
 import java.time.LocalDateTime
 
@@ -131,7 +133,7 @@ class GetPrisonerContactRestrictionsIntegrationTest : H2IntegrationTestBase() {
         createdBy = "USER1",
         relationship = ContactRelationship(
           prisonerNumber = prisonerNumber,
-          relationshipCode = "FRI",
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
           isNextOfKin = false,
           isEmergencyContact = false,
           comments = null,

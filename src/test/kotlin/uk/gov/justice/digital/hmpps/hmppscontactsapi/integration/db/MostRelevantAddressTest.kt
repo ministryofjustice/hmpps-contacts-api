@@ -12,6 +12,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.entity.ContactAddressEntity
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.PostgresIntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.repository.ContactAddressRepository
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -34,7 +36,7 @@ class MostRelevantAddressTest : PostgresIntegrationTestBase() {
         firstName = "ThisIsFor",
         relationship = ContactRelationship(
           prisonerNumber = prisonerNumber,
-          relationshipCode = "FRI",
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
           isNextOfKin = false,
           isEmergencyContact = false,
           comments = null,

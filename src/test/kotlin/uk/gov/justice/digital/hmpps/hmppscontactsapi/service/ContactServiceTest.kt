@@ -34,6 +34,8 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.AddContactRel
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactSearchRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.ContactSearchResultItem
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Language
@@ -186,7 +188,7 @@ class ContactServiceTest {
     fun `should create a contact with a relationship successfully`() {
       val relationshipRequest = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
         isNextOfKin = true,
         isEmergencyContact = true,
         comments = "some comments",
@@ -230,7 +232,7 @@ class ContactServiceTest {
     fun `should throw exception if relationship is invalid`() {
       val relationshipRequest = ContactRelationship(
         prisonerNumber = "A1234BC",
-        relationshipCode = "FRI",
+        relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
         isNextOfKin = true,
         isEmergencyContact = true,
         comments = "some comments",
@@ -286,7 +288,7 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = ContactRelationship(
           prisonerNumber = "A1234BC",
-          relationshipCode = "FRI",
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "some comments",
@@ -312,7 +314,7 @@ class ContactServiceTest {
         createdBy = "created",
         relationship = ContactRelationship(
           prisonerNumber = "A1234BC",
-          relationshipCode = "FRI",
+          relationshipDetails = Relationship(RelationshipType.SOCIAL, "FRI"),
           isNextOfKin = true,
           isEmergencyContact = true,
           comments = "some comments",
@@ -558,7 +560,7 @@ class ContactServiceTest {
     private val contactId = 123456L
     private val relationship = ContactRelationship(
       prisonerNumber = "A1234BC",
-      relationshipCode = "MOT",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "MOT"),
       isNextOfKin = true,
       isEmergencyContact = false,
       comments = "Foo",
@@ -712,13 +714,13 @@ class ContactServiceTest {
     }
 
     @Nested
-    inner class RelationshipType {
+    inner class RelationshipTypeTests {
 
       @Test
       fun `should update the contact relationship type`() {
         val relationShipTypeCode = "FRI"
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(relationShipTypeCode),
+          relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, relationShipTypeCode)),
           updatedBy = "Admin",
         )
         mockBrotherRelationshipReferenceCode()
@@ -751,7 +753,7 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship type with null`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(null),
+          relationshipDetails = JsonNullable.of(null),
           updatedBy = "Admin",
         )
 
@@ -767,7 +769,7 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship type with invalid type`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of("OOO"),
+          relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, "OOO")),
           updatedBy = "Admin",
         )
 
@@ -1012,7 +1014,7 @@ class ContactServiceTest {
       @Test
       fun `should not update relationship comment with null`() {
         val request = UpdateRelationshipRequest(
-          relationshipCode = JsonNullable.of(null),
+          relationshipDetails = JsonNullable.of(null),
           updatedBy = "Admin",
         )
 
@@ -1083,7 +1085,7 @@ class ContactServiceTest {
         prisonerContactId = prisonerContactId,
         contactId = cId,
         prisonerNumber = "A1234BC",
-        contactType = "SOCIAL",
+        contactType = "S",
         relationshipType = "BRO",
         nextOfKin = true,
         emergencyContact = true,
@@ -1105,7 +1107,7 @@ class ContactServiceTest {
 
     private fun PrisonerContactEntity.assertUnchangedFields() {
       assertThat(prisonerNumber).isEqualTo("A1234BC")
-      assertThat(contactType).isEqualTo("SOCIAL")
+      assertThat(contactType).isEqualTo("S")
       assertThat(currentTerm).isTrue()
       assertThat(approvedVisitor).isTrue()
       assertThat(createdBy).isEqualTo("TEST")
@@ -1118,7 +1120,7 @@ class ContactServiceTest {
 
     private fun updateRelationshipRequest(): UpdateRelationshipRequest {
       return UpdateRelationshipRequest(
-        relationshipCode = JsonNullable.of("MOT"),
+        relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, "MOT")),
         isEmergencyContact = JsonNullable.of(true),
         isNextOfKin = JsonNullable.of(true),
         isRelationshipActive = JsonNullable.of(false),

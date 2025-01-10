@@ -58,7 +58,7 @@ class ReferenceCodesResourceIntegrationTest : H2IntegrationTestBase() {
       .expectBody(ErrorResponse::class.java)
       .returnResult().responseBody!!
 
-    assertThat(error.developerMessage).startsWith(""""FOO" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFF_RELATION""")
+    assertThat(error.developerMessage).startsWith(""""FOO" is not a valid reference code group. Valid groups are DOMESTIC_STS, OFFICIAL_RELATIONSHIP""")
   }
 
   @ParameterizedTest

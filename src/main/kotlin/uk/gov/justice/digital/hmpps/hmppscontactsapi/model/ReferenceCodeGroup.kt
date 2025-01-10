@@ -5,7 +5,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 @Schema(enumAsRef = true)
 enum class ReferenceCodeGroup(val displayName: String, val isDocumented: Boolean) {
   DOMESTIC_STS("domestic status", true),
-  OFF_RELATION("official relationship", true),
+  OFFICIAL_RELATIONSHIP("official relationship", true),
   ID_TYPE("identity type", true),
   LANGUAGE("language", true),
   GENDER("gender", true),

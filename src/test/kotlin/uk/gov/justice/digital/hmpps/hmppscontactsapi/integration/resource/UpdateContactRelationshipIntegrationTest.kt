@@ -11,6 +11,8 @@ import org.springframework.http.MediaType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.integration.H2IntegrationTestBase
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.ContactRelationship
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.CreateContactRequest
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.Relationship
+import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.RelationshipType
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.request.UpdateRelationshipRequest
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.PrisonerContactSummary
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.service.events.OutboundEvent
@@ -24,7 +26,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   @ParameterizedTest
   @CsvSource(
     value = [
-      "Unsupported relationship type null.;{\"relationshipCode\": null,  \"updatedBy\": \"Admin\"}",
+      "Unsupported relationship type null.;{\"relationshipDetails\": null, \"relationshipType\": \"SOCIAL\", \"updatedBy\": \"Admin\"}", // TODO: to be improved as both required together
       "Unsupported approved visitor value null.;{\"isApprovedVisitor\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported emergency contact null.;{\"isEmergencyContact\": null,  \"updatedBy\": \"Admin\"}",
       "Unsupported next of kin null.;{\"isNextOfKin\": null,  \"updatedBy\": \"Admin\"}",
@@ -63,7 +65,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = cretePrisonerContact(prisonerNumber)
 
     val updateRequest = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("SIS"),
+      relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, "SIS")),
       updatedBy = "Admin",
     )
 
@@ -237,7 +239,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     val prisonerContact = cretePrisonerContact(prisonerNumber)
 
     val updateRequest = UpdateRelationshipRequest(
-      relationshipCode = JsonNullable.of("FRI"),
+      relationshipDetails = JsonNullable.of(Relationship(RelationshipType.SOCIAL, "FRI")),
       isNextOfKin = JsonNullable.of(true),
       isApprovedVisitor = JsonNullable.of(true),
       isEmergencyContact = JsonNullable.of(true),
@@ -263,7 +265,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
 
   private fun assertUpdatedPrisonerContactEquals(prisonerContact: PrisonerContactSummary, relationship: UpdateRelationshipRequest) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode.get())
+      assertThat(relationshipCode).isEqualTo(relationship.relationshipDetails.get().code)
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin.get())
       assertThat(approvedVisitor).isEqualTo(relationship.isApprovedVisitor.get())
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact.get())
@@ -285,7 +287,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
   private fun cretePrisonerContact(prisonerNumber: String = "A1234AB"): PrisonerContactSummary {
     val requestedRelationship = ContactRelationship(
       prisonerNumber = prisonerNumber,
-      relationshipCode = "BRO",
+      relationshipDetails = Relationship(RelationshipType.SOCIAL, "BRO"),
       isNextOfKin = false,
       isEmergencyContact = false,
       comments = null,
@@ -311,7 +313,7 @@ class UpdateContactRelationshipIntegrationTest : H2IntegrationTestBase() {
     relationship: ContactRelationship,
   ) {
     with(prisonerContact) {
-      assertThat(relationshipCode).isEqualTo(relationship.relationshipCode)
+      assertThat(relationshipCode).isEqualTo(relationship.relationshipDetails.code)
       assertThat(nextOfKin).isEqualTo(relationship.isNextOfKin)
       assertThat(emergencyContact).isEqualTo(relationship.isEmergencyContact)
       assertThat(comments).isEqualTo(relationship.comments)
