@@ -17,7 +17,7 @@ import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.City
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.model.response.Organisation
 import uk.gov.justice.digital.hmpps.hmppscontactsapi.swagger.AuthApiResponses
 
-@Tag(name = "Organisation Data")
+@Tag(name = "Organisation")
 @RestController
 @RequestMapping(value = ["organisation"], produces = [MediaType.APPLICATION_JSON_VALUE])
 @AuthApiResponses
