@@ -1069,8 +1069,6 @@ class SyncFacadeTest {
         organisationId = 2L,
         contactId = 2L,
         active = true,
-        createdBy = "CREATOR",
-        createdTime = LocalDateTime.now(),
         updatedBy = "UPDATER",
         updatedTime = LocalDateTime.now(),
       )

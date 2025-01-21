@@ -124,8 +124,6 @@ class SyncEmploymentServiceTest {
         organisationId = updateRequest.organisationId,
         contactId = updateRequest.contactId,
         active = updateRequest.active,
-        createdBy = updateRequest.createdBy,
-        createdTime = updateRequest.createdTime,
         updatedBy = updateRequest.updatedBy,
         updatedTime = updateRequest.updatedTime,
       )
@@ -159,8 +157,6 @@ class SyncEmploymentServiceTest {
         assertThat(organisationId).isEqualTo(updateRequest.organisationId)
         assertThat(contactId).isEqualTo(updateRequest.contactId)
         assertThat(active).isEqualTo(updateRequest.active)
-        assertThat(createdBy).isEqualTo(updateRequest.createdBy)
-        assertThat(createdTime).isEqualTo(updateRequest.createdTime)
         assertThat(updatedBy).isEqualTo(updateRequest.updatedBy)
         assertThat(updatedTime).isEqualTo(updateRequest.updatedTime)
       }
@@ -198,8 +194,6 @@ class SyncEmploymentServiceTest {
         organisationId = updateRequest.organisationId,
         contactId = updateRequest.contactId,
         active = updateRequest.active,
-        createdBy = updateRequest.createdBy,
-        createdTime = updateRequest.createdTime,
         updatedBy = updateRequest.updatedBy,
         updatedTime = updateRequest.updatedTime,
       )
@@ -218,8 +212,6 @@ class SyncEmploymentServiceTest {
           assertThat(organisationId).isEqualTo(updateRequest.organisationId)
           assertThat(contactId).isEqualTo(updateRequest.contactId)
           assertThat(active).isEqualTo(updateRequest.active)
-          assertThat(createdBy).isEqualTo(updateRequest.createdBy)
-          assertThat(createdTime).isEqualTo(updateRequest.createdTime)
           assertThat(updatedBy).isEqualTo(updateRequest.updatedBy)
           assertThat(updatedTime).isEqualTo(updateRequest.updatedTime)
         }
@@ -298,8 +290,6 @@ class SyncEmploymentServiceTest {
     organisationId = 101L,
     contactId = 201L,
     active = false,
-    createdBy = "NEW_USER",
-    createdTime = LocalDateTime.now(),
     updatedBy = "NEW_USER",
     updatedTime = LocalDateTime.now(),
   )

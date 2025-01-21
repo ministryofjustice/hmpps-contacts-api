@@ -38,8 +38,6 @@ class SyncEmploymentService(
       organisationId = request.organisationId,
       contactId = request.contactId,
       active = request.active,
-      createdBy = request.createdBy,
-      createdTime = request.createdTime,
       updatedBy = request.updatedBy,
       updatedTime = request.updatedTime,
     )

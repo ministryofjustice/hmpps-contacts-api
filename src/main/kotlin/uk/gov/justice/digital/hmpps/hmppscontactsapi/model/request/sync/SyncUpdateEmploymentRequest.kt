@@ -15,12 +15,6 @@ data class SyncUpdateEmploymentRequest(
   @Schema(description = "If the employment is active", example = "true")
   val active: Boolean,
 
-  @Schema(description = "User who created the entry", example = "admin")
-  val createdBy: String,
-
-  @Schema(description = "Timestamp when the entry was created", example = "2023-09-23T10:15:30")
-  val createdTime: LocalDateTime,
-
   @Schema(description = "The username of the person who made the update", example = "JD000001")
   val updatedBy: String,
 

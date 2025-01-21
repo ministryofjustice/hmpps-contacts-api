@@ -154,7 +154,6 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
         assertThat(createdBy).isEqualTo("CREATOR")
         assertThat(updatedBy).isEqualTo(null)
         assertThat(createdTime).isAfter(LocalDateTime.now().minusMinutes(5))
-        assertThat(createdTime).isNotNull()
       }
 
       stubEvents.assertHasEvent(
@@ -188,9 +187,7 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
         assertThat(organisationId).isEqualTo(updateEmploymentRequest.organisationId)
         assertThat(contactId).isEqualTo(updateEmploymentRequest.contactId)
         assertThat(active).isFalse()
-        assertThat(createdBy).isEqualTo(updateEmploymentRequest.createdBy)
         assertThat(updatedBy).isEqualTo(updateEmploymentRequest.updatedBy)
-        assertThat(createdTime).isEqualTo(updateEmploymentRequest.createdTime)
         assertThat(updatedTime).isAfter(LocalDateTime.now().minusMinutes(5))
       }
 
@@ -234,8 +231,6 @@ class SyncEmploymentIntegrationTest : PostgresIntegrationTestBase() {
       organisationId = employment.organisationId,
       contactId = employment.contactId,
       active = false,
-      createdBy = "CREATOR",
-      createdTime = LocalDateTime.now(),
       updatedBy = "UPDATER",
       updatedTime = LocalDateTime.now(),
     )
